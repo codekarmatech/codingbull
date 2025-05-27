@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00BFFF" />
+      <stop offset="100%" stop-color="#6A0DAD" />
+    </linearGradient>
+  </defs>
+  <!-- Bull head shape -->
+  <path d="M100 40C70 40 45 60 45 90C45 110 55 125 70 135L60 160H80L85 140C90 142 95 143 100 143C105 143 110 142 115 140L120 160H140L130 135C145 125 155 110 155 90C155 60 130 40 100 40Z" fill="url(#gradient)"/>
+  
+  <!-- Bull horns -->
+  <path d="M70 80C60 70 40 75 30 85C25 90 25 95 30 100C40 110 55 105 65 95" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <path d="M130 80C140 70 160 75 170 85C175 90 175 95 170 100C160 110 145 105 135 95" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Bull eyes -->
+  <circle cx="80" cy="100" r="8" fill="white"/>
+  <circle cx="120" cy="100" r="8" fill="white"/>
+  
+  <!-- Bull nostrils -->
+  <circle cx="95" cy="120" r="4" fill="white"/>
+  <circle cx="105" cy="120" r="4" fill="white"/>
+  
+  <!-- Code elements -->
+  <path d="M40 170L60 150M60 170L40 150" stroke="url(#gradient)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M140 170L160 150M160 170L140 150" stroke="url(#gradient)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M90 170H110" stroke="url(#gradient)" stroke-width="6" stroke-linecap="round"/>
+</svg>
