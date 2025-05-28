@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { fadeIn, slideUp } from '../animations/variants';
+import { fadeIn, slideUp, staggerContainer, hoverScale } from '../animations/variants'; // Added staggerContainer, hoverScale
 import bullLogo from '../assets/bull-logo.svg';
 
 // Footer container
@@ -33,7 +33,7 @@ const FooterContent = styled.div`
 `;
 
 // Footer top section
-const FooterTop = styled.div`
+const MotionFooterTop = styled(motion.div)` // Made motion component
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 3rem;
@@ -152,7 +152,7 @@ const ContactInfo = styled.div`
 `;
 
 // Contact item
-const ContactItem = styled.div`
+const MotionContactItem = styled(motion.div)` // Made motion component
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -191,7 +191,10 @@ const InputGroup = styled.div`
     }
   }
   
-  button {
+  /* Replaced button with MotionButton styled component below */
+`;
+
+const MotionSubscribeButton = styled(motion.button)`
     padding: 0.75rem 1.5rem;
     background: ${props => props.theme.colors.electricBlue};
     color: ${props => props.theme.colors.textPrimary};
@@ -232,7 +235,7 @@ const FooterBottomLinks = styled.div`
   display: flex;
   gap: 1.5rem;
   
-  a {
+  a { /* This will become motion.a */
     color: ${props => props.theme.colors.textSecondary};
     font-size: ${props => props.theme.fontSizes.sm};
     transition: all 0.3s ease;
@@ -247,13 +250,13 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <FooterTop>
-          <FooterColumn
-            variants={fadeIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+        <MotionFooterTop // Changed to motion component
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }} // amount ensures some part is visible
+        >
+          <FooterColumn variants={fadeIn}> {/* Columns will now use variants from staggerContainer */}
             <FooterLogo>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <img src={bullLogo} alt="CodingBull Logo" style={{ height: '40px' }} />
@@ -264,144 +267,57 @@ const Footer = () => {
               Since incorporation in 2025, CodingBull Technovations Pvt Ltd has grown into a collaborative network of seasoned developers and designers led by Pranshu Dixit.
             </FooterDescription>
             <SocialLinks>
-              <SocialLink 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <span>FB</span>
-              </SocialLink>
-              <SocialLink 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <span>TW</span>
-              </SocialLink>
-              <SocialLink 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <span>IN</span>
-              </SocialLink>
-              <SocialLink 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <span>GH</span>
-              </SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}><span>FB</span></SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}><span>TW</span></SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}><span>IN</span></SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}><span>GH</span></SocialLink>
             </SocialLinks>
           </FooterColumn>
           
-          <FooterColumn
-            variants={slideUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <FooterColumn variants={slideUp}>
             <FooterHeading>Quick Links</FooterHeading>
-            <FooterLinks>
-              <li>
-                <FooterLink to="/" whileHover={{ x: 5 }}>Home</FooterLink>
-              </li>
-              <li>
-                <FooterLink to="/services" whileHover={{ x: 5 }}>Services</FooterLink>
-              </li>
-              <li>
-                <FooterLink to="#tech-stack" onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('tech-stack').scrollIntoView({ behavior: 'smooth' });
-                }} whileHover={{ x: 5 }}>Technology</FooterLink>
-              </li>
-              <li>
-                <FooterLink to="#our-projects" onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('our-projects').scrollIntoView({ behavior: 'smooth' });
-                }} whileHover={{ x: 5 }}>Our Projects</FooterLink>
-              </li>
-              <li>
-                <FooterLink to="/about" whileHover={{ x: 5 }}>About</FooterLink>
-              </li>
-              <li>
-                <FooterLink to="#contact" onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-                }} whileHover={{ x: 5 }}>Contact</FooterLink>
-              </li>
+            <FooterLinks> {/* This could also be a staggerContainer for its items */}
+              <li><FooterLink to="/" whileHover={{ x: 5 }}>Home</FooterLink></li>
+              <li><FooterLink to="/services" whileHover={{ x: 5 }}>Services</FooterLink></li>
+              <li><FooterLink to="#tech-stack" onClick={(e) => { e.preventDefault(); document.getElementById('tech-stack').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Technology</FooterLink></li>
+              <li><FooterLink to="#our-projects" onClick={(e) => { e.preventDefault(); document.getElementById('our-projects').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Our Projects</FooterLink></li>
+              <li><FooterLink to="/about" whileHover={{ x: 5 }}>About</FooterLink></li>
+              <li><FooterLink to="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Contact</FooterLink></li>
             </FooterLinks>
           </FooterColumn>
           
-          <FooterColumn
-            variants={slideUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
+          <FooterColumn variants={slideUp}>
             <FooterHeading>Contact Us</FooterHeading>
-            <ContactInfo>
-              <ContactItem>
-                <span className="icon">📍</span>
-                <span>Registered in India</span>
-              </ContactItem>
-              <ContactItem>
-                <span className="icon">✉️</span>
-                <span>contact@codingbull.com</span>
-              </ContactItem>
-              <ContactItem>
-                <span className="icon">⏰</span>
-                <span>Our team responds to all inquiries within 24 hours</span>
-              </ContactItem>
-              <ContactItem>
-                <span className="icon">🌐</span>
-                <span>MCA Registration: 2025</span>
-              </ContactItem>
+            <ContactInfo variants={staggerContainer} initial="hidden" animate="visible"> {/* Stagger ContactItems */}
+              <MotionContactItem variants={fadeIn}><span className="icon">📍</span><span>Registered in India</span></MotionContactItem>
+              <MotionContactItem variants={fadeIn}><span className="icon">✉️</span><span>contact@codingbull.com</span></MotionContactItem>
+              <MotionContactItem variants={fadeIn}><span className="icon">⏰</span><span>Our team responds to all inquiries within 24 hours</span></MotionContactItem>
+              <MotionContactItem variants={fadeIn}><span className="icon">🌐</span><span>MCA Registration: 2025</span></MotionContactItem>
             </ContactInfo>
           </FooterColumn>
           
-          <FooterColumn
-            variants={slideUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
+          <FooterColumn variants={slideUp}>
             <FooterHeading>Newsletter</FooterHeading>
             <p style={{ color: '#E0E0E0', marginBottom: '1rem' }}>
               Subscribe to our newsletter for the latest updates, insights, and offers.
             </p>
             <NewsletterForm>
               <InputGroup>
-                <input 
-                  type="email" 
-                  id="footer-newsletter-email" 
-                  name="footer-newsletter-email" 
-                  placeholder="Your email address" 
-                />
-                <button type="submit">Subscribe</button>
+                <input type="email" id="footer-newsletter-email" name="footer-newsletter-email" placeholder="Your email address" />
+                <MotionSubscribeButton type="submit" whileHover={hoverScale} whileTap={{scale: 0.95}}>Subscribe</MotionSubscribeButton>
               </InputGroup>
             </NewsletterForm>
           </FooterColumn>
-        </FooterTop>
+        </MotionFooterTop>
         
-        <FooterBottom>
+        <FooterBottom> {/* This can also be animated */}
           <Copyright>
             © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | CIN: XXXX | GSTIN: YYYY | Remote-enabled team | Serving clients worldwide
           </Copyright>
-          <FooterBottomLinks>
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-service">Terms of Service</a>
-            <a href="/cookie-policy">Cookie Policy</a>
+          <FooterBottomLinks variants={staggerContainer} initial="hidden" animate="visible"> {/* Stagger links */}
+            <motion.a variants={fadeIn} href="/privacy-policy">Privacy Policy</motion.a>
+            <motion.a variants={fadeIn} href="/terms-of-service">Terms of Service</motion.a>
+            <motion.a variants={fadeIn} href="/cookie-policy">Cookie Policy</motion.a>
           </FooterBottomLinks>
         </FooterBottom>
       </FooterContent>

@@ -2,33 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { prefersReducedMotion } from '../utils/accessibility';
-import { hoverScale } from '../animations/variants';
 
 // Custom shouldForwardProp function to filter out non-DOM props
 const shouldForwardProp = prop =>
   !['variant', 'size', 'fullWidth', 'whileHover', 'whileTap'].includes(prop);
 
-// Button variants
+// Button variants using theme variables
 const VARIANTS = {
   primary: {
-    background: props => props.theme.colors.gradientPrimary,
+    background: props => props.theme.colors.buttonPrimary,
     color: props => props.theme.colors.textPrimary,
     border: 'none',
+    boxShadow: props => props.theme.shadows.buttonPrimary,
   },
   secondary: {
-    background: 'transparent',
+    background: 'rgba(0, 112, 255, 0.1)',
     color: props => props.theme.colors.electricBlue,
     border: props => `2px solid ${props.theme.colors.electricBlue}`,
+    boxShadow: props => props.theme.shadows.buttonSecondary,
   },
   outline: {
     background: 'transparent',
     color: props => props.theme.colors.textPrimary,
     border: props => `2px solid ${props.theme.colors.textPrimary}`,
+    boxShadow: props => props.theme.shadows.sm,
   },
   ghost: {
     background: 'transparent',
     color: props => props.theme.colors.electricBlue,
     border: 'none',
+    boxShadow: 'none',
   },
 };
 
@@ -56,16 +59,19 @@ const StyledButton = styled(motion.button).withConfig({
   justify-content: center;
   gap: 0.5rem;
   font-weight: 600;
+  letter-spacing: 0.5px;
   border-radius: ${props => props.theme.borderRadius.md};
   cursor: pointer;
-  transition: all ${props => props.theme.animations.fast} ease;
+  transition: all ${props => props.theme.animations.mediumBounce};
   position: relative;
   overflow: hidden;
+  z-index: 1;
 
   // Apply variant styles
   background: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].background : VARIANTS.primary.background};
   color: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].color : VARIANTS.primary.color};
   border: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].border : VARIANTS.primary.border};
+  box-shadow: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].boxShadow : '0 4px 15px rgba(106, 13, 173, 0.4)'};
 
   // Apply size styles
   padding: ${props => props.size && SIZES[props.size] ? SIZES[props.size].padding : SIZES.md.padding};
@@ -78,51 +84,101 @@ const StyledButton = styled(motion.button).withConfig({
   opacity: ${props => props.disabled ? 0.6 : 1};
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 
-  // Hover effect (when not disabled)
+  // Glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    z-index: -1;
+    background: ${props => props.variant === 'primary' 
+      ? 'linear-gradient(135deg, #9b30ff 0%, #6a0dad 50%, #9b30ff 100%)' 
+      : props.variant === 'secondary' 
+        ? 'linear-gradient(135deg, #00bfff 0%, #0070ff 50%, #00bfff 100%)'
+        : 'transparent'};
+    opacity: 0;
+    border-radius: inherit;
+    transition: opacity 0.3s ease-out;
+    filter: blur(8px);
+  }
+
+  // Hover effect (when not disabled) using theme variables
   &:hover:not(:disabled) {
-    box-shadow: ${props => props.theme.shadows.md};
+    transform: translateY(-2px);
+    box-shadow: ${props => props.variant === 'primary' 
+      ? props.theme.shadows.buttonHoverPrimary
+      : props.variant === 'secondary' 
+        ? props.theme.shadows.buttonHoverSecondary
+        : props.variant === 'outline'
+          ? '0 8px 25px rgba(255, 255, 255, 0.2)'
+          : 'none'};
+
+    &::before {
+      opacity: 0.7;
+    }
 
     ${props => props.variant === 'primary' && `
-      background: ${props.theme.colors.gradientSecondary};
+      background: ${props.theme.colors.buttonHoverPrimary};
     `}
 
     ${props => props.variant === 'secondary' && `
-      background: ${props.theme.colors.electricBlue};
-      color: ${props.theme.colors.textPrimary};
+      background: rgba(0, 112, 255, 0.2);
+      color: ${props.theme.colors.neonCyan};
+      border-color: ${props.theme.colors.neonCyan};
     `}
 
     ${props => props.variant === 'outline' && `
-      background: rgba(255, 255, 255, 0.1);
+      background: ${props.theme.colors.overlayLight};
     `}
 
     ${props => props.variant === 'ghost' && `
-      background: rgba(0, 191, 255, 0.1);
+      background: rgba(0, 191, 255, 0.15);
+      text-shadow: ${props.theme.colors.glowBlue};
     `}
   }
 
-  // Focus state
+  // Focus state using theme variables
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3), 
+                ${props => props.variant === 'primary' 
+                  ? props.theme.shadows.buttonHoverPrimary
+                  : props.variant === 'secondary' 
+                    ? props.theme.shadows.buttonHoverSecondary
+                    : '0 8px 25px rgba(255, 255, 255, 0.2)'};
   }
 
-  // Active state
+  // Active state using theme variables
   &:active:not(:disabled) {
     transform: translateY(1px);
+    box-shadow: ${props => props.variant === 'primary' 
+      ? props.theme.shadows.buttonPrimary
+      : props.variant === 'secondary' 
+        ? props.theme.shadows.buttonSecondary
+        : props.variant === 'outline'
+          ? props.theme.shadows.sm
+          : 'none'};
   }
 
-  // Ripple effect
+  // Enhanced ripple effect using theme variables
   .ripple {
     position: absolute;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
+    background: ${props => props.variant === 'primary' 
+      ? 'rgba(155, 48, 255, 0.5)' 
+      : props.variant === 'secondary' 
+        ? 'rgba(0, 191, 255, 0.5)'
+        : 'rgba(255, 255, 255, 0.5)'};
     transform: scale(0);
-    animation: ripple 0.6s linear;
+    animation: ripple 0.8s ${props => props.theme.animations.bounce};
+    pointer-events: none;
   }
 
   @keyframes ripple {
     to {
-      transform: scale(4);
+      transform: scale(5);
       opacity: 0;
     }
   }
@@ -190,10 +246,37 @@ const Button = ({
   // Filter out custom props that shouldn't be passed to DOM elements
   const { whileHover, whileTap, ...buttonProps } = props;
 
-  // Create motion props object to avoid passing them directly to DOM
+  // Create enhanced motion props object with more dynamic animations
   const motionProps = !disabled && !loading && !reducedMotion ? {
-    whileHover: hoverScale,
-    whileTap: { scale: 0.98 }
+    whileHover: { 
+      scale: 1.05,
+      y: -3,
+      transition: { 
+        type: "spring", 
+        stiffness: 400, 
+        damping: 10 
+      }
+    },
+    whileTap: { 
+      scale: 0.95, 
+      y: 2,
+      transition: { 
+        type: "spring", 
+        stiffness: 500, 
+        damping: 15 
+      }
+    },
+    initial: { 
+      y: 0,
+      scale: 1
+    },
+    animate: { 
+      y: [0, -3, 0],
+      transition: {
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    }
   } : {};
 
   return (

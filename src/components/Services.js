@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { slideUp, staggerContainer } from '../animations/variants';
+import { slideUp, staggerContainer, fadeIn } from '../animations/variants'; // Added fadeIn
+import Button from './Button'; // Import the Button component
 
 // Services section container
 const ServicesContainer = styled.section`
@@ -164,13 +165,13 @@ const ServiceDescription = styled.p`
 `;
 
 // Service features list
-const ServiceFeatures = styled.ul`
+const ServiceFeaturesList = styled(motion.ul)` // Renamed and made motion component
   list-style: none;
   margin-top: 1.5rem;
 `;
 
 // Service feature item
-const ServiceFeature = styled.li`
+const ServiceFeatureItem = styled(motion.li)` // Renamed and made motion component
   display: flex;
   align-items: center;
   margin-bottom: 0.75rem;
@@ -333,11 +334,11 @@ const Services = () => {
               </ServiceIcon>
               <ServiceTitle>{service.title}</ServiceTitle>
               <ServiceDescription>{service.description}</ServiceDescription>
-              <ServiceFeatures>
+              <ServiceFeaturesList variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
                 {service.features.map((feature, i) => (
-                  <ServiceFeature key={i}>{feature}</ServiceFeature>
+                  <ServiceFeatureItem key={i} variants={fadeIn}>{feature}</ServiceFeatureItem>
                 ))}
-              </ServiceFeatures>
+              </ServiceFeaturesList>
               
               <TechStackLabel>
                 <h4>Technology Stack</h4>
@@ -351,23 +352,13 @@ const Services = () => {
               )}
               
               <CTAWrapper>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{
-                    background: 'transparent',
-                    color: '#00BFFF',
-                    border: '2px solid #00BFFF',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontSize: '0.875rem'
-                  }}
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
                 >
                   Discuss Your Project
-                </motion.button>
+                </Button>
               </CTAWrapper>
             </ServiceCard>
           ))}

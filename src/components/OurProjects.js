@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { slideInLeft, slideInRight } from '../animations/variants';
+import { slideInLeft, slideInRight, staggerContainer, fadeIn, slideUp } from '../animations/variants'; // Removed hoverScale
 import Button from './Button';
 
 // Projects section container
@@ -103,7 +103,7 @@ const ProjectImage = styled(motion.div)`
 `;
 
 // Project content
-const ProjectContent = styled(motion.div)`
+const ProjectContentWrapper = styled(motion.div)` // Renamed to avoid conflict if ProjectContent was already a motion component
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -111,7 +111,7 @@ const ProjectContent = styled(motion.div)`
 `;
 
 // Challenge and solution section
-const ChallengeSection = styled.div`
+const MotionChallengeSection = styled(motion.div)` // Made motion component
   margin-top: 1rem;
   
   h4 {
@@ -127,7 +127,7 @@ const ChallengeSection = styled.div`
 `;
 
 // Tech used tag
-const TechUsedTag = styled.div`
+const MotionTechUsedTag = styled(motion.div)` // Made motion component
   display: inline-block;
   background: rgba(106, 13, 173, 0.2);
   border: 1px solid rgba(106, 13, 173, 0.5);
@@ -139,7 +139,7 @@ const TechUsedTag = styled.div`
 `;
 
 // Client quote
-const ClientQuote = styled.blockquote`
+const MotionClientQuote = styled(motion.blockquote)` // Made motion component
   margin-top: 1.5rem;
   padding: 1.5rem;
   background: rgba(0, 0, 0, 0.2);
@@ -160,7 +160,7 @@ const ClientQuote = styled.blockquote`
 `;
 
 // Project category
-const ProjectCategory = styled.span`
+const MotionProjectCategory = styled(motion.span)` // Made motion component
   display: inline-block;
   padding: 0.5rem 1rem;
   background: ${props => props.theme.colors.deepPurple};
@@ -174,13 +174,13 @@ const ProjectCategory = styled.span`
 `;
 
 // Project title
-const ProjectTitle = styled.h3`
+const MotionProjectTitle = styled(motion.h3)` // Made motion component
   font-size: ${props => props.theme.fontSizes['2xl']};
   margin-bottom: 0.5rem;
 `;
 
 // Project description
-const ProjectDescription = styled.p`
+const MotionProjectDescription = styled(motion.p)` // Made motion component
   color: ${props => props.theme.colors.textSecondary};
   margin-bottom: 1rem;
 `;
@@ -194,7 +194,7 @@ const ProjectNav = styled.div`
 `;
 
 // Nav dot
-const NavDot = styled.button`
+const MotionNavDot = styled(motion.button)` // Made motion component
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -341,67 +341,77 @@ const OurProjects = () => {
                 </div>
               </ProjectImage>
               
-              <ProjectContent
-                variants={currentIndex % 2 !== 0 ? slideInLeft : slideInRight}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+              <ProjectContentWrapper
+                variants={staggerContainer} // Apply staggerContainer here
+                initial="hidden" // Initial for stagger is hidden
+                animate="visible" // Animate to visible when parent (ProjectItem) is in view or animates
+                // We will apply whileInView to ProjectItem if needed, for now, this animates with ProjectItem
               >
-                <ProjectCategory>{currentProject.category}</ProjectCategory>
-                <ProjectTitle>{currentProject.title}</ProjectTitle>
-                <ProjectDescription>Client: {currentProject.client}</ProjectDescription>
+                <MotionProjectCategory variants={fadeIn}>{currentProject.category}</MotionProjectCategory>
+                <MotionProjectTitle variants={fadeIn}>{currentProject.title}</MotionProjectTitle>
+                <MotionProjectDescription variants={fadeIn}>Client: {currentProject.client}</MotionProjectDescription>
                 
-                <ChallengeSection>
+                <MotionChallengeSection variants={slideUp}>
                   <h4>Challenge</h4>
                   <p>{currentProject.challenge}</p>
-                </ChallengeSection>
+                </MotionChallengeSection>
                 
-                <ChallengeSection>
+                <MotionChallengeSection variants={slideUp}>
                   <h4>Solution</h4>
                   <p>{currentProject.solution}</p>
-                </ChallengeSection>
+                </MotionChallengeSection>
                 
-                <ChallengeSection>
+                <MotionChallengeSection variants={slideUp}>
                   <h4>Outcome</h4>
                   <p>{currentProject.outcome}</p>
-                </ChallengeSection>
+                </MotionChallengeSection>
                 
-                <TechUsedTag>
+                <MotionTechUsedTag variants={fadeIn}>
                   <strong>Tech Used:</strong> {currentProject.techUsed}
-                </TechUsedTag>
+                </MotionTechUsedTag>
                 
-                <ClientQuote>
+                <MotionClientQuote variants={fadeIn}>
                   {currentProject.testimonial.quote}
                   <div style={{ marginTop: '1rem', textAlign: 'right', fontStyle: 'normal' }}>
                     — {currentProject.testimonial.author}, {currentProject.testimonial.title}, {currentProject.testimonial.company}
                   </div>
-                </ClientQuote>
+                </MotionClientQuote>
                 
-                <Link to={`/our-projects?id=${currentProject.id}`}>
-                  <Button variant="primary">View Project Details</Button>
-                </Link>
-              </ProjectContent>
+                <motion.div variants={fadeIn}> {/* Wrapper for the Link/Button to be part of stagger */}
+                  <Link to={`/our-projects?id=${currentProject.id}`}>
+                    <Button variant="primary">View Project Details</Button>
+                  </Link>
+                </motion.div>
+              </ProjectContentWrapper>
             </ProjectItem>
           </AnimatePresence>
         </ProjectShowcase>
         
         <ProjectNav>
           {projects.map((project, index) => (
-            <NavDot 
+            <MotionNavDot
               key={project.id}
               $active={index === currentIndex}
               onClick={() => handleNavClick(index)}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
             />
           ))}
         </ProjectNav>
         
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '3rem',
-          padding: '2rem',
-          background: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: '0.5rem'
-        }}>
+        <motion.div // Animate the CTA section
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          style={{
+            textAlign: 'center',
+            marginTop: '3rem',
+            padding: '2rem',
+            background: 'rgba(0, 0, 0, 0.2)',
+            borderRadius: '0.5rem'
+          }}
+        >
           <h3 style={{ 
             marginBottom: '1rem',
             fontSize: '1.5rem'
@@ -415,7 +425,7 @@ const OurProjects = () => {
           >
             Get in Touch
           </Button>
-        </div>
+        </motion.div>
       </ProjectsContent>
     </ProjectsContainer>
   );
