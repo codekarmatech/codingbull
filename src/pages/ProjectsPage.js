@@ -1,33 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import Hero from '../components/Hero';
-import Services from '../components/Services';
-import OurProjects from '../components/OurProjects';
-import TechStack from '../components/TechStack';
-import Footer from '../components/Footer';
 import { pageTransition } from '../animations/variants';
+import OurProjects from '../components/OurProjects';
+import Footer from '../components/Footer';
 
 // Page container
 const PageContainer = styled(motion.div)`
   min-height: 100vh;
+  background: ${props => props.theme.colors.darkGrey};
 `;
 
-const HomePage = () => {
+// Page content
+const PageContent = styled.div`
+  padding-top: 80px; // Account for fixed navbar
+`;
+
+const ProjectsPage = () => {
   return (
     <PageContainer
-      variants={pageTransition}
       initial="initial"
       animate="animate"
       exit="exit"
+      variants={pageTransition}
     >
-      <Hero />
-      <Services />
-      <TechStack />
-      <OurProjects />
-      <Footer />
+      <PageContent>
+        <OurProjects />
+        <Footer />
+      </PageContent>
     </PageContainer>
   );
 };
 
-export default HomePage;
+export default ProjectsPage;

@@ -636,8 +636,8 @@ const AboutPage = () => {
   const stats = [
     { value: '1', label: 'Year Experience' },
     { value: '5+', label: 'Projects Completed' },
-    { value: '1', label: 'Team Member' },
-    { value: '2+', label: 'Services Offered' }
+    { value: '7+', label: 'Services Offered' },
+    { value: '3', label: 'Core Technologies' }
   ];
   
   // Company timeline
@@ -668,8 +668,8 @@ const AboutPage = () => {
   const team = [
     {
       name: 'Pranshu Dixit',
-      position: 'Founder & Director',
-      bio: 'With a passion for technology and innovation, Pranshu founded CodingBull in 2025 to deliver cutting-edge digital solutions that help businesses thrive in the digital age.',
+      position: 'Founder & CEO',
+      bio: 'With a passion for technology and innovation, Pranshu founded CodingBull in 2025 to build a team of experts delivering cutting-edge digital solutions that help businesses thrive.',
       image: 'https://placehold.co/300x400'
     }
   ];
@@ -739,7 +739,7 @@ const AboutPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              CodingBull is a technology startup founded in 2025 by Pranshu Dixit, specializing in innovative digital solutions for businesses. As a solo founder with a passion for technology, we focus on delivering high-quality, customized web development and digital transformation services.
+              CodingBull is a technology company founded in 2025 by Pranshu Dixit, specializing in innovative digital solutions for businesses. As a team, we focus on delivering high-quality, customized web development and digital transformation services to help businesses thrive in the digital era.
             </HeroDescription>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

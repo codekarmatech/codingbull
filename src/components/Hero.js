@@ -231,19 +231,19 @@ const Hero = () => {
           <Headline
             variants={textReveal}
           >
-            Founded in 2025 by Pranshu Dixit — <span>CodingBull Technovations Pvt Ltd</span>
+            Established in 2025 by Pranshu Dixit — <span>CodingBull Technovations Pvt Ltd</span>
           </Headline>
           
           <Subheadline
             variants={fadeIn}
           >
-            Founded in 2025 by Pranshu Dixit, full-stack innovation with Django, React, Node.js & more—solutions for Gujju-Masla, Physioway & Harsh Patel. Full-Stack Development, Digital Transformation, Cyber Security, AI and Machine Learning.
+            Established in 2025 by Pranshu Dixit, CodingBull Technovations is powered by a team of full-stack experts in Django, React & beyond. Our team builds solutions for brands like Gujju-Masla, Physioway & Harsh Patel. Full-Stack Development, Digital Transformation, Cyber Security, AI and Machine Learning.
           </Subheadline>
           
           <ButtonGroup
             variants={fadeIn}
           >
-            <Button variant="primary" size="lg" onClick={() => document.getElementById('case-studies').scrollIntoView({ behavior: 'smooth' })}>See Our Case Studies</Button>
+            <Button variant="primary" size="lg" onClick={() => document.getElementById('our-projects').scrollIntoView({ behavior: 'smooth' })}>View Our Projects</Button>
             <Button variant="secondary" size="lg" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>View Services</Button>
           </ButtonGroup>
           

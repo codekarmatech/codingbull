@@ -337,65 +337,328 @@ const TechStack = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.3 }}
         >
-          <VisualizationTitle>How Our Tech Stack Interconnects</VisualizationTitle>
+          <VisualizationTitle>Our Integrated Technology Ecosystem</VisualizationTitle>
+          
           <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '2rem',
-            textAlign: 'center'
+            textAlign: 'center', 
+            marginBottom: '3rem',
+            color: '#E0E0E0',
+            maxWidth: '800px',
+            margin: '0 auto 3rem'
           }}>
-            <div style={{ flex: '1 1 200px', minWidth: '200px' }}>
-              <h4 style={{ color: '#00BFFF', marginBottom: '1rem' }}>Frontend</h4>
-              <p style={{ color: '#E0E0E0' }}>React, Redux, Tailwind CSS</p>
-              <div style={{ fontSize: '2rem', margin: '1rem 0' }}>⚛️</div>
-              <p style={{ color: '#AAAAAA', fontSize: '0.9rem' }}>User interfaces & experiences</p>
-            </div>
-            
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              color: '#AAAAAA',
-              margin: '0 1rem'
-            }}>
-              ⟷
-            </div>
-            
-            <div style={{ flex: '1 1 200px', minWidth: '200px' }}>
-              <h4 style={{ color: '#9C27B0', marginBottom: '1rem' }}>Backend</h4>
-              <p style={{ color: '#E0E0E0' }}>Django, Node.js, Express</p>
-              <div style={{ fontSize: '2rem', margin: '1rem 0' }}>🔧</div>
-              <p style={{ color: '#AAAAAA', fontSize: '0.9rem' }}>APIs & business logic</p>
-            </div>
-            
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              color: '#AAAAAA',
-              margin: '0 1rem'
-            }}>
-              ⟷
-            </div>
-            
-            <div style={{ flex: '1 1 200px', minWidth: '200px' }}>
-              <h4 style={{ color: '#4CAF50', marginBottom: '1rem' }}>Database</h4>
-              <p style={{ color: '#E0E0E0' }}>MongoDB, PostgreSQL</p>
-              <div style={{ fontSize: '2rem', margin: '1rem 0' }}>💾</div>
-              <p style={{ color: '#AAAAAA', fontSize: '0.9rem' }}>Data storage & retrieval</p>
-            </div>
+            <p>At CodingBull, we've architected a seamless technology ecosystem where each layer communicates efficiently with others, creating robust, scalable, and maintainable solutions. Our stack isn't just a collection of technologies—it's a carefully orchestrated symphony of tools working in perfect harmony.</p>
           </div>
           
           <div style={{ 
-            marginTop: '3rem', 
-            padding: '1.5rem',
-            background: 'rgba(0, 0, 0, 0.2)',
-            borderRadius: '8px',
-            textAlign: 'center'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '2.5rem',
+            position: 'relative'
           }}>
-            <h4 style={{ color: '#FF9800', marginBottom: '1rem' }}>DevOps & Deployment</h4>
-            <p style={{ color: '#E0E0E0' }}>Docker, GitHub Actions, AWS/Azure</p>
-            <div style={{ fontSize: '2rem', margin: '1rem 0' }}>🚀</div>
-            <p style={{ color: '#AAAAAA', fontSize: '0.9rem' }}>Continuous integration, delivery & cloud infrastructure</p>
+            {/* Frontend Layer */}
+            <div style={{ 
+              background: 'linear-gradient(145deg, rgba(0, 191, 255, 0.1), rgba(0, 191, 255, 0.05))',
+              borderRadius: '12px',
+              padding: '2rem',
+              border: '1px solid rgba(0, 191, 255, 0.2)',
+              position: 'relative',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+            }}>
+              <div style={{ 
+                position: 'absolute', 
+                top: '-15px', 
+                left: '20px', 
+                background: '#00BFFF', 
+                padding: '5px 15px',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: 'bold'
+              }}>
+                CLIENT LAYER
+              </div>
+              <h4 style={{ color: '#00BFFF', marginBottom: '1.5rem', fontSize: '1.3rem' }}>Frontend Architecture</h4>
+              
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>⚛️</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>React + TypeScript</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Component-based UI architecture with type safety</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔄</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Redux Toolkit + RTK Query</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Centralized state management with optimized API requests</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🎨</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Tailwind CSS + Framer Motion</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Utility-first styling with fluid animations</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1rem', 
+                borderRadius: '8px',
+                fontSize: '0.9rem'
+              }}>
+                <p style={{ color: '#E0E0E0', fontStyle: 'italic' }}>
+                  "Our frontend architecture prioritizes component reusability, type safety, and performance optimization through code splitting and lazy loading."
+                </p>
+              </div>
+            </div>
+            
+            {/* Backend Layer */}
+            <div style={{ 
+              background: 'linear-gradient(145deg, rgba(156, 39, 176, 0.1), rgba(156, 39, 176, 0.05))',
+              borderRadius: '12px',
+              padding: '2rem',
+              border: '1px solid rgba(156, 39, 176, 0.2)',
+              position: 'relative',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+            }}>
+              <div style={{ 
+                position: 'absolute', 
+                top: '-15px', 
+                left: '20px', 
+                background: '#9C27B0', 
+                padding: '5px 15px',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: 'bold'
+              }}>
+                SERVICE LAYER
+              </div>
+              <h4 style={{ color: '#9C27B0', marginBottom: '1.5rem', fontSize: '1.3rem' }}>Backend Infrastructure</h4>
+              
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🐍</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Django + DRF</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Robust ORM with RESTful API capabilities</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>�</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Node.js + Express</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Event-driven architecture for real-time applications</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔐</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>JWT + OAuth2</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Secure authentication and authorization flows</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1rem', 
+                borderRadius: '8px',
+                fontSize: '0.9rem'
+              }}>
+                <p style={{ color: '#E0E0E0', fontStyle: 'italic' }}>
+                  "Our microservices architecture enables independent scaling and deployment, with comprehensive API documentation via Swagger/OpenAPI."
+                </p>
+              </div>
+            </div>
+            
+            {/* Data Layer */}
+            <div style={{ 
+              background: 'linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05))',
+              borderRadius: '12px',
+              padding: '2rem',
+              border: '1px solid rgba(76, 175, 80, 0.2)',
+              position: 'relative',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+            }}>
+              <div style={{ 
+                position: 'absolute', 
+                top: '-15px', 
+                left: '20px', 
+                background: '#4CAF50', 
+                padding: '5px 15px',
+                borderRadius: '20px',
+                fontSize: '0.8rem',
+                fontWeight: 'bold'
+              }}>
+                DATA LAYER
+              </div>
+              <h4 style={{ color: '#4CAF50', marginBottom: '1.5rem', fontSize: '1.3rem' }}>Data Management</h4>
+              
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🐘</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>PostgreSQL + TimescaleDB</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Relational data with time-series capabilities</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🍃</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>MongoDB + Mongoose</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Document-oriented storage with schema validation</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔴</span>
+                  <div>
+                    <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Redis + Elasticsearch</p>
+                    <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Caching and full-text search capabilities</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1rem', 
+                borderRadius: '8px',
+                fontSize: '0.9rem'
+              }}>
+                <p style={{ color: '#E0E0E0', fontStyle: 'italic' }}>
+                  "Our polyglot persistence approach selects the optimal database technology for each specific data access pattern and requirement."
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* DevOps & Infrastructure */}
+          <div style={{ 
+            marginTop: '3.5rem', 
+            background: 'linear-gradient(145deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05))',
+            borderRadius: '12px',
+            padding: '2rem',
+            border: '1px solid rgba(255, 152, 0, 0.2)',
+            position: 'relative',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ 
+              position: 'absolute', 
+              top: '-15px', 
+              left: '20px', 
+              background: '#FF9800', 
+              padding: '5px 15px',
+              borderRadius: '20px',
+              fontSize: '0.8rem',
+              fontWeight: 'bold'
+            }}>
+              INFRASTRUCTURE LAYER
+            </div>
+            
+            <h4 style={{ color: '#FF9800', marginBottom: '1.5rem', fontSize: '1.3rem' }}>DevOps & Cloud Infrastructure</h4>
+            
+            <div style={{ 
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1.5rem'
+            }}>
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1.2rem', 
+                borderRadius: '8px',
+                height: '100%'
+              }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>🐳</div>
+                <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Containerization</h5>
+                <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Docker + Docker Compose for consistent environments across development and production</p>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1.2rem', 
+                borderRadius: '8px',
+                height: '100%'
+              }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>⚙️</div>
+                <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>CI/CD Pipeline</h5>
+                <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>GitHub Actions + Jenkins for automated testing, building, and deployment workflows</p>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1.2rem', 
+                borderRadius: '8px',
+                height: '100%'
+              }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>☁️</div>
+                <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Cloud Services</h5>
+                <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>AWS/Azure with Infrastructure as Code (Terraform) for scalable and reproducible environments</p>
+              </div>
+              
+              <div style={{ 
+                background: 'rgba(0, 0, 0, 0.2)', 
+                padding: '1.2rem', 
+                borderRadius: '8px',
+                height: '100%'
+              }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>�</div>
+                <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Monitoring & Logging</h5>
+                <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Prometheus + Grafana for metrics and ELK Stack for centralized logging and analysis</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Integration Diagram */}
+          <div style={{ 
+            marginTop: '3.5rem',
+            textAlign: 'center',
+            padding: '2rem',
+            background: 'rgba(0, 0, 0, 0.2)',
+            borderRadius: '12px',
+          }}>
+            <h4 style={{ color: '#E0E0E0', marginBottom: '1.5rem' }}>Full-Stack Integration</h4>
+            <p style={{ color: '#AAAAAA', marginBottom: '2rem' }}>Our technology stack is designed for seamless data flow and communication between all layers</p>
+            
+            <div style={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem'
+            }}>
+              <div style={{ color: '#00BFFF', fontWeight: 'bold' }}>Client Layer (React, Redux)</div>
+              <div style={{ fontSize: '1.5rem' }}>↕️</div>
+              <div style={{ color: '#9C27B0', fontWeight: 'bold' }}>Service Layer (Django, Node.js)</div>
+              <div style={{ fontSize: '1.5rem' }}>↕️</div>
+              <div style={{ color: '#4CAF50', fontWeight: 'bold' }}>Data Layer (PostgreSQL, MongoDB)</div>
+            </div>
+            
+            <div style={{ 
+              position: 'relative',
+              marginTop: '2rem',
+              padding: '1rem',
+              border: '1px dashed rgba(255, 152, 0, 0.5)',
+              borderRadius: '8px'
+            }}>
+              <div style={{ 
+                position: 'absolute',
+                top: '-12px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: '#121212',
+                padding: '0 10px',
+                color: '#FF9800'
+              }}>
+                Supported By
+              </div>
+              <div style={{ color: '#FF9800', fontWeight: 'bold' }}>Infrastructure Layer (Docker, CI/CD, Cloud Services)</div>
+            </div>
           </div>
         </TechVisualization>
         

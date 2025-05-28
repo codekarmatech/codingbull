@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { slideInLeft, slideInRight } from '../animations/variants';
 import Button from './Button';
 
-// Case studies section container
-const CaseStudiesContainer = styled.section`
+// Projects section container
+const ProjectsContainer = styled.section`
   padding: 6rem 2rem;
   background: ${props => props.theme.colors.mediumGrey};
   position: relative;
@@ -13,7 +13,7 @@ const CaseStudiesContainer = styled.section`
 `;
 
 // Content wrapper
-const CaseStudiesContent = styled.div`
+const ProjectsContent = styled.div`
   max-width: 1400px;
   margin: 0 auto;
 `;
@@ -51,15 +51,15 @@ const SectionDescription = styled(motion.p)`
   margin: 0 auto;
 `;
 
-// Case study showcase
-const CaseStudyShowcase = styled.div`
+// Project showcase
+const ProjectShowcase = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3rem;
 `;
 
-// Case study item
-const CaseStudyItem = styled(motion.div)`
+// Project item
+const ProjectItem = styled(motion.div)`
   display: flex;
   align-items: center;
   gap: 3rem;
@@ -70,8 +70,8 @@ const CaseStudyItem = styled(motion.div)`
   }
 `;
 
-// Case study image
-const CaseStudyImage = styled(motion.div)`
+// Project image
+const ProjectImage = styled(motion.div)`
   flex: 1;
   border-radius: ${props => props.theme.borderRadius.lg};
   overflow: hidden;
@@ -101,8 +101,8 @@ const CaseStudyImage = styled(motion.div)`
   }
 `;
 
-// Case study content
-const CaseStudyContent = styled(motion.div)`
+// Project content
+const ProjectContent = styled(motion.div)`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -158,8 +158,8 @@ const ClientQuote = styled.blockquote`
   }
 `;
 
-// Case study category
-const CaseStudyCategory = styled.span`
+// Project category
+const ProjectCategory = styled.span`
   display: inline-block;
   padding: 0.5rem 1rem;
   background: ${props => props.theme.colors.deepPurple};
@@ -172,23 +172,20 @@ const CaseStudyCategory = styled.span`
   margin-bottom: 0.5rem;
 `;
 
-// Case study title
-const CaseStudyTitle = styled.h3`
+// Project title
+const ProjectTitle = styled.h3`
   font-size: ${props => props.theme.fontSizes['2xl']};
   margin-bottom: 0.5rem;
 `;
 
-// Case study description
-const CaseStudyDescription = styled.p`
+// Project description
+const ProjectDescription = styled.p`
   color: ${props => props.theme.colors.textSecondary};
   margin-bottom: 1rem;
 `;
 
-// Note: CaseStudyStats and Stat components were removed as they're no longer used
-// in the current implementation of the case studies display
-
-// Case study navigation
-const CaseStudyNav = styled.div`
+// Project navigation
+const ProjectNav = styled.div`
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -219,12 +216,12 @@ const NavDot = styled.button.withConfig({
   }
 `;
 
-const CaseStudies = () => {
-  // State for current case study
+const OurProjects = () => {
+  // State for current project
   const [currentIndex, setCurrentIndex] = useState(0);
   
-  // Case studies data
-  const caseStudies = [
+  // Projects data
+  const projects = [
     {
       id: 1,
       title: "Gujju-Masla E-commerce Platform",
@@ -281,8 +278,8 @@ const CaseStudies = () => {
     }
   ];
   
-  // Get current case study
-  const currentCaseStudy = caseStudies[currentIndex];
+  // Get current project
+  const currentProject = projects[currentIndex];
   
   // Handle navigation
   const handleNavClick = (index) => {
@@ -290,8 +287,8 @@ const CaseStudies = () => {
   };
   
   return (
-    <CaseStudiesContainer id="our-projects">
-      <CaseStudiesContent>
+    <ProjectsContainer id="our-projects">
+      <ProjectsContent>
         <SectionHeader>
           <SectionTitle
             initial={{ opacity: 0, y: 20 }}
@@ -311,17 +308,17 @@ const CaseStudies = () => {
           </SectionDescription>
         </SectionHeader>
         
-        <CaseStudyShowcase>
+        <ProjectShowcase>
           <AnimatePresence mode="wait">
-            <CaseStudyItem 
-              key={currentCaseStudy.id}
+            <ProjectItem 
+              key={currentProject.id}
               $reverse={currentIndex % 2 !== 0}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <CaseStudyImage
+              <ProjectImage
                 variants={currentIndex % 2 === 0 ? slideInLeft : slideInRight}
                 initial="hidden"
                 whileInView="visible"
@@ -337,8 +334,8 @@ const CaseStudies = () => {
                   padding: '2rem'
                 }}>
                   <img 
-                    src={currentCaseStudy.logo} 
-                    alt={`${currentCaseStudy.client} logo`} 
+                    src={currentProject.logo} 
+                    alt={`${currentProject.client} logo`} 
                     style={{ 
                       maxWidth: '100%', 
                       maxHeight: '100%', 
@@ -346,59 +343,59 @@ const CaseStudies = () => {
                     }} 
                   />
                 </div>
-              </CaseStudyImage>
+              </ProjectImage>
               
-              <CaseStudyContent
+              <ProjectContent
                 variants={currentIndex % 2 !== 0 ? slideInLeft : slideInRight}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <CaseStudyCategory>{currentCaseStudy.category}</CaseStudyCategory>
-                <CaseStudyTitle>{currentCaseStudy.title}</CaseStudyTitle>
-                <CaseStudyDescription>Client: {currentCaseStudy.client}</CaseStudyDescription>
+                <ProjectCategory>{currentProject.category}</ProjectCategory>
+                <ProjectTitle>{currentProject.title}</ProjectTitle>
+                <ProjectDescription>Client: {currentProject.client}</ProjectDescription>
                 
                 <ChallengeSection>
                   <h4>Challenge</h4>
-                  <p>{currentCaseStudy.challenge}</p>
+                  <p>{currentProject.challenge}</p>
                 </ChallengeSection>
                 
                 <ChallengeSection>
                   <h4>Solution</h4>
-                  <p>{currentCaseStudy.solution}</p>
+                  <p>{currentProject.solution}</p>
                 </ChallengeSection>
                 
                 <ChallengeSection>
                   <h4>Outcome</h4>
-                  <p>{currentCaseStudy.outcome}</p>
+                  <p>{currentProject.outcome}</p>
                 </ChallengeSection>
                 
                 <TechUsedTag>
-                  <strong>Tech Used:</strong> {currentCaseStudy.techUsed}
+                  <strong>Tech Used:</strong> {currentProject.techUsed}
                 </TechUsedTag>
                 
                 <ClientQuote>
-                  {currentCaseStudy.testimonial.quote}
+                  {currentProject.testimonial.quote}
                   <div style={{ marginTop: '1rem', textAlign: 'right', fontStyle: 'normal' }}>
-                    — {currentCaseStudy.testimonial.author}, {currentCaseStudy.testimonial.title}, {currentCaseStudy.testimonial.company}
+                    — {currentProject.testimonial.author}, {currentProject.testimonial.title}, {currentProject.testimonial.company}
                   </div>
                 </ClientQuote>
                 
-                <Button variant="primary">View Full Case Study</Button>
-              </CaseStudyContent>
-            </CaseStudyItem>
+                <Button variant="primary">View Project Details</Button>
+              </ProjectContent>
+            </ProjectItem>
           </AnimatePresence>
-        </CaseStudyShowcase>
+        </ProjectShowcase>
         
-        <CaseStudyNav>
-          {caseStudies.map((study, index) => (
+        <ProjectNav>
+          {projects.map((project, index) => (
             <NavDot 
-              key={study.id}
+              key={project.id}
               active={index === currentIndex}
               onClick={() => handleNavClick(index)}
             />
           ))}
-        </CaseStudyNav>
+        </ProjectNav>
         
         <div style={{ 
           textAlign: 'center', 
@@ -418,12 +415,12 @@ const CaseStudies = () => {
             size="lg" 
             onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
           >
-            Discuss Your Project
+            Get in Touch
           </Button>
         </div>
-      </CaseStudiesContent>
-    </CaseStudiesContainer>
+      </ProjectsContent>
+    </ProjectsContainer>
   );
 };
 
-export default CaseStudies;
+export default OurProjects;

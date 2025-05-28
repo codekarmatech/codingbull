@@ -133,17 +133,18 @@ const TestimonialAuthor = styled.div`
 
 // Author image
 const AuthorImage = styled.div`
-  width: 80px;
+  width: 100px;
   height: 80px;
-  border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1rem;
-  border: 3px solid ${props => props.theme.colors.electricBlue};
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 `;
 
@@ -303,16 +304,17 @@ const CardAuthor = styled.div`
 
 // Card author image
 const CardAuthorImage = styled.div`
-  width: 50px;
+  width: 70px;
   height: 50px;
-  border-radius: 50%;
   overflow: hidden;
-  border: 2px solid ${props => props.theme.colors.electricBlue};
+  padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
   
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 `;
 
@@ -380,51 +382,27 @@ const Testimonials = () => {
   const testimonials = [
     {
       id: 1,
-      quote: "CodingBull transformed our outdated systems into a modern, scalable platform that has significantly improved our operational efficiency. Their team's expertise and dedication to our project exceeded our expectations.",
-      author: "Jennifer Martinez",
-      title: "CTO",
-      company: "HealthTech Solutions",
-      image: "https://placehold.co/150"
+      quote: "Hiring CodingBull was a game-changer for our business. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
+      author: "Deep Varma",
+      title: "Managing Director",
+      company: "Gujju-Masla",
+      image: "/logos/gujju-masla.png"
     },
     {
       id: 2,
-      quote: "Working with CodingBull on our e-commerce platform was a game-changer for our business. They delivered a solution that not only met our immediate needs but was built with future growth in mind.",
-      author: "Michael Chang",
-      title: "Director of Digital",
-      company: "Global Retail Inc.",
-      image: "https://placehold.co/150"
+      quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
+      author: "Dr. Rajavi Dixit",
+      title: "Founder & CEO",
+      company: "Physioway",
+      image: "/logos/physioway.png"
     },
     {
       id: 3,
-      quote: "The AI-powered analytics dashboard CodingBull developed has given us unprecedented insights into our customer behavior. Their team took the time to understand our business challenges and delivered a solution that directly addressed them.",
-      author: "Sarah Johnson",
-      title: "Head of Customer Experience",
-      company: "DataDrive Analytics",
-      image: "https://placehold.co/150"
-    },
-    {
-      id: 4,
-      quote: "CodingBull's expertise in cloud migration saved us months of downtime and potential data loss. Their methodical approach and clear communication throughout the project made a complex process manageable.",
-      author: "Robert Williams",
-      title: "IT Director",
-      company: "Enterprise Solutions Ltd.",
-      image: "https://placehold.co/150"
-    },
-    {
-      id: 5,
-      quote: "We approached CodingBull with a challenging mobile app concept, and they delivered beyond our expectations. Their development process was transparent, and they were responsive to our feedback at every stage.",
-      author: "Lisa Chen",
-      title: "Product Manager",
-      company: "MobileFirst Technologies",
-      image: "https://placehold.co/150"
-    },
-    {
-      id: 6,
-      quote: "The custom CRM solution developed by CodingBull has streamlined our sales process and improved our team's productivity by over 40%. Their ongoing support has been exceptional.",
-      author: "David Patel",
-      title: "Sales Director",
-      company: "Growth Ventures",
-      image: "https://placehold.co/150"
+      quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
+      author: "Harsh Patel",
+      title: "CEO",
+      company: "Harsh Patel Enterprises",
+      image: "/logos/harsh-patel.png"
     }
   ];
   
@@ -470,7 +448,7 @@ const Testimonials = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            Client Testimonials
+            What Our Clients Say
           </SectionTitle>
           <SectionDescription
             variants={fadeIn}
@@ -479,7 +457,7 @@ const Testimonials = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Don't just take our word for it. Here's what our clients have to say about working with CodingBull.
+            Hear from our clients about working with the CodingBull team:
           </SectionDescription>
         </SectionHeader>
         
@@ -513,7 +491,7 @@ const Testimonials = () => {
                 </TestimonialQuote>
                 <TestimonialAuthor>
                   <AuthorImage>
-                    <img src={currentTestimonial.image} alt={currentTestimonial.author} />
+                    <img src={currentTestimonial.image} alt={`${currentTestimonial.company} logo`} />
                   </AuthorImage>
                   <AuthorName>{currentTestimonial.author}</AuthorName>
                   <AuthorTitle>{currentTestimonial.title}</AuthorTitle>
@@ -570,7 +548,7 @@ const Testimonials = () => {
                 </CardQuote>
                 <CardAuthor>
                   <CardAuthorImage>
-                    <img src={testimonial.image} alt={testimonial.author} />
+                    <img src={testimonial.image} alt={`${testimonial.company} logo`} />
                   </CardAuthorImage>
                   <CardAuthorInfo>
                     <CardAuthorName>{testimonial.author}</CardAuthorName>

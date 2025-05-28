@@ -190,7 +190,7 @@ const Services = () => {
       id: 1,
       icon: '💻',
       title: 'Custom Web & Mobile Apps',
-      description: 'End-to-end development services from front-end interfaces to back-end systems.',
+      description: 'Our team handles front-end and back-end development with end-to-end services.',
       features: [
         'HTML5, JavaScript/TypeScript',
         'React, Redux Toolkit',
@@ -204,7 +204,7 @@ const Services = () => {
       id: 2,
       icon: '🚀',
       title: 'Backend & API Development',
-      description: 'Robust, scalable backend systems and APIs that power your applications.',
+      description: 'Our engineers build robust, scalable backend systems and APIs that power your applications.',
       features: [
         'Python, Django, Flask',
         'Node.js, Express',
@@ -218,7 +218,7 @@ const Services = () => {
       id: 3,
       icon: '🎮',
       title: '3D & Visualization',
-      description: 'Immersive 3D experiences and data visualizations for web applications.',
+      description: 'Our specialists create immersive 3D experiences and data visualizations for web applications.',
       features: [
         'Three.js, WebGL',
         'React Three Fiber',
@@ -232,7 +232,7 @@ const Services = () => {
       id: 4,
       icon: '🐳',
       title: 'DevOps & Containerization',
-      description: 'Streamline your development and deployment processes with modern DevOps practices.',
+      description: 'Our DevOps experts streamline your development and deployment processes with modern practices.',
       features: [
         'Docker containerization',
         'CI/CD with GitHub Actions',
@@ -248,7 +248,7 @@ const Services = () => {
       id: 5,
       icon: '🔒',
       title: 'Cybersecurity',
-      description: 'Protect your digital assets with comprehensive security solutions.',
+      description: 'Our security team protects your digital assets with comprehensive security solutions.',
       features: [
         'Security assessment and auditing',
         'Penetration testing',
@@ -262,7 +262,7 @@ const Services = () => {
       id: 6,
       icon: '🤖',
       title: 'AI & Machine Learning',
-      description: 'Leverage the power of AI to gain insights and automate processes.',
+      description: 'Our AI specialists help you leverage the power of AI to gain insights and automate processes.',
       features: [
         'Predictive analytics',
         'Natural language processing',
@@ -276,7 +276,7 @@ const Services = () => {
       id: 7,
       icon: '🏢',
       title: 'Enterprise Platforms',
-      description: 'Turnkey solutions for businesses including attendance systems and healthcare platforms.',
+      description: 'Our team delivers turnkey solutions for businesses including attendance systems and healthcare platforms.',
       features: [
         'Physioway healthcare platform',
         'Attendance systems',
@@ -306,7 +306,7 @@ const Services = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            We offer a comprehensive range of technology services to help businesses innovate, transform, and grow in the digital era.
+            Our multidisciplinary team delivers a comprehensive range of technology services to help businesses innovate, transform, and grow in the digital era.
           </SectionDescription>
         </SectionHeader>
         

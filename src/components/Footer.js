@@ -261,7 +261,7 @@ const Footer = () => {
               </div>
             </FooterLogo>
             <FooterDescription>
-              Founded in 2025 by Pranshu Dixit, we provide innovative digital solutions for businesses looking to establish or enhance their online presence.
+              Since incorporation in 2025, CodingBull Technovations Pvt Ltd has grown into a collaborative network of seasoned developers and designers led by Pranshu Dixit.
             </FooterDescription>
             <SocialLinks>
               <SocialLink 
@@ -324,10 +324,10 @@ const Footer = () => {
                 }} whileHover={{ x: 5 }}>Technology</FooterLink>
               </li>
               <li>
-                <FooterLink to="#case-studies" onClick={(e) => {
+                <FooterLink to="#our-projects" onClick={(e) => {
                   e.preventDefault();
-                  document.getElementById('case-studies').scrollIntoView({ behavior: 'smooth' });
-                }} whileHover={{ x: 5 }}>Projects</FooterLink>
+                  document.getElementById('our-projects').scrollIntoView({ behavior: 'smooth' });
+                }} whileHover={{ x: 5 }}>Our Projects</FooterLink>
               </li>
               <li>
                 <FooterLink to="/about" whileHover={{ x: 5 }}>About</FooterLink>
@@ -360,7 +360,7 @@ const Footer = () => {
               </ContactItem>
               <ContactItem>
                 <span className="icon">⏰</span>
-                <span>Mon-Fri: 9:00 AM - 6:00 PM IST</span>
+                <span>Our team responds to all inquiries within 24 hours</span>
               </ContactItem>
               <ContactItem>
                 <span className="icon">🌐</span>
@@ -391,7 +391,7 @@ const Footer = () => {
         
         <FooterBottom>
           <Copyright>
-            © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | CIN: XXXX | GSTIN: YYYY | Remote-first
+            © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | CIN: XXXX | GSTIN: YYYY | Remote-enabled team | Serving clients worldwide
           </Copyright>
           <FooterBottomLinks>
             <a href="/privacy-policy">Privacy Policy</a>
