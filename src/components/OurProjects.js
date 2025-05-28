@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { slideInLeft, slideInRight } from '../animations/variants';
 import Button from './Button';
 
@@ -192,17 +193,12 @@ const ProjectNav = styled.div`
   margin-top: 3rem;
 `;
 
-// Custom shouldForwardProp function to filter out non-DOM props
-const shouldForwardProp = prop => prop !== 'active';
-
 // Nav dot
-const NavDot = styled.button.withConfig({
-  shouldForwardProp
-})`
+const NavDot = styled.button`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: ${props => props.active 
+  background: ${props => props.$active 
     ? props.theme.colors.electricBlue 
     : props.theme.colors.lightGrey};
   border: none;
@@ -210,7 +206,7 @@ const NavDot = styled.button.withConfig({
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.active 
+    background: ${props => props.$active 
       ? props.theme.colors.electricBlue 
       : props.theme.colors.deepPurple};
   }
@@ -381,7 +377,9 @@ const OurProjects = () => {
                   </div>
                 </ClientQuote>
                 
-                <Button variant="primary">View Project Details</Button>
+                <Link to={`/our-projects?id=${currentProject.id}`}>
+                  <Button variant="primary">View Project Details</Button>
+                </Link>
               </ProjectContent>
             </ProjectItem>
           </AnimatePresence>
@@ -391,7 +389,7 @@ const OurProjects = () => {
           {projects.map((project, index) => (
             <NavDot 
               key={project.id}
-              active={index === currentIndex}
+              $active={index === currentIndex}
               onClick={() => handleNavClick(index)}
             />
           ))}

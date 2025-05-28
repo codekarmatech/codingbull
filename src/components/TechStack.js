@@ -97,10 +97,11 @@ const TechIcon = styled.div`
   border-radius: ${props => props.theme.borderRadius.md};
   background: ${props => props.theme.colors.mediumGrey};
   transition: all 0.3s ease;
+  padding: 12px;
   
   img {
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
   

@@ -6,6 +6,7 @@ import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
+import SEO from '../components/SEO';
 
 // About page container
 const AboutPageContainer = styled(motion.div)`
@@ -709,12 +710,18 @@ const AboutPage = () => {
   ];
   
   return (
-    <AboutPageContainer
-      variants={pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <>
+      <SEO 
+        title="About Us" 
+        description="Learn about CodingBull's journey, our expert team, and the values that drive our innovative web and mobile development solutions."
+        canonical="/about"
+      />
+      <AboutPageContainer
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
       <AboutHero>
         <HeroContent>
           <HeroText>
@@ -1003,6 +1010,7 @@ const AboutPage = () => {
       
       <Footer />
     </AboutPageContainer>
+    </>
   );
 };
 

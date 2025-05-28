@@ -382,7 +382,12 @@ const Footer = () => {
             </p>
             <NewsletterForm>
               <InputGroup>
-                <input type="email" placeholder="Your email address" />
+                <input 
+                  type="email" 
+                  id="footer-newsletter-email" 
+                  name="footer-newsletter-email" 
+                  placeholder="Your email address" 
+                />
                 <button type="submit">Subscribe</button>
               </InputGroup>
             </NewsletterForm>

@@ -199,13 +199,11 @@ const CaseStudyNav = styled.div`
 const shouldForwardProp = prop => prop !== 'active';
 
 // Nav dot
-const NavDot = styled.button.withConfig({
-  shouldForwardProp
-})`
+const NavDot = styled.button`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: ${props => props.active 
+  background: ${props => props.$active 
     ? props.theme.colors.electricBlue 
     : props.theme.colors.lightGrey};
   border: none;
@@ -213,7 +211,7 @@ const NavDot = styled.button.withConfig({
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.active 
+    background: ${props => props.$active 
       ? props.theme.colors.electricBlue 
       : props.theme.colors.deepPurple};
   }

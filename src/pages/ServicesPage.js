@@ -6,6 +6,7 @@ import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
+import SEO from '../components/SEO';
 
 // Services page container
 const ServicesPageContainer = styled(motion.div)`
@@ -440,12 +441,18 @@ const ServicesPage = () => {
   ];
   
   return (
-    <ServicesPageContainer
-      variants={pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <>
+      <SEO 
+        title="Our Services" 
+        description="Explore CodingBull's comprehensive range of web and mobile development services including full-stack development, mobile apps, cloud solutions, and more."
+        canonical="/services"
+      />
+      <ServicesPageContainer
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
       <ServicesHero>
         <HeroContent>
           <HeroTitle
@@ -594,6 +601,7 @@ const ServicesPage = () => {
       
       <Footer />
     </ServicesPageContainer>
+    </>
   );
 };
 

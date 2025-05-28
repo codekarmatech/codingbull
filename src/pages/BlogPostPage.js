@@ -926,7 +926,13 @@ const BlogPostPage = () => {
                       Subscribe to our newsletter for the latest insights and articles.
                     </p>
                     <NewsletterForm onSubmit={handleNewsletterSubmit}>
-                      <input type="email" placeholder="Your email address" required />
+                      <input 
+                        type="email" 
+                        id="blog-post-newsletter-email" 
+                        name="blog-post-newsletter-email" 
+                        placeholder="Your email address" 
+                        required 
+                      />
                       <Button type="submit" variant="primary" fullWidth>Subscribe</Button>
                     </NewsletterForm>
                   </SidebarSection>

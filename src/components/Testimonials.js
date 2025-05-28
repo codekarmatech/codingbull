@@ -214,17 +214,14 @@ const NavDots = styled.div`
   margin-top: 2rem;
 `;
 
-// Custom shouldForwardProp function to filter out non-DOM props
-const shouldForwardProp = prop => prop !== 'active';
+// We're using $active prop instead of shouldForwardProp
 
 // Nav dot
-const NavDot = styled.button.withConfig({
-  shouldForwardProp
-})`
+const NavDot = styled.button`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: ${props => props.active 
+  background: ${props => props.$active 
     ? props.theme.colors.electricBlue 
     : props.theme.colors.lightGrey};
   border: none;
@@ -232,7 +229,7 @@ const NavDot = styled.button.withConfig({
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.active 
+    background: ${props => props.$active 
       ? props.theme.colors.electricBlue 
       : props.theme.colors.deepPurple};
   }
@@ -356,10 +353,8 @@ const ViewToggle = styled.div`
 `;
 
 // Toggle button
-const ToggleButton = styled.button.withConfig({
-  shouldForwardProp
-})`
-  background: ${props => props.active ? props.theme.colors.electricBlue : props.theme.colors.mediumGrey};
+const ToggleButton = styled.button`
+  background: ${props => props.$active ? props.theme.colors.electricBlue : props.theme.colors.mediumGrey};
   color: ${props => props.theme.colors.textPrimary};
   border: none;
   padding: 0.5rem 1.5rem;
@@ -369,7 +364,7 @@ const ToggleButton = styled.button.withConfig({
   font-weight: 500;
   
   &:hover {
-    background: ${props => props.active ? props.theme.colors.electricBlue : props.theme.colors.deepPurple};
+    background: ${props => props.$active ? props.theme.colors.electricBlue : props.theme.colors.deepPurple};
   }
 `;
 
@@ -463,13 +458,13 @@ const Testimonials = () => {
         
         <ViewToggle>
           <ToggleButton 
-            active={view === 'slider'} 
+            $active={view === 'slider'} 
             onClick={() => setView('slider')}
           >
             Showcase View
           </ToggleButton>
           <ToggleButton 
-            active={view === 'grid'} 
+            $active={view === 'grid'} 
             onClick={() => setView('grid')}
           >
             Grid View
@@ -519,7 +514,7 @@ const Testimonials = () => {
               {testimonials.map((_, index) => (
                 <NavDot 
                   key={index}
-                  active={index === currentIndex}
+                  $active={index === currentIndex}
                   onClick={() => handleDotClick(index)}
                 />
               ))}

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { pageTransition, staggerContainer, slideUp } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
+import SEO from '../components/SEO';
 
 // Blog page container
 const BlogPageContainer = styled(motion.div)`
@@ -280,27 +281,22 @@ const Pagination = styled.div`
   margin-top: 4rem;
 `;
 
-// Custom shouldForwardProp function to filter out non-DOM props
-const shouldForwardProp = prop => prop !== 'active';
-
 // Page button
-const PageButton = styled.button.withConfig({
-  shouldForwardProp
-})`
+const PageButton = styled.button`
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: ${props => props.theme.borderRadius.md};
-  background: ${props => props.active ? props.theme.colors.electricBlue : props.theme.colors.darkGrey};
+  background: ${props => props.$active ? props.theme.colors.electricBlue : props.theme.colors.darkGrey};
   color: ${props => props.theme.colors.textPrimary};
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.active ? props.theme.colors.electricBlue : props.theme.colors.deepPurple};
+    background: ${props => props.$active ? props.theme.colors.electricBlue : props.theme.colors.deepPurple};
   }
   
   &:disabled {
@@ -538,12 +534,18 @@ const BlogPage = () => {
   };
   
   return (
-    <BlogPageContainer
-      variants={pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <>
+      <SEO 
+        title="Blog" 
+        description="Stay updated with the latest insights, tutorials, and trends in web development, AI, cloud computing, and more from the CodingBull team."
+        canonical="/blog"
+      />
+      <BlogPageContainer
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
       <BlogHero>
         <HeroContent>
           <HeroTitle
@@ -673,7 +675,7 @@ const BlogPage = () => {
                   {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }).map((_, index) => (
                     <PageButton
                       key={index}
-                      active={currentPage === index + 1}
+                      $active={currentPage === index + 1}
                       onClick={() => paginate(index + 1)}
                     >
                       {index + 1}
@@ -718,7 +720,13 @@ const BlogPage = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             onSubmit={handleNewsletterSubmit}
           >
-            <input type="email" placeholder="Your email address" required />
+            <input 
+              type="email" 
+              id="blog-newsletter-email" 
+              name="blog-newsletter-email" 
+              placeholder="Your email address" 
+              required 
+            />
             <Button type="submit" variant="primary">Subscribe</Button>
           </NewsletterForm>
         </NewsletterContent>
@@ -726,6 +734,7 @@ const BlogPage = () => {
       
       <Footer />
     </BlogPageContainer>
+    </>
   );
 };
 
