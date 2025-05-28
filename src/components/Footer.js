@@ -121,7 +121,7 @@ const FooterLinks = styled.ul`
 `;
 
 // Footer link
-const FooterLink = styled(motion(Link))`
+const FooterLink = styled(motion.create(Link))`
   color: ${props => props.theme.colors.textSecondary};
   transition: all 0.3s ease;
   display: flex;
@@ -318,16 +318,25 @@ const Footer = () => {
                 <FooterLink to="/services" whileHover={{ x: 5 }}>Services</FooterLink>
               </li>
               <li>
-                <FooterLink to="/case-studies" whileHover={{ x: 5 }}>Case Studies</FooterLink>
+                <FooterLink to="#tech-stack" onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('tech-stack').scrollIntoView({ behavior: 'smooth' });
+                }} whileHover={{ x: 5 }}>Technology</FooterLink>
               </li>
               <li>
-                <FooterLink to="/about" whileHover={{ x: 5 }}>About Us</FooterLink>
+                <FooterLink to="#case-studies" onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('case-studies').scrollIntoView({ behavior: 'smooth' });
+                }} whileHover={{ x: 5 }}>Projects</FooterLink>
               </li>
               <li>
-                <FooterLink to="/blog" whileHover={{ x: 5 }}>Blog</FooterLink>
+                <FooterLink to="/about" whileHover={{ x: 5 }}>About</FooterLink>
               </li>
               <li>
-                <FooterLink to="/careers" whileHover={{ x: 5 }}>Careers</FooterLink>
+                <FooterLink to="#contact" onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                }} whileHover={{ x: 5 }}>Contact</FooterLink>
               </li>
             </FooterLinks>
           </FooterColumn>
@@ -382,7 +391,7 @@ const Footer = () => {
         
         <FooterBottom>
           <Copyright>
-            © 2025-{new Date().getFullYear()} CodingBull. Founded by Pranshu Dixit. All rights reserved.
+            © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | CIN: XXXX | GSTIN: YYYY | Remote-first
           </Copyright>
           <FooterBottomLinks>
             <a href="/privacy-policy">Privacy Policy</a>

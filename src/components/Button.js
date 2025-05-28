@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { hoverScale } from '../animations/variants';
 
+// Custom shouldForwardProp function to filter out non-DOM props
+const shouldForwardProp = prop => 
+  !['variant', 'size', 'fullWidth', 'whileHover', 'whileTap'].includes(prop);
+
 // Button variants
 const VARIANTS = {
   primary: {
@@ -43,7 +47,9 @@ const SIZES = {
   },
 };
 
-const StyledButton = styled(motion.button)`
+const StyledButton = styled(motion.button).withConfig({
+  shouldForwardProp
+})`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -56,13 +62,13 @@ const StyledButton = styled(motion.button)`
   overflow: hidden;
   
   // Apply variant styles
-  background: ${props => VARIANTS[props.variant].background};
-  color: ${props => VARIANTS[props.variant].color};
-  border: ${props => VARIANTS[props.variant].border};
+  background: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].background : VARIANTS.primary.background};
+  color: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].color : VARIANTS.primary.color};
+  border: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].border : VARIANTS.primary.border};
   
   // Apply size styles
-  padding: ${props => SIZES[props.size].padding};
-  font-size: ${props => SIZES[props.size].fontSize};
+  padding: ${props => props.size && SIZES[props.size] ? SIZES[props.size].padding : SIZES.md.padding};
+  font-size: ${props => props.size && SIZES[props.size] ? SIZES[props.size].fontSize : SIZES.md.fontSize};
   
   // Full width option
   width: ${props => props.fullWidth ? '100%' : 'auto'};
@@ -160,6 +166,15 @@ const Button = ({
     }
   };
   
+  // Filter out custom props that shouldn't be passed to DOM elements
+  const { whileHover, whileTap, ...buttonProps } = props;
+  
+  // Create motion props object to avoid passing them directly to DOM
+  const motionProps = !disabled ? {
+    whileHover: hoverScale,
+    whileTap: { scale: 0.98 }
+  } : {};
+
   return (
     <StyledButton
       variant={variant}
@@ -167,9 +182,8 @@ const Button = ({
       fullWidth={fullWidth}
       disabled={disabled}
       onClick={handleClick}
-      whileHover={!disabled ? hoverScale : {}}
-      whileTap={!disabled ? { scale: 0.98 } : {}}
-      {...props}
+      {...motionProps}
+      {...buttonProps}
     >
       {children}
     </StyledButton>

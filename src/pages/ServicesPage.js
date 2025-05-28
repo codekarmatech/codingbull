@@ -341,7 +341,7 @@ const ServicesPage = () => {
         'Third-party integrations',
         'Performance optimization'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     },
     {
       id: 2,
@@ -355,7 +355,7 @@ const ServicesPage = () => {
         'App Store optimization',
         'Ongoing maintenance and updates'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     },
     {
       id: 3,
@@ -369,7 +369,7 @@ const ServicesPage = () => {
         'Microservices implementation',
         'DevOps automation'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     },
     {
       id: 4,
@@ -383,7 +383,7 @@ const ServicesPage = () => {
         'Kubernetes orchestration',
         'Monitoring and logging solutions'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     },
     {
       id: 5,
@@ -397,7 +397,7 @@ const ServicesPage = () => {
         'Usability testing',
         'Accessibility compliance'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     },
     {
       id: 6,
@@ -411,7 +411,7 @@ const ServicesPage = () => {
         'Recommendation systems',
         'AI integration with existing systems'
       ],
-      image: 'https://via.placeholder.com/600x400'
+      image: 'https://placehold.co/600x400'
     }
   ];
   

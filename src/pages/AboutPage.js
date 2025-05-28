@@ -670,7 +670,7 @@ const AboutPage = () => {
       name: 'Pranshu Dixit',
       position: 'Founder & Director',
       bio: 'With a passion for technology and innovation, Pranshu founded CodingBull in 2025 to deliver cutting-edge digital solutions that help businesses thrive in the digital age.',
-      image: 'https://via.placeholder.com/300x400'
+      image: 'https://placehold.co/300x400'
     }
   ];
   
@@ -762,7 +762,7 @@ const AboutPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <img src="https://via.placeholder.com/600x400" alt="CodingBull Team" />
+            <img src="https://placehold.co/600x400" alt="CodingBull Team" />
           </HeroImage>
         </HeroContent>
       </AboutHero>

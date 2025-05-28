@@ -79,6 +79,8 @@ const ServiceCard = styled(motion.div)`
   position: relative;
   overflow: hidden;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   
   &::before {
     content: '';
@@ -101,6 +103,38 @@ const ServiceCard = styled(motion.div)`
       transform: scaleX(1);
     }
   }
+`;
+
+// Tech stack label
+const TechStackLabel = styled.div`
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  
+  h4 {
+    font-size: ${props => props.theme.fontSizes.sm};
+    color: ${props => props.theme.colors.electricBlue};
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    font-size: ${props => props.theme.fontSizes.sm};
+    color: ${props => props.theme.colors.textSecondary};
+  }
+`;
+
+// Clients label
+const ClientsLabel = styled.div`
+  margin-top: 0.75rem;
+  font-size: ${props => props.theme.fontSizes.sm};
+  color: ${props => props.theme.colors.lightGrey};
+  font-style: italic;
+`;
+
+// CTA wrapper
+const CTAWrapper = styled.div`
+  margin-top: auto;
+  padding-top: 1.5rem;
 `;
 
 // Service icon
@@ -155,50 +189,60 @@ const Services = () => {
     {
       id: 1,
       icon: '💻',
-      title: 'Full-Stack Development',
+      title: 'Custom Web & Mobile Apps',
       description: 'End-to-end development services from front-end interfaces to back-end systems.',
       features: [
-        'React, Angular, Vue.js front-end',
-        'Node.js, Python, Java back-end',
-        'Database design and optimization',
-        'API development and integration'
-      ]
+        'HTML5, JavaScript/TypeScript',
+        'React, Redux Toolkit',
+        'Tailwind CSS',
+        'Responsive & cross-platform design'
+      ],
+      techStack: 'HTML5, JavaScript/TypeScript, React, Redux Toolkit, Tailwind CSS',
+      clients: 'LinkedInFresh Consulting'
     },
     {
       id: 2,
       icon: '🚀',
-      title: 'Digital Transformation',
-      description: 'Transform your business with innovative digital solutions and strategies.',
+      title: 'Backend & API Development',
+      description: 'Robust, scalable backend systems and APIs that power your applications.',
       features: [
-        'Legacy system modernization',
-        'Cloud migration and optimization',
-        'Process automation',
-        'Digital strategy consulting'
-      ]
+        'Python, Django, Flask',
+        'Node.js, Express',
+        'RESTful & GraphQL APIs',
+        'MongoDB, PostgreSQL'
+      ],
+      techStack: 'Python, Django, Flask, Node.js, Docker, MongoDB',
+      clients: 'Mind the ProductFull Scale'
     },
     {
       id: 3,
-      icon: '📱',
-      title: 'Mobile App Development',
-      description: 'Native and cross-platform mobile applications for iOS and Android.',
+      icon: '🎮',
+      title: '3D & Visualization',
+      description: 'Immersive 3D experiences and data visualizations for web applications.',
       features: [
-        'React Native development',
-        'Native iOS (Swift) development',
-        'Native Android (Kotlin) development',
-        'App Store optimization'
-      ]
+        'Three.js, WebGL',
+        'React Three Fiber',
+        'Interactive 3D models',
+        'Data visualization'
+      ],
+      techStack: 'Three.js, WebGL, React Three Fiber',
+      clients: 'Reddit'
     },
     {
       id: 4,
-      icon: '☁️',
-      title: 'Cloud Solutions',
-      description: 'Scalable, secure, and cost-effective cloud infrastructure and services.',
+      icon: '🐳',
+      title: 'DevOps & Containerization',
+      description: 'Streamline your development and deployment processes with modern DevOps practices.',
       features: [
+        'Docker containerization',
+        'CI/CD with GitHub Actions',
         'AWS, Azure, Google Cloud',
         'Serverless architecture',
         'Microservices implementation',
         'DevOps and CI/CD pipelines'
-      ]
+      ],
+      techStack: 'Docker, CI/CD (GitHub Actions), AWS/Azure/Google Cloud deployment',
+      clients: 'Asana'
     },
     {
       id: 5,
@@ -210,7 +254,9 @@ const Services = () => {
         'Penetration testing',
         'Secure coding practices',
         'Compliance (GDPR, HIPAA, etc.)'
-      ]
+      ],
+      techStack: 'Security frameworks, encryption, authentication systems, Geo fencing',
+      clients: 'Enterprise clients'
     },
     {
       id: 6,
@@ -222,7 +268,23 @@ const Services = () => {
         'Natural language processing',
         'Computer vision solutions',
         'AI-powered automation'
-      ]
+      ],
+      techStack: 'Python, TensorFlow, PyTorch, scikit-learn',
+      clients: 'Research and enterprise projects'
+    },
+    {
+      id: 7,
+      icon: '🏢',
+      title: 'Enterprise Platforms',
+      description: 'Turnkey solutions for businesses including attendance systems and healthcare platforms.',
+      features: [
+        'Physioway healthcare platform',
+        'Attendance systems',
+        'Custom dashboards',
+        'Analytics and reporting'
+      ],
+      techStack: 'Full-stack technologies, Django, React, PostgreSQL',
+      clients: 'Physioway, Harsh Patel, Cynet'
     }
   ];
   
@@ -276,6 +338,37 @@ const Services = () => {
                   <ServiceFeature key={i}>{feature}</ServiceFeature>
                 ))}
               </ServiceFeatures>
+              
+              <TechStackLabel>
+                <h4>Technology Stack</h4>
+                <p>{service.techStack}</p>
+              </TechStackLabel>
+              
+              {service.clients && (
+                <ClientsLabel>
+                  Used by: {service.clients}
+                </ClientsLabel>
+              )}
+              
+              <CTAWrapper>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    background: 'transparent',
+                    color: '#00BFFF',
+                    border: '2px solid #00BFFF',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontSize: '0.875rem'
+                  }}
+                  onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Discuss Your Project
+                </motion.button>
+              </CTAWrapper>
             </ServiceCard>
           ))}
         </ServicesGrid>

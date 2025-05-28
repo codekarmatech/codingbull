@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
 import CaseStudies from '../components/CaseStudies';
+import TechStack from '../components/TechStack';
 import Footer from '../components/Footer';
 import { pageTransition } from '../animations/variants';
 
@@ -22,6 +23,7 @@ const HomePage = () => {
     >
       <Hero />
       <Services />
+      <TechStack />
       <CaseStudies />
       <Footer />
     </PageContainer>

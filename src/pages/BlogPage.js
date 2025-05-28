@@ -280,8 +280,13 @@ const Pagination = styled.div`
   margin-top: 4rem;
 `;
 
+// Custom shouldForwardProp function to filter out non-DOM props
+const shouldForwardProp = prop => prop !== 'active';
+
 // Page button
-const PageButton = styled.button`
+const PageButton = styled.button.withConfig({
+  shouldForwardProp
+})`
   width: 40px;
   height: 40px;
   display: flex;
@@ -376,7 +381,7 @@ const BlogPage = () => {
       date: '2024-06-15',
       category: 'Technology',
       tags: ['Web Development', 'Trends', 'JavaScript'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'future-web-development-trends-2024'
     },
     {
@@ -388,7 +393,7 @@ const BlogPage = () => {
       date: '2024-06-10',
       category: 'Artificial Intelligence',
       tags: ['AI', 'Machine Learning', 'Software Development'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'ai-transforming-software-development'
     },
     {
@@ -400,7 +405,7 @@ const BlogPage = () => {
       date: '2024-06-05',
       category: 'Architecture',
       tags: ['Microservices', 'Scalability', 'System Design'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'building-scalable-microservices-architecture'
     },
     {
@@ -412,7 +417,7 @@ const BlogPage = () => {
       date: '2024-05-28',
       category: 'Cybersecurity',
       tags: ['Security', 'Business', 'Data Protection'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'complete-guide-cybersecurity-businesses'
     },
     {
@@ -424,7 +429,7 @@ const BlogPage = () => {
       date: '2024-05-20',
       category: 'Frontend',
       tags: ['React', 'Performance', 'JavaScript'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'optimizing-react-applications-performance'
     },
     {
@@ -436,7 +441,7 @@ const BlogPage = () => {
       date: '2024-05-15',
       category: 'Cloud',
       tags: ['Cloud Computing', 'Migration', 'Enterprise'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'cloud-migration-strategies-enterprise'
     },
     {
@@ -448,7 +453,7 @@ const BlogPage = () => {
       date: '2024-05-08',
       category: 'Technology',
       tags: ['Low-Code', 'Digital Transformation', 'Productivity'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'rise-low-code-development-platforms'
     },
     {
@@ -460,7 +465,7 @@ const BlogPage = () => {
       date: '2024-05-01',
       category: 'DevOps',
       tags: ['DevOps', 'Organizational Change', 'CI/CD'],
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       slug: 'implementing-devops-traditional-organizations'
     }
   ]);

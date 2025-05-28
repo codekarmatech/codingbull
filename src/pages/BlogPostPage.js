@@ -276,8 +276,13 @@ const ShareButtons = styled.div`
   gap: 1rem;
 `;
 
-// Share button
-const ShareButton = styled(motion.a)`
+// Custom shouldForwardProp function to filter out motion props
+const shouldForwardProp = prop => !['whileHover', 'whileTap'].includes(prop);
+
+// Share button styled component (without motion props)
+const StyledShareButton = styled(motion.a).withConfig({
+  shouldForwardProp
+})`
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -293,6 +298,24 @@ const ShareButton = styled(motion.a)`
     transform: translateY(-3px);
   }
 `;
+
+// Share button component that handles motion props
+const ShareButton = ({ children, ...props }) => {
+  // Extract motion props to avoid passing them to DOM
+  const { whileHover, whileTap, ...otherProps } = props;
+  
+  // Create motion props object
+  const motionProps = {
+    whileHover,
+    whileTap
+  };
+  
+  return (
+    <StyledShareButton {...motionProps} {...otherProps}>
+      {children}
+    </StyledShareButton>
+  );
+};
 
 // Sidebar
 const Sidebar = styled.aside`
@@ -596,7 +619,7 @@ const mockPosts = [
     date: '2024-06-15',
     category: 'Technology',
     tags: ['Web Development', 'Trends', 'JavaScript', 'WebAssembly', 'Edge Computing'],
-    image: 'https://via.placeholder.com/1200x600',
+    image: 'https://placehold.co/1200x600',
     slug: 'future-web-development-trends-2024',
     readingTime: '8 min read'
   },
@@ -609,7 +632,7 @@ const mockPosts = [
     date: '2024-06-10',
     category: 'Artificial Intelligence',
     tags: ['AI', 'Machine Learning', 'Software Development'],
-    image: 'https://via.placeholder.com/1200x600',
+    image: 'https://placehold.co/1200x600',
     slug: 'ai-transforming-software-development',
     readingTime: '6 min read'
   },
@@ -622,7 +645,7 @@ const mockPosts = [
     date: '2024-06-05',
     category: 'Architecture',
     tags: ['Microservices', 'Scalability', 'System Design'],
-    image: 'https://via.placeholder.com/1200x600',
+    image: 'https://placehold.co/1200x600',
     slug: 'building-scalable-microservices-architecture',
     readingTime: '10 min read'
   },
@@ -635,7 +658,7 @@ const mockPosts = [
     date: '2024-05-28',
     category: 'Cybersecurity',
     tags: ['Security', 'Business', 'Data Protection'],
-    image: 'https://via.placeholder.com/1200x600',
+    image: 'https://placehold.co/1200x600',
     slug: 'complete-guide-cybersecurity-businesses',
     readingTime: '12 min read'
   }

@@ -582,7 +582,7 @@ const ServicePage = () => {
       slug: 'full-stack-development',
       description: 'End-to-end development services from front-end interfaces to back-end systems.',
       longDescription: 'Our full-stack development services provide comprehensive solutions that cover both client-facing interfaces and server-side systems. We leverage the latest technologies and frameworks to build scalable, high-performance applications that meet your business needs.',
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       icon: '💻',
       features: [
         {
@@ -690,21 +690,21 @@ const ServicePage = () => {
           title: 'Mobile App Development',
           slug: 'mobile-app-development',
           description: 'Native and cross-platform mobile applications for iOS and Android.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         },
         {
           id: 3,
           title: 'Cloud Solutions',
           slug: 'cloud-solutions',
           description: 'Scalable, secure, and cost-effective cloud infrastructure and services.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         },
         {
           id: 4,
           title: 'DevOps & CI/CD',
           slug: 'devops-cicd',
           description: 'Streamline your development workflow with automated testing and deployment.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         }
       ]
     },
@@ -714,7 +714,7 @@ const ServicePage = () => {
       slug: 'mobile-app-development',
       description: 'Native and cross-platform mobile applications for iOS and Android.',
       longDescription: 'Our mobile app development services deliver high-performance, user-friendly applications that engage your audience and drive business growth. Whether you need native iOS, Android, or cross-platform solutions, we create mobile experiences that stand out in today is competitive market.',
-      image: 'https://via.placeholder.com/600x400',
+      image: 'https://placehold.co/600x400',
       icon: '📱',
       features: [
         {
@@ -822,21 +822,21 @@ const ServicePage = () => {
           title: 'Full-Stack Development',
           slug: 'full-stack-development',
           description: 'End-to-end development services from front-end interfaces to back-end systems.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         },
         {
           id: 5,
           title: 'UI/UX Design',
           slug: 'ui-ux-design',
           description: 'User-centered design services that create intuitive, engaging digital experiences.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         },
         {
           id: 6,
           title: 'QA & Testing',
           slug: 'qa-testing',
           description: 'Comprehensive quality assurance services to ensure flawless digital products.',
-          image: 'https://via.placeholder.com/600x400'
+          image: 'https://placehold.co/600x400'
         }
       ]
     }

@@ -213,8 +213,13 @@ const NavDots = styled.div`
   margin-top: 2rem;
 `;
 
+// Custom shouldForwardProp function to filter out non-DOM props
+const shouldForwardProp = prop => prop !== 'active';
+
 // Nav dot
-const NavDot = styled.button`
+const NavDot = styled.button.withConfig({
+  shouldForwardProp
+})`
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -349,7 +354,9 @@ const ViewToggle = styled.div`
 `;
 
 // Toggle button
-const ToggleButton = styled.button`
+const ToggleButton = styled.button.withConfig({
+  shouldForwardProp
+})`
   background: ${props => props.active ? props.theme.colors.electricBlue : props.theme.colors.mediumGrey};
   color: ${props => props.theme.colors.textPrimary};
   border: none;
@@ -377,7 +384,7 @@ const Testimonials = () => {
       author: "Jennifer Martinez",
       title: "CTO",
       company: "HealthTech Solutions",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     },
     {
       id: 2,
@@ -385,7 +392,7 @@ const Testimonials = () => {
       author: "Michael Chang",
       title: "Director of Digital",
       company: "Global Retail Inc.",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     },
     {
       id: 3,
@@ -393,7 +400,7 @@ const Testimonials = () => {
       author: "Sarah Johnson",
       title: "Head of Customer Experience",
       company: "DataDrive Analytics",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     },
     {
       id: 4,
@@ -401,7 +408,7 @@ const Testimonials = () => {
       author: "Robert Williams",
       title: "IT Director",
       company: "Enterprise Solutions Ltd.",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     },
     {
       id: 5,
@@ -409,7 +416,7 @@ const Testimonials = () => {
       author: "Lisa Chen",
       title: "Product Manager",
       company: "MobileFirst Technologies",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     },
     {
       id: 6,
@@ -417,7 +424,7 @@ const Testimonials = () => {
       author: "David Patel",
       title: "Sales Director",
       company: "Growth Ventures",
-      image: "https://via.placeholder.com/150"
+      image: "https://placehold.co/150"
     }
   ];
   

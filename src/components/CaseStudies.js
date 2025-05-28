@@ -65,7 +65,7 @@ const CaseStudyItem = styled(motion.div)`
   gap: 3rem;
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
-    flex-direction: ${props => props.reverse ? 'column-reverse' : 'column'};
+    flex-direction: ${props => props.$reverse ? 'column-reverse' : 'column'};
     gap: 2rem;
   }
 `;
@@ -107,6 +107,55 @@ const CaseStudyContent = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+`;
+
+// Challenge and solution section
+const ChallengeSection = styled.div`
+  margin-top: 1rem;
+  
+  h4 {
+    font-size: ${props => props.theme.fontSizes.md};
+    color: ${props => props.theme.colors.electricBlue};
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: ${props => props.theme.colors.textSecondary};
+    font-size: ${props => props.theme.fontSizes.md};
+  }
+`;
+
+// Tech used tag
+const TechUsedTag = styled.div`
+  display: inline-block;
+  background: rgba(106, 13, 173, 0.2);
+  border: 1px solid rgba(106, 13, 173, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: ${props => props.theme.borderRadius.md};
+  font-size: ${props => props.theme.fontSizes.sm};
+  color: ${props => props.theme.colors.textSecondary};
+  margin-top: 0.5rem;
+`;
+
+// Client quote
+const ClientQuote = styled.blockquote`
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 3px solid ${props => props.theme.colors.electricBlue};
+  font-style: italic;
+  color: ${props => props.theme.colors.textSecondary};
+  position: relative;
+  
+  &::before {
+    content: '"';
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+    font-size: 3rem;
+    color: rgba(0, 191, 255, 0.2);
+    line-height: 1;
+  }
 `;
 
 // Case study category
@@ -170,8 +219,13 @@ const CaseStudyNav = styled.div`
   margin-top: 3rem;
 `;
 
+// Custom shouldForwardProp function to filter out non-DOM props
+const shouldForwardProp = prop => prop !== 'active';
+
 // Nav dot
-const NavDot = styled.button`
+const NavDot = styled.button.withConfig({
+  shouldForwardProp
+})`
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -197,39 +251,51 @@ const CaseStudies = () => {
   const caseStudies = [
     {
       id: 1,
-      title: 'E-commerce Platform Transformation',
-      category: 'Digital Transformation',
-      description: 'Redesigned and rebuilt a legacy e-commerce platform for a global retail brand, resulting in a 45% increase in conversion rates and a 30% reduction in cart abandonment.',
-      image: 'https://via.placeholder.com/800x600',
+      title: 'Gujju-Masla E-commerce Platform',
+      category: 'E-commerce',
+      description: 'Designed and developed a complete e-commerce solution for Gujju-Masla, transforming their traditional business into a digital marketplace with online ordering, inventory management, and analytics.',
+      image: 'https://placehold.co/800x600',
+      challenge: 'Legacy processes, manual inventory tracking, and no online presence',
+      solution: 'Built with React, Node.js, MongoDB, and integrated payment gateways',
+      techUsed: 'React, Node.js, Express, MongoDB, Stripe',
       stats: [
-        { value: '45%', label: 'Conversion Increase' },
-        { value: '30%', label: 'Reduced Abandonment' },
-        { value: '3x', label: 'Faster Load Time' }
-      ]
+        { value: '45%', label: 'Revenue Increase' },
+        { value: '24/7', label: 'Online Availability' },
+        { value: '30%', label: 'Operational Efficiency' }
+      ],
+      clientQuote: "CodingBull transformed our traditional business model with a powerful online platform that's easy to manage and has significantly increased our customer reach."
     },
     {
       id: 2,
-      title: 'AI-Powered Healthcare Solution',
+      title: 'Physioway Healthcare Platform',
       category: 'Healthcare Tech',
-      description: 'Developed an AI-driven diagnostic tool for a leading healthcare provider that improved diagnostic accuracy by 28% and reduced patient wait times by 40%.',
-      image: 'https://via.placeholder.com/800x600',
+      description: 'Developed a comprehensive platform for Physioway that streamlines patient management, appointment scheduling, treatment tracking, and billing for physiotherapy practices.',
+      image: 'https://placehold.co/800x600',
+      challenge: 'Fragmented patient data, inefficient scheduling, and manual billing processes',
+      solution: 'Enterprise-grade platform with secure patient portal and practitioner dashboard',
+      techUsed: 'Django, React, PostgreSQL, Docker',
       stats: [
-        { value: '28%', label: 'Improved Accuracy' },
-        { value: '40%', label: 'Reduced Wait Times' },
-        { value: '15K+', label: 'Patients Served' }
-      ]
+        { value: '40%', label: 'Reduced Admin Time' },
+        { value: '35%', label: 'Increased Appointments' },
+        { value: '98%', label: 'Patient Satisfaction' }
+      ],
+      clientQuote: "The platform Pranshu built has revolutionized how we manage our practice. The efficiency gains and improved patient experience have been remarkable."
     },
     {
       id: 3,
-      title: 'FinTech Mobile App',
-      category: 'Financial Technology',
-      description: 'Created a secure, user-friendly mobile banking application that increased customer engagement by 60% and processed over $500M in transactions within the first year.',
-      image: 'https://via.placeholder.com/800x600',
+      title: 'Harsh Patel Attendance System',
+      category: 'Enterprise Solution',
+      description: 'Created a custom attendance and analytics system for Harsh Patel that automates employee tracking, generates reports, and provides real-time insights into workforce management.',
+      image: 'https://placehold.co/800x600',
+      challenge: 'Manual attendance tracking, reporting delays, and lack of analytical insights',
+      solution: 'Dashboard & analytics platform with automated reporting and visualization',
+      techUsed: 'React, Node.js, MongoDB, Chart.js',
       stats: [
-        { value: '60%', label: 'Increased Engagement' },
-        { value: '$500M+', label: 'Transactions Processed' },
-        { value: '4.8/5', label: 'App Store Rating' }
-      ]
+        { value: '60%', label: 'Reduced Reporting Time' },
+        { value: '25%', label: 'Improved Compliance' },
+        { value: '15hrs+', label: 'Weekly Time Saved' }
+      ],
+      clientQuote: "The attendance system has given us unprecedented visibility into our operations and saved countless hours of administrative work. It's been a game-changer."
     }
   ];
   
@@ -267,7 +333,7 @@ const CaseStudies = () => {
           <AnimatePresence mode="wait">
             <CaseStudyItem 
               key={currentCaseStudy.id}
-              reverse={currentIndex % 2 !== 0}
+              $reverse={currentIndex % 2 !== 0}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -304,6 +370,20 @@ const CaseStudies = () => {
                 <CaseStudyTitle>{currentCaseStudy.title}</CaseStudyTitle>
                 <CaseStudyDescription>{currentCaseStudy.description}</CaseStudyDescription>
                 
+                <ChallengeSection>
+                  <h4>Challenge</h4>
+                  <p>{currentCaseStudy.challenge}</p>
+                </ChallengeSection>
+                
+                <ChallengeSection>
+                  <h4>Solution</h4>
+                  <p>{currentCaseStudy.solution}</p>
+                </ChallengeSection>
+                
+                <TechUsedTag>
+                  <strong>Tech Used:</strong> {currentCaseStudy.techUsed}
+                </TechUsedTag>
+                
                 <CaseStudyStats>
                   {currentCaseStudy.stats.map((stat, index) => (
                     <Stat key={index}>
@@ -312,6 +392,10 @@ const CaseStudies = () => {
                     </Stat>
                   ))}
                 </CaseStudyStats>
+                
+                <ClientQuote>
+                  {currentCaseStudy.clientQuote}
+                </ClientQuote>
                 
                 <Button variant="primary">View Full Case Study</Button>
               </CaseStudyContent>

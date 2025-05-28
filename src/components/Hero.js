@@ -115,34 +115,7 @@ const TrustedBy = styled(motion.div)`
   }
 `;
 
-// Client logos container
-const ClientLogos = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  
-  @media (max-width: ${props => props.theme.breakpoints.lg}) {
-    justify-content: center;
-  }
-`;
-
-// Individual client logo
-const ClientLogo = styled(motion.div)`
-  height: 40px;
-  opacity: 0.7;
-  filter: grayscale(100%);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    opacity: 1;
-    filter: grayscale(0%);
-  }
-  
-  img {
-    height: 100%;
-  }
-`;
+// We'll add client logos in the future if needed
 
 // Button group
 const ButtonGroup = styled(motion.div)`
@@ -258,20 +231,20 @@ const Hero = () => {
           <Headline
             variants={textReveal}
           >
-            Full-Stack Development & <span>Digital Transformation</span>
+            Founded in 2025 by Pranshu Dixit — <span>CodingBull Technovations Pvt Ltd</span>
           </Headline>
           
           <Subheadline
             variants={fadeIn}
           >
-            Founded in 2025 by Pranshu Dixit, we build innovative digital solutions that help businesses succeed in the digital age. We deliver custom web development with a focus on quality and client satisfaction.
+            Founded in 2025 by Pranshu Dixit, full-stack innovation with Django, React, Node.js & more—solutions for Gujju-Masla, Physioway & Harsh Patel. Full-Stack Development, Digital Transformation, Cyber Security, AI and Machine Learning.
           </Subheadline>
           
           <ButtonGroup
             variants={fadeIn}
           >
-            <Button variant="primary" size="lg">Get Started</Button>
-            <Button variant="secondary" size="lg">View Case Studies</Button>
+            <Button variant="primary" size="lg" onClick={() => document.getElementById('case-studies').scrollIntoView({ behavior: 'smooth' })}>See Our Case Studies</Button>
+            <Button variant="secondary" size="lg" onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}>View Services</Button>
           </ButtonGroup>
           
           <TrustedBy

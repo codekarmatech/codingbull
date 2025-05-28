@@ -14,11 +14,11 @@ const NavbarContainer = styled(motion.header)`
   z-index: ${props => props.theme.zIndex.fixed};
   padding: 1rem 2rem;
   transition: all 0.3s ease;
-  background: ${props => props.scrolled 
+  background: ${props => props.$scrolled 
     ? props.theme.colors.darkGrey 
     : 'rgba(18, 18, 18, 0.8)'};
-  backdrop-filter: ${props => props.scrolled ? 'blur(10px)' : 'none'};
-  box-shadow: ${props => props.scrolled ? props.theme.shadows.md : 'none'};
+  backdrop-filter: ${props => props.$scrolled ? 'blur(10px)' : 'none'};
+  box-shadow: ${props => props.$scrolled ? props.theme.shadows.md : 'none'};
 `;
 
 // Navbar content wrapper
@@ -58,11 +58,18 @@ const NavLinks = styled.nav`
   }
 `;
 
-// Individual nav link
-const NavLink = styled(motion(Link))`
+// Individual nav link - using a custom component that combines motion and Link
+const NavLink = styled(({ to, children, ...props }) => (
+  <motion.div {...props}>
+    <Link to={to} style={{ color: 'inherit', textDecoration: 'none' }}>
+      {children}
+    </Link>
+  </motion.div>
+))`
   color: ${props => props.theme.colors.textPrimary};
   font-weight: 500;
   position: relative;
+  cursor: pointer;
   
   &:after {
     content: '';
@@ -112,12 +119,19 @@ const MobileMenu = styled(motion.div)`
 `;
 
 // Mobile menu links
-const MobileNavLink = styled(motion(Link))`
+const MobileNavLink = styled(({ to, children, ...props }) => (
+  <motion.div {...props}>
+    <Link to={to} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
+      {children}
+    </Link>
+  </motion.div>
+))`
   color: ${props => props.theme.colors.textPrimary};
   font-size: ${props => props.theme.fontSizes.xl};
   font-weight: 600;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
 `;
 
 // Mobile menu backdrop
@@ -201,7 +215,7 @@ const Navbar = () => {
   
   return (
     <NavbarContainer
-      scrolled={scrolled}
+      $scrolled={scrolled}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}
