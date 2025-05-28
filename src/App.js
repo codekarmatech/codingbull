@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import theme from './styles/theme';
 import GlobalStyles from './styles/GlobalStyles';
 import Navbar from './components/Navbar';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load page components
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -28,9 +29,9 @@ const LoadingFallback = () => (
     color: theme.colors.electricBlue
   }}>
     <div>
-      <div style={{ 
-        width: '50px', 
-        height: '50px', 
+      <div style={{
+        width: '50px',
+        height: '50px',
         border: `3px solid ${theme.colors.mediumGrey}`,
         borderTop: `3px solid ${theme.colors.electricBlue}`,
         borderRadius: '50%',
@@ -53,23 +54,25 @@ function App() {
     <HelmetProvider>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
-        <Router>
-          <Navbar />
-          <AnimatePresence mode="wait">
-            <Suspense fallback={<LoadingFallback />}>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:slug" element={<BlogPostPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/services/:slug" element={<ServicePage />} />
-                <Route path="/our-projects" element={<ProjectsPage />} />
-                {/* Add more routes as needed */}
-              </Routes>
-            </Suspense>
-          </AnimatePresence>
-        </Router>
+        <ErrorBoundary>
+          <Router>
+            <Navbar />
+            <AnimatePresence mode="wait">
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:slug" element={<BlogPostPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/services/:slug" element={<ServicePage />} />
+                  <Route path="/our-projects" element={<ProjectsPage />} />
+                  {/* Add more routes as needed */}
+                </Routes>
+              </Suspense>
+            </AnimatePresence>
+          </Router>
+        </ErrorBoundary>
       </ThemeProvider>
     </HelmetProvider>
   );
