@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn, slideUp, staggerContainer } from '../animations/variants';
+import apiService from '../services/api';
 
 // Testimonials section container
 const TestimonialsContainer = styled.section`
@@ -372,9 +373,20 @@ const Testimonials = () => {
   // State for current testimonial
   const [currentIndex, setCurrentIndex] = useState(0);
   const [view, setView] = useState('slider'); // 'slider' or 'grid'
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Testimonials data
-  const testimonials = [
+  // Create a loading state UI indicator component
+  const LoadingState = () => (
+    <div className="testimonials-loading">
+      {loading && <div className="loading-spinner">Loading testimonials...</div>}
+      {error && <div className="error-message">{error}</div>}
+    </div>
+  );
+  
+  // Mock testimonials data for fallback - defined before useEffect to avoid dependency issues
+  const mockTestimonials = [
     {
       id: 1,
       quote: "Hiring CodingBull was a game-changer for our business. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
@@ -400,6 +412,33 @@ const Testimonials = () => {
       image: "/logos/harsh-patel.png"
     }
   ];
+  
+  // Fetch testimonials from API
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await apiService.testimonials.getTestimonials();
+        if (response && response.results && response.results.length > 0) {
+          setTestimonials(response.results);
+        } else {
+          // Fallback to mock data
+          setTestimonials(mockTestimonials);
+        }
+      } catch (err) {
+        console.error('Error fetching testimonials:', err);
+        setError('Failed to load testimonials. Please try again later.');
+        // Fallback to mock data
+        setTestimonials(mockTestimonials);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTestimonials();
+  }, []);
   
   // Get current testimonial
   const currentTestimonial = testimonials[currentIndex];

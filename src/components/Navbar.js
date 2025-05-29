@@ -179,6 +179,7 @@ const Navbar = () => {
     { name: 'Our Projects', path: '/our-projects' },
     { name: 'About', path: '/about' },
     { name: 'Blog', path: '/blog' },
+    { name: 'Contact', path: '/contact' },
   ];
   
   // Handle scroll event to change navbar appearance
@@ -245,7 +246,9 @@ const Navbar = () => {
               {item.name}
             </NavLink>
           ))}
-          <Button variant="primary" size="md">Contact Us</Button>
+          <Link to="/contact" style={{ textDecoration: 'none' }}>
+            <Button variant="primary" size="md">Contact Us</Button>
+          </Link>
         </NavLinks>
         
         <MenuButton
@@ -286,9 +289,15 @@ const Navbar = () => {
                     {item.name}
                   </MobileNavLink>
                 ))}
-                <Button variant="primary" size="lg" fullWidth onClick={closeMobileMenu}>
-                  Contact Us
-                </Button>
+                <Link to="/contact" style={{ textDecoration: 'none', width: '100%' }} onClick={closeMobileMenu}>
+                  <Button 
+                    variant="primary" 
+                    size="lg" 
+                    fullWidth 
+                  >
+                    Contact Us
+                  </Button>
+                </Link>
               </MobileMenu>
             </>
           )}

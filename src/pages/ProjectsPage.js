@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { pageTransition, fadeIn } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import SEO from '../components/SEO';
+import apiService from '../services/api';
 
 // Page container
 const PageContainer = styled(motion.div)`
@@ -534,12 +535,11 @@ const ProjectCardCategory = styled.span`
   background: ${props => props.theme.colors.deepPurple};
   color: ${props => props.theme.colors.textPrimary};
   border-radius: ${props => props.theme.borderRadius.full};
-  font-size: ${props => props.theme.fontSizes.sm};
+  font-size: ${props => props.theme.fontSizes.xs};
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 1rem;
-  align-self: flex-start;
 `;
 
 // Project card title
@@ -560,143 +560,48 @@ const ProjectCardDescription = styled.p`
   overflow: hidden;
 `;
 
-// Project card tech
-const ProjectCardTech = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+// Project card button
+const ProjectCardButton = styled(Button)`
+  align-self: flex-start;
 `;
 
-// Project card tech item
-const ProjectCardTechItem = styled.span`
-  background: rgba(106, 13, 173, 0.2);
-  border: 1px solid rgba(106, 13, 173, 0.5);
-  padding: 0.25rem 0.5rem;
-  border-radius: ${props => props.theme.borderRadius.sm};
-  font-size: ${props => props.theme.fontSizes.xs};
-  color: ${props => props.theme.colors.textSecondary};
-`;
-
-// Stats section
-const StatsSection = styled.section`
-  position: relative;
-  padding: 8rem 2rem;
-  background: ${props => props.theme.colors.darkGrey};
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 15rem;
-    background: ${props => props.theme.colors.mediumGrey};
-    transform: skewY(5deg);
-    transform-origin: top right;
-    z-index: 1;
-  }
-`;
-
-// Stats content
-const StatsContent = styled.div`
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  z-index: 2;
-`;
-
-// Stats grid
-const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.lg}) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  @media (max-width: ${props => props.theme.breakpoints.sm}) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-// Stat item
-const StatItem = styled(motion.div)`
+// No projects message
+const NoProjectsMessage = styled.div`
   text-align: center;
-`;
-
-// Stat value
-const StatValue = styled.div`
-  font-size: ${props => props.theme.fontSizes['6xl']};
-  font-weight: 800;
-  background: ${props => props.theme.colors.gradientPrimary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 1rem;
+  padding: 4rem 2rem;
   
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    font-size: ${props => props.theme.fontSizes['5xl']};
+  h3 {
+    font-size: ${props => props.theme.fontSizes['2xl']};
+    margin-bottom: 1rem;
+    color: ${props => props.theme.colors.textPrimary};
   }
-`;
-
-// Stat label
-const StatLabel = styled.p`
-  font-size: ${props => props.theme.fontSizes.lg};
-  color: ${props => props.theme.colors.textSecondary};
-  position: relative;
-  display: inline-block;
   
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -0.75rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3rem;
-    height: 2px;
-    background: ${props => props.theme.colors.electricBlue};
+  p {
+    color: ${props => props.theme.colors.textSecondary};
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
   }
-`;
-
-// CTA section
-const CTASection = styled.section`
-  padding: 8rem 2rem;
-  background: ${props => props.theme.colors.mediumGrey};
-  text-align: center;
-`;
-
-// CTA content
-const CTAContent = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-// CTA title
-const CTATitle = styled(motion.h2)`
-  font-size: ${props => props.theme.fontSizes['4xl']};
-  margin-bottom: 1.5rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    font-size: ${props => props.theme.fontSizes['3xl']};
-  }
-`;
-
-// CTA description
-const CTADescription = styled(motion.p)`
-  font-size: ${props => props.theme.fontSizes.lg};
-  color: ${props => props.theme.colors.textSecondary};
-  margin-bottom: 2.5rem;
-  line-height: 1.7;
 `;
 
 const ProjectsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filter, setFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [technologies, setTechnologies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Projects data
-  const projects = useMemo(() => [
+  // Create a loading state UI indicator component
+  const LoadingIndicator = () => (
+    <div className="loading-container">
+      {loading && <div className="loading-spinner">Loading projects...</div>}
+      {error && <div className="error-message">{error}</div>}
+    </div>
+  );
+  
+  // Mock projects data for fallback - defined before useEffect to avoid dependency issues
+  const mockProjects = useMemo(() => [
     {
       id: 1,
       title: "Gujju-Masla E-commerce Platform",
@@ -707,13 +612,11 @@ const ProjectsPage = () => {
       challenge: "Gujju-Masla needed to modernize its 40-year-old brand with an online ordering system to reach new customers.",
       solution: "Built on Django, React, Tailwind CSS, and Docker for rapid, reliable deployments.",
       outcome: "Launched in 4 weeks; online orders rose by 30% within the first month.",
-      techUsed: ['Django', 'React', 'Tailwind CSS', 'Docker', 'PostgreSQL'],
+      technologies: ['React', 'Django', 'Tailwind CSS', 'Docker', 'PostgreSQL'],
       testimonial: {
-        quote: "Hiring CodingBull was a game-changer. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
-        author: "Deep Varma",
-        title: "Managing Director",
-        company: "Gujju-Masla",
-        image: "/logos/gujju-masla.png"
+        quote: "Hiring CodingBull was a game-changer for our business. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
+        author: "Rajesh Patel",
+        title: "CEO, Gujju-Masla"
       },
       description: "A modern e-commerce platform for a 40-year-old spice brand, enabling online ordering and expanding their customer base.",
       featured: true
@@ -728,7 +631,7 @@ const ProjectsPage = () => {
       challenge: "Physioway required a secure, enterprise-grade application to manage patient assessments and treatment plans across multiple clinics.",
       solution: "Developed with Django REST Framework, React, and integrated audit logs for HIPAA-style compliance.",
       outcome: "Deployed in 8 weeks; clinic efficiency improved by 40%, and patient satisfaction scores rose 15%.",
-      techUsed: ['Django', 'React', 'PostgreSQL', 'Docker', 'Redux'],
+      technologies: ['Django', 'React', 'PostgreSQL', 'Docker', 'Redux'],
       testimonial: {
         quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
         author: "Dr. Rajavi Dixit",
@@ -749,7 +652,7 @@ const ProjectsPage = () => {
       challenge: "Harsh Patel Enterprises needed real-time attendance tracking and analytics for their distributed teams.",
       solution: "Built a custom dashboard using Flask, MongoDB, and Chart.js for live reporting, containerized with Docker.",
       outcome: "Saved over 20 hours of manual reporting per month and slashed errors by 90%.",
-      techUsed: ['Flask', 'MongoDB', 'Chart.js', 'Docker', 'Python'],
+      technologies: ['Flask', 'MongoDB', 'Chart.js', 'Docker', 'Python'],
       testimonial: {
         quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
         author: "Harsh Patel",
@@ -771,114 +674,167 @@ const ProjectsPage = () => {
   ];
   
   // Filter categories
-  const categories = ['all', 'E-commerce', 'Healthcare', 'Enterprise'];
+  const filterCategories = [
+    { id: 'all', label: 'All Projects' },
+    { id: 'E-commerce', label: 'E-commerce' },
+    { id: 'Healthcare', label: 'Healthcare' },
+    { id: 'Enterprise', label: 'Enterprise' }
+  ];
   
-  // Effect to set selected project from URL
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await apiService.projects.getProjects();
+        if (response && response.results) {
+          setProjects(response.results);
+        } else {
+          // Fallback to mock data
+          setProjects(mockProjects);
+        }
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError('Failed to load projects. Please try again later.');
+        // Fallback to mock data
+        setProjects(mockProjects);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    // Fetch technologies
+    const fetchTechnologies = async () => {
+      try {
+        const response = await apiService.projects.getTechnologies();
+        if (response && response.results) {
+          setTechnologies(response.results);
+        }
+      } catch (err) {
+        console.error('Error fetching technologies:', err);
+      }
+    };
+    
+    fetchProjects();
+    fetchTechnologies();
+  }, [mockProjects]);
+  
+  // Handle project selection from URL
   useEffect(() => {
     const projectId = searchParams.get('id');
     if (projectId) {
-      const project = projects.find(p => p.id === parseInt(projectId));
-      if (project) {
-        setSelectedProject(project);
+      const selectedProject = projects.find(p => p.id.toString() === projectId);
+      if (selectedProject) {
+        setSelectedProject(selectedProject);
       }
-    } else {
-      setSelectedProject(null);
     }
   }, [searchParams, projects]);
   
-  // Filter projects
-  const filteredProjects = filter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === filter);
+  // Filter projects based on category
+  const filteredProjects = useMemo(() => {
+    if (filter === 'all') return projects;
+    return projects.filter(project => project.category === filter);
+  }, [filter, projects]);
+  
+  // Get unique categories from projects
+  const categories = useMemo(() => {
+    const uniqueCategories = [...new Set(projects.map(project => project.category))];
+    return uniqueCategories;
+  }, [projects]);
   
   // Handle filter change
   const handleFilterChange = (category) => {
     setFilter(category);
+    setSelectedProject(null);
+    setSearchParams({ category });
   };
   
   // Handle project selection
   const handleProjectSelect = (project) => {
     setSelectedProject(project);
-    setSearchParams({ id: project.id.toString() });
+    setSearchParams({ id: project.id });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   // Handle back button click
   const handleBackClick = () => {
     setSelectedProject(null);
-    setSearchParams({});
+    setSearchParams({ category: filter !== 'all' ? filter : '' });
   };
   
   return (
-    <>
+    <PageContainer
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageTransition}
+    >
       <SEO 
-        title="Our Projects" 
-        description="Explore CodingBull's portfolio of web and mobile development projects across e-commerce, healthcare, enterprise solutions, and more."
-        canonical="/our-projects"
+        title="Our Projects | CodingBull"
+        description="Explore our portfolio of custom software solutions across e-commerce, healthcare, enterprise, and more."
       />
-      <PageContainer
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageTransition}
-      >
-        <PageContent>
-          {/* Hero Section */}
-          <ProjectsHero>
-            <HeroContent>
-              <HeroTitle
-                variants={fadeIn}
-                initial="hidden"
-                animate="visible"
-              >
-                Our Projects
-              </HeroTitle>
-              <HeroDescription
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                Explore our portfolio of successful projects across various industries. 
-                We deliver tailored solutions that drive real business results.
-              </HeroDescription>
-              
-              <ProjectCounter
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <p>We've completed</p>
-                <span>{projects.length}</span>
-                <p>successful projects</p>
-              </ProjectCounter>
-            </HeroContent>
-          </ProjectsHero>
-          
-          {/* Project Showcase Section */}
-          <ProjectShowcaseSection>
-            <ShowcaseContent>
-              {/* Project Detail View */}
-              <AnimatePresence mode="wait">
-                {selectedProject && (
+      <PageContent>
+        {/* Hero Section */}
+        <ProjectsHero>
+          <HeroContent>
+            <HeroTitle
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.6 }}
+            >
+              Our Projects
+            </HeroTitle>
+            <HeroDescription
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Explore our portfolio of custom software solutions that have helped businesses transform their operations and achieve their goals.
+            </HeroDescription>
+            
+            {/* Project Counter */}
+            <ProjectCounter
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <p>Over</p>
+              <span>{projects.length || '10'}+</span>
+              <p>Projects Delivered</p>
+            </ProjectCounter>
+          </HeroContent>
+        </ProjectsHero>
+        
+        {/* Project Showcase Section */}
+        <ProjectShowcaseSection>
+          <ShowcaseContent>
+            {loading ? (
+              <LoadingIndicator />
+            ) : (
+              <>
+                {selectedProject ? (
                   <ProjectDetailView
-                    key="project-detail"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                   >
                     <ProjectDetailBackButton onClick={handleBackClick}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
-                      Back to all projects
+                      Back to Projects
                     </ProjectDetailBackButton>
                     
                     <ProjectDetailContainer>
                       <ProjectDetailHeader>
                         <ProjectDetailBanner>
-                          <img src={selectedProject.logo} alt={`${selectedProject.client} logo`} />
+                          <img src={selectedProject.image} alt={selectedProject.title} />
                         </ProjectDetailBanner>
                         <ProjectDetailOverlay>
                           <ProjectDetailTitleArea>
@@ -895,22 +851,22 @@ const ProjectsPage = () => {
                       <ProjectDetailBody>
                         <ProjectDetailMain>
                           <ProjectDetailSection>
-                            <ProjectDetailSectionTitle>Overview</ProjectDetailSectionTitle>
+                            <ProjectDetailSectionTitle>Project Overview</ProjectDetailSectionTitle>
                             <ProjectDetailText>{selectedProject.description}</ProjectDetailText>
                           </ProjectDetailSection>
                           
                           <ProjectDetailSection>
-                            <ProjectDetailSectionTitle>Challenge</ProjectDetailSectionTitle>
+                            <ProjectDetailSectionTitle>The Challenge</ProjectDetailSectionTitle>
                             <ProjectDetailText>{selectedProject.challenge}</ProjectDetailText>
                           </ProjectDetailSection>
                           
                           <ProjectDetailSection>
-                            <ProjectDetailSectionTitle>Solution</ProjectDetailSectionTitle>
+                            <ProjectDetailSectionTitle>Our Solution</ProjectDetailSectionTitle>
                             <ProjectDetailText>{selectedProject.solution}</ProjectDetailText>
                           </ProjectDetailSection>
                           
                           <ProjectDetailSection>
-                            <ProjectDetailSectionTitle>Outcome</ProjectDetailSectionTitle>
+                            <ProjectDetailSectionTitle>The Outcome</ProjectDetailSectionTitle>
                             <ProjectDetailText>{selectedProject.outcome}</ProjectDetailText>
                           </ProjectDetailSection>
                         </ProjectDetailMain>
@@ -919,141 +875,93 @@ const ProjectsPage = () => {
                           <ProjectDetailTechStack>
                             <TechStackTitle>Technologies Used</TechStackTitle>
                             <TechStackList>
-                              {selectedProject.techUsed.map((tech, index) => (
+                              {selectedProject.technologies && selectedProject.technologies.map((tech, index) => (
                                 <TechStackItem key={index}>{tech}</TechStackItem>
                               ))}
                             </TechStackList>
                           </ProjectDetailTechStack>
                           
-                          <ProjectDetailTestimonial>
-                            <TestimonialQuote>
-                              {selectedProject.testimonial.quote}
-                            </TestimonialQuote>
-                            <TestimonialAuthor>
-                              <TestimonialAuthorImage>
-                                <img src={selectedProject.logo} alt={selectedProject.testimonial.author} />
-                              </TestimonialAuthorImage>
-                              <TestimonialAuthorInfo>
-                                <TestimonialAuthorName>{selectedProject.testimonial.author}</TestimonialAuthorName>
-                                <TestimonialAuthorTitle>
-                                  {selectedProject.testimonial.title}, {selectedProject.testimonial.company}
-                                </TestimonialAuthorTitle>
-                              </TestimonialAuthorInfo>
-                            </TestimonialAuthor>
-                          </ProjectDetailTestimonial>
+                          {selectedProject.testimonial && (
+                            <ProjectDetailTestimonial>
+                              <TestimonialQuote>
+                                {selectedProject.testimonial.quote}
+                              </TestimonialQuote>
+                              <TestimonialAuthor>
+                                {selectedProject.testimonial.image && (
+                                  <TestimonialAuthorImage>
+                                    <img src={selectedProject.testimonial.image} alt={selectedProject.testimonial.author} />
+                                  </TestimonialAuthorImage>
+                                )}
+                                <TestimonialAuthorInfo>
+                                  <TestimonialAuthorName>{selectedProject.testimonial.author}</TestimonialAuthorName>
+                                  <TestimonialAuthorTitle>
+                                    {selectedProject.testimonial.title}
+                                    {selectedProject.testimonial.company && `, ${selectedProject.testimonial.company}`}
+                                  </TestimonialAuthorTitle>
+                                </TestimonialAuthorInfo>
+                              </TestimonialAuthor>
+                            </ProjectDetailTestimonial>
+                          )}
                         </ProjectDetailSidebar>
                       </ProjectDetailBody>
                     </ProjectDetailContainer>
                   </ProjectDetailView>
-                )}
-              </AnimatePresence>
-              
-              {/* Project Filter Tabs */}
-              {!selectedProject && (
-                <>
-                  <FilterTabs>
-                    {categories.map((category, index) => (
-                      <FilterTab
-                        key={index}
-                        $active={filter === category}
-                        onClick={() => handleFilterChange(category)}
-                      >
-                        {category === 'all' ? 'All Projects' : category}
-                      </FilterTab>
-                    ))}
-                  </FilterTabs>
-                  
-                  {/* Project Cards */}
-                  <ProjectCardsContainer>
-                    <AnimatePresence>
-                      {filteredProjects.map((project) => (
-                        <ProjectCard
-                          key={project.id}
-                          initial={{ opacity: 0, y: 30 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 30 }}
-                          transition={{ duration: 0.5 }}
-                          onClick={() => handleProjectSelect(project)}
+                ) : (
+                  <>
+                    <FilterTabs>
+                      {filterCategories.map(category => (
+                        <FilterTab
+                          key={category.id}
+                          $active={filter === category.id}
+                          onClick={() => handleFilterChange(category.id)}
                         >
-                          <ProjectCardImage>
-                            <img src={project.logo} alt={`${project.client} logo`} />
-                          </ProjectCardImage>
-                          <ProjectCardOverlay>
-                            <ProjectCardCategory>{project.category}</ProjectCardCategory>
-                            <ProjectCardTitle>{project.title}</ProjectCardTitle>
-                            <ProjectCardDescription>{project.description}</ProjectCardDescription>
-                            <ProjectCardTech>
-                              {project.techUsed.slice(0, 3).map((tech, index) => (
-                                <ProjectCardTechItem key={index}>{tech}</ProjectCardTechItem>
-                              ))}
-                              {project.techUsed.length > 3 && (
-                                <ProjectCardTechItem>+{project.techUsed.length - 3}</ProjectCardTechItem>
-                              )}
-                            </ProjectCardTech>
-                            <Button variant="primary">View Project Details</Button>
-                          </ProjectCardOverlay>
-                        </ProjectCard>
+                          {category.label}
+                        </FilterTab>
                       ))}
-                    </AnimatePresence>
-                  </ProjectCardsContainer>
-                </>
-              )}
-            </ShowcaseContent>
-          </ProjectShowcaseSection>
-          
-          {/* Stats Section */}
-          <StatsSection>
-            <StatsContent>
-              <StatsGrid>
-                {stats.map((stat, index) => (
-                  <StatItem
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <StatValue>{stat.value}</StatValue>
-                    <StatLabel>{stat.label}</StatLabel>
-                  </StatItem>
-                ))}
-              </StatsGrid>
-            </StatsContent>
-          </StatsSection>
-          
-          {/* CTA Section */}
-          <CTASection>
-            <CTAContent>
-              <CTATitle
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                Ready to Build Your Next Project?
-              </CTATitle>
-              <CTADescription
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                Let's discuss how we can help you achieve your business goals with our custom web and mobile development solutions.
-              </CTADescription>
-              <Button 
-                variant="primary" 
-                size="lg"
-                onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-              >
-                Get in Touch
-              </Button>
-            </CTAContent>
-          </CTASection>
-          
-          <Footer />
-        </PageContent>
-      </PageContainer>
-    </>
+                    </FilterTabs>
+                    
+                    {filteredProjects.length > 0 ? (
+                      <ProjectCardsContainer>
+                        <AnimatePresence>
+                          {filteredProjects.map(project => (
+                            <ProjectCard
+                              key={project.id}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                              transition={{ duration: 0.5 }}
+                              whileHover={{ y: -10 }}
+                              onClick={() => handleProjectSelect(project)}
+                            >
+                              <ProjectCardImage>
+                                <img src={project.image} alt={project.title} />
+                              </ProjectCardImage>
+                              <ProjectCardOverlay>
+                                <ProjectCardCategory>{project.category}</ProjectCardCategory>
+                                <ProjectCardTitle>{project.title}</ProjectCardTitle>
+                                <ProjectCardDescription>{project.description}</ProjectCardDescription>
+                                <ProjectCardButton variant="outline">View Project</ProjectCardButton>
+                              </ProjectCardOverlay>
+                            </ProjectCard>
+                          ))}
+                        </AnimatePresence>
+                      </ProjectCardsContainer>
+                    ) : (
+                      <NoProjectsMessage>
+                        <h3>No projects found</h3>
+                        <p>We couldn't find any projects matching your filter criteria. Please try a different category.</p>
+                        <Button onClick={() => handleFilterChange('all')}>View All Projects</Button>
+                      </NoProjectsMessage>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </ShowcaseContent>
+        </ProjectShowcaseSection>
+      </PageContent>
+      <Footer />
+    </PageContainer>
   );
 };
 

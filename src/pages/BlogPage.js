@@ -6,6 +6,10 @@ import { pageTransition, staggerContainer, slideUp } from '../animations/variant
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import SEO from '../components/SEO';
+import DebugEnv from '../components/DebugEnv';
+import ApiTest from '../components/ApiTest';
+import NetworkDebug from '../components/NetworkDebug';
+import apiService from '../services/api';
 
 // Blog page container
 const BlogPageContainer = styled(motion.div)`
@@ -366,7 +370,10 @@ const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const postsPerPage = 6;
   
-  // Mock blog data (would be fetched from API in production)
+  // State for API data
+  const [error, setError] = useState(null); // Used for error handling
+  
+  // Legacy mock data (will be replaced by API data)
   const mockPostsRef = useRef([
     {
       id: 1,
@@ -466,15 +473,55 @@ const BlogPage = () => {
     }
   ]);
   
-  // Simulate API fetch
+  // Fetch blog posts from API
   useEffect(() => {
-    // In a real app, this would be an API call
-    setTimeout(() => {
-      setPosts(mockPostsRef.current);
-      setFilteredPosts(mockPostsRef.current);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        console.log('Fetching blog posts with category:', category, 'page:', currentPage, 'search:', searchTerm);
+        
+        // Use the API service to fetch posts
+        let response;
+        
+        if (category !== 'all' && category) {
+          // If a category is selected, fetch posts by category
+          response = await apiService.blog.getPostsByCategory(category, currentPage);
+        } else {
+          // Otherwise fetch all posts with optional search
+          response = await apiService.blog.getPosts(currentPage, {
+            search: searchTerm
+          });
+        }
+        
+        console.log('API response:', response);
+        
+        if (response && response.results) {
+          setPosts(response.results);
+          setFilteredPosts(response.results);
+        } else {
+          console.log('No results found, using mock data');
+          // Fallback to mock data if API fails or during development
+          setPosts(mockPostsRef.current);
+          setFilteredPosts(mockPostsRef.current);
+        }
+      } catch (err) {
+        console.error('Error fetching blog posts:', err);
+        setError('Failed to load blog posts. Please try again later.');
+        console.log('Using mock data due to error');
+        // Fallback to mock data
+        setPosts(mockPostsRef.current);
+        setFilteredPosts(mockPostsRef.current);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPosts();
+  }, [currentPage, category, searchTerm]);
+  
+  // We're using uniqueCategories derived from posts, so we don't need to fetch categories separately
   
   // Filter posts based on category and search term
   useEffect(() => {
@@ -500,7 +547,7 @@ const BlogPage = () => {
   }, [category, searchTerm, posts]);
   
   // Get unique categories for filter
-  const categories = ['all', ...new Set(posts.map(post => post.category))];
+  const uniqueCategories = ['all', ...new Set(posts.map(post => post.category))];
   
   // Get current posts for pagination
   const indexOfLastPost = currentPage * postsPerPage;
@@ -525,12 +572,46 @@ const BlogPage = () => {
       .toUpperCase();
   };
   
+  // State for newsletter form
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isNewsletterSubmitting, setIsNewsletterSubmitting] = useState(false);
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+  const [newsletterError, setNewsletterError] = useState(null);
+  
   // Handle newsletter submission
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, this would send the email to an API
-    alert('Thank you for subscribing to our newsletter!');
-    e.target.reset();
+    
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterError('Please enter a valid email address');
+      return;
+    }
+    
+    setIsNewsletterSubmitting(true);
+    setNewsletterError(null);
+    
+    try {
+      // Use the contact API to submit newsletter subscription
+      await apiService.contact.submitInquiry({
+        email: newsletterEmail,
+        subject: 'Newsletter Subscription',
+        message: 'Please add me to your newsletter',
+        name: 'Newsletter Subscriber'
+      });
+      
+      setNewsletterSuccess(true);
+      setNewsletterEmail('');
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setNewsletterSuccess(false);
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting newsletter form:', error);
+      setNewsletterError('Failed to subscribe. Please try again later.');
+    } finally {
+      setIsNewsletterSubmitting(false);
+    }
   };
   
   return (
@@ -575,7 +656,7 @@ const BlogPage = () => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                {categories.map((cat, index) => (
+                {uniqueCategories.map((cat, index) => (
                   <option key={index} value={cat}>
                     {cat === 'all' ? 'All Categories' : cat}
                   </option>
@@ -725,14 +806,48 @@ const BlogPage = () => {
               id="blog-newsletter-email" 
               name="blog-newsletter-email" 
               placeholder="Your email address" 
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              disabled={isNewsletterSubmitting}
               required 
             />
-            <Button type="submit" variant="primary">Subscribe</Button>
+            <Button 
+              type="submit" 
+              variant="primary"
+              disabled={isNewsletterSubmitting}
+            >
+              {isNewsletterSubmitting ? 'Subscribing...' : 'Subscribe'}
+            </Button>
+            {newsletterError && (
+              <div style={{ 
+                color: '#ff6b6b', 
+                fontSize: '0.875rem', 
+                marginTop: '1rem', 
+                textAlign: 'center',
+                width: '100%'
+              }}>
+                {newsletterError}
+              </div>
+            )}
+            {newsletterSuccess && (
+              <div style={{ 
+                color: '#2ed573', 
+                fontSize: '0.875rem', 
+                marginTop: '1rem', 
+                textAlign: 'center',
+                width: '100%'
+              }}>
+                Successfully subscribed to the newsletter!
+              </div>
+            )}
           </NewsletterForm>
         </NewsletterContent>
       </NewsletterSection>
       
       <Footer />
+      <DebugEnv />
+      <ApiTest />
+      <NetworkDebug />
     </BlogPageContainer>
     </>
   );

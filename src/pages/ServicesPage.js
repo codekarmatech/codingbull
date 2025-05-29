@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
 import SEO from '../components/SEO';
+import apiService from '../services/api';
 
 // Services page container
 const ServicesPageContainer = styled(motion.div)`
@@ -328,8 +329,48 @@ const CTAButtons = styled(motion.div)`
 `;
 
 const ServicesPage = () => {
-  // Services data
-  const services = [
+  // State for services data
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Create a loading state UI indicator component
+  const ServiceLoadingState = () => (
+    <div className="services-loading">
+      {loading && <div className="loading-spinner">Loading services...</div>}
+      {error && <div className="error-message">{error}</div>}
+    </div>
+  );
+  
+  // Fetch services from API
+  useEffect(() => {
+    const fetchServices = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await apiService.services.getServices();
+        if (response && response.results) {
+          setServices(response.results);
+        } else {
+          // Fallback to mock data
+          setServices(mockServices);
+        }
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setError('Failed to load services. Please try again later.');
+        // Fallback to mock data
+        setServices(mockServices);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchServices();
+  }, [mockServices]); // Add mockServices as a dependency
+  
+  // Mock services data for fallback - defined before useEffect to avoid dependency issues
+  const mockServices = [
     {
       id: 1,
       title: 'Full-Stack Development',

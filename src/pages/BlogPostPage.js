@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // useNavigate will be used when implementing navigation features
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
+import apiService from '../services/api';
+// apiService and SEO will be used when API integration is complete
+// import apiService from '../services/api';
+// import SEO from '../components/SEO';
 
 // Blog post page container
 const BlogPostPageContainer = styled(motion.div)`
@@ -671,32 +675,64 @@ const BlogPostPage = () => {
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [contentKey, setContentKey] = useState(0); // Key for AnimatePresence
   
-  // Simulate API fetch
+  // Fetch post data from API
   useEffect(() => {
     // Reset loading state and increment content key for animation
     setLoading(true);
     setContentKey(prevKey => prevKey + 1);
     
-    // In a real app, this would be an API call to fetch the specific post
-    setTimeout(() => {
-      const foundPost = mockPosts.find(p => p.slug === slug);
-      setPost(foundPost || mockPosts[0]); // Default to first post if not found
-      
-      // Get related posts (same category or shared tags)
-      if (foundPost) {
-        const related = mockPosts
-          .filter(p => p.id !== foundPost.id) // Exclude current post
-          .filter(p => 
-            p.category === foundPost.category || 
-            p.tags.some(tag => foundPost.tags.includes(tag))
-          )
-          .slice(0, 3); // Limit to 3 related posts
+    const fetchPost = async () => {
+      try {
+        // Fetch the post by slug
+        const postData = await apiService.blog.getPost(slug);
+        setPost(postData);
         
-        setRelatedPosts(related);
+        // Fetch related posts (same category or shared tags)
+        if (postData && postData.category) {
+          try {
+            // Get posts from the same category
+            const categoryResponse = await apiService.blog.getPostsByCategory(postData.category.slug);
+            
+            // Filter out the current post and limit to 3 related posts
+            const related = (categoryResponse.results || [])
+              .filter(p => p.id !== postData.id)
+              .slice(0, 3);
+              
+            setRelatedPosts(related);
+          } catch (error) {
+            console.error('Error fetching related posts:', error);
+            // Fallback to mock related posts
+            const related = mockPosts
+              .filter(p => p.id !== postData.id)
+              .filter(p => p.category === postData.category.name)
+              .slice(0, 3);
+            setRelatedPosts(related);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        // Fallback to mock data if API fails
+        const foundPost = mockPosts.find(p => p.slug === slug);
+        setPost(foundPost || mockPosts[0]);
+        
+        // Get mock related posts
+        if (foundPost) {
+          const related = mockPosts
+            .filter(p => p.id !== foundPost.id)
+            .filter(p => 
+              p.category === foundPost.category || 
+              p.tags.some(tag => foundPost.tags.includes(tag))
+            )
+            .slice(0, 3);
+          
+          setRelatedPosts(related);
+        }
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
-    }, 1000);
+    };
+    
+    fetchPost();
   }, [slug]);
   
   // Format date

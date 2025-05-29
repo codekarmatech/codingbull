@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { fadeIn, slideUp, staggerContainer, hoverScale } from '../animations/variants'; // Added staggerContainer, hoverScale
 import bullLogo from '../assets/bull-logo.svg';
+import apiService from '../services/api';
 
 // Footer container
 const FooterContainer = styled.footer`
@@ -247,6 +248,46 @@ const FooterBottomLinks = styled.div`
 `;
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      setSubmitError('Please enter a valid email address');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
+    try {
+      // Use the contact API to submit newsletter subscription
+      await apiService.contact.submitInquiry({
+        email,
+        subject: 'Newsletter Subscription',
+        message: 'Please add me to your newsletter',
+        name: 'Newsletter Subscriber'
+      });
+      
+      setSubmitSuccess(true);
+      setEmail('');
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 5000);
+    } catch (error) {
+      console.error('Error submitting newsletter form:', error);
+      setSubmitError('Failed to subscribe. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   return (
     <FooterContainer>
       <FooterContent>
@@ -282,7 +323,7 @@ const Footer = () => {
               <li><FooterLink to="#tech-stack" onClick={(e) => { e.preventDefault(); document.getElementById('tech-stack').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Technology</FooterLink></li>
               <li><FooterLink to="#our-projects" onClick={(e) => { e.preventDefault(); document.getElementById('our-projects').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Our Projects</FooterLink></li>
               <li><FooterLink to="/about" whileHover={{ x: 5 }}>About</FooterLink></li>
-              <li><FooterLink to="#contact" onClick={(e) => { e.preventDefault(); document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }} whileHover={{ x: 5 }}>Contact</FooterLink></li>
+              <li><FooterLink to="/contact" whileHover={{ x: 5 }}>Contact</FooterLink></li>
             </FooterLinks>
           </FooterColumn>
           
@@ -301,11 +342,36 @@ const Footer = () => {
             <p style={{ color: '#E0E0E0', marginBottom: '1rem' }}>
               Subscribe to our newsletter for the latest updates, insights, and offers.
             </p>
-            <NewsletterForm>
+            <NewsletterForm onSubmit={handleNewsletterSubmit}>
               <InputGroup>
-                <input type="email" id="footer-newsletter-email" name="footer-newsletter-email" placeholder="Your email address" />
-                <MotionSubscribeButton type="submit" whileHover={hoverScale} whileTap={{scale: 0.95}}>Subscribe</MotionSubscribeButton>
+                <input 
+                  type="email" 
+                  id="footer-newsletter-email" 
+                  name="footer-newsletter-email" 
+                  placeholder="Your email address" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                />
+                <MotionSubscribeButton 
+                  type="submit" 
+                  whileHover={hoverScale} 
+                  whileTap={{scale: 0.95}}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                </MotionSubscribeButton>
               </InputGroup>
+              {submitError && (
+                <div style={{ color: '#ff6b6b', fontSize: '0.875rem', marginTop: '0.5rem', textAlign: 'left' }}>
+                  {submitError}
+                </div>
+              )}
+              {submitSuccess && (
+                <div style={{ color: '#2ed573', fontSize: '0.875rem', marginTop: '0.5rem', textAlign: 'left' }}>
+                  Successfully subscribed to the newsletter!
+                </div>
+              )}
             </NewsletterForm>
           </FooterColumn>
         </MotionFooterTop>
