@@ -56,7 +56,7 @@ const config = {
 
   // API Configuration
   api: {
-    baseUrl: process.env.REACT_APP_API_BASE_URL || '/api',
+    baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/v1/',
     timeout: parseNumber(process.env.REACT_APP_API_TIMEOUT, 10000),
   },
 

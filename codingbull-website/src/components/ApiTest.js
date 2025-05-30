@@ -10,9 +10,9 @@ const ApiTest = () => {
   useEffect(() => {
     const testApis = async () => {
       try {
-        // Test direct fetch without /v1
+        // Test direct fetch without /v1 - this will fail as the endpoint doesn't exist
         try {
-          const response1 = await fetch('http://localhost:8000/api/categories/');
+          const response1 = await fetch('http://localhost:8000/api/v1/categories/');
           const data1 = await response1.json();
           setResults(prev => ({ ...prev, directFetch: data1 }));
         } catch (error) {

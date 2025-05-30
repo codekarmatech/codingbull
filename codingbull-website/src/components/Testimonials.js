@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn, slideUp, staggerContainer } from '../animations/variants';
 import apiService from '../services/api';
+import PropTypes from 'prop-types';
 
 // Testimonials section container
 const TestimonialsContainer = styled.section`
@@ -369,6 +370,194 @@ const ToggleButton = styled.button`
   }
 `;
 
+
+// Mock testimonials data for fallback
+const mockTestimonials = [
+  {
+    id: 1,
+    quote: "Hiring CodingBull was a game-changer for our business. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
+    author: "Deep Varma",
+    title: "Managing Director",
+    company: "Gujju-Masla",
+    image: "/logos/gujju-masla.png"
+  },
+  {
+    id: 2,
+    quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
+    author: "Dr. Rajavi Dixit",
+    title: "Founder & CEO",
+    company: "Physioway",
+    image: "/logos/physioway.png"
+  },
+  {
+    id: 3,
+    quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
+    author: "Harsh Patel",
+    title: "CEO",
+    company: "Harsh Patel Enterprises",
+    image: "/logos/harsh-patel.png"
+  }
+];
+
+// Loading state component
+const LoadingState = memo(({ isLoading, error }) => (
+  <div className="testimonials-loading" data-testid="testimonials-loading">
+    {isLoading && <div className="loading-spinner">Loading testimonials...</div>}
+    {error && <div className="error-message" role="alert">{error}</div>}
+  </div>
+));
+
+LoadingState.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  error: PropTypes.string
+};
+
+// Single testimonial item component for slider view
+const TestimonialSliderItem = memo(({ testimonial }) => (
+  <TestimonialItem
+    key={testimonial.id}
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -50 }}
+    transition={{ duration: 0.5 }}
+  >
+    <TestimonialQuote>
+      {testimonial.quote}
+    </TestimonialQuote>
+    <TestimonialAuthor>
+      <AuthorImage>
+        <img src={testimonial.image} alt={`${testimonial.company} logo`} />
+      </AuthorImage>
+      <AuthorName>{testimonial.author}</AuthorName>
+      <AuthorTitle>{testimonial.title}</AuthorTitle>
+      <AuthorCompany>{testimonial.company}</AuthorCompany>
+    </TestimonialAuthor>
+  </TestimonialItem>
+));
+
+TestimonialSliderItem.propTypes = {
+  testimonial: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    quote: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    company: PropTypes.string.isRequired,
+    image: PropTypes.string
+  }).isRequired
+};
+
+// Navigation controls component
+const TestimonialNavigation = memo(({ 
+  currentIndex, 
+  testimonials, 
+  handlePrev, 
+  handleNext, 
+  handleDotClick 
+}) => (
+  <>
+    <TestimonialNav>
+      <NavButton 
+        onClick={handlePrev}
+        disabled={testimonials.length <= 1}
+        aria-label="Previous testimonial"
+      >
+        ←
+      </NavButton>
+      <NavButton 
+        onClick={handleNext}
+        disabled={testimonials.length <= 1}
+        aria-label="Next testimonial"
+      >
+        →
+      </NavButton>
+    </TestimonialNav>
+    
+    <NavDots>
+      {testimonials.map((_, index) => (
+        <NavDot 
+          key={index}
+          $active={index === currentIndex}
+          onClick={() => handleDotClick(index)}
+          aria-label={`Go to testimonial ${index + 1}`}
+          aria-current={index === currentIndex ? 'true' : 'false'}
+        />
+      ))}
+    </NavDots>
+  </>
+));
+
+TestimonialNavigation.propTypes = {
+  currentIndex: PropTypes.number.isRequired,
+  testimonials: PropTypes.array.isRequired,
+  handlePrev: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  handleDotClick: PropTypes.func.isRequired
+};
+
+// Grid item component
+const TestimonialGridItem = memo(({ testimonial, index }) => (
+  <TestimonialCard
+    key={testimonial.id}
+    variants={slideUp}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    custom={index * 0.1}
+  >
+    <CardQuote>
+      {testimonial.quote}
+    </CardQuote>
+    <CardAuthor>
+      <CardAuthorImage>
+        <img src={testimonial.image} alt={`${testimonial.company} logo`} />
+      </CardAuthorImage>
+      <CardAuthorInfo>
+        <CardAuthorName>{testimonial.author}</CardAuthorName>
+        <CardAuthorTitle>{testimonial.title}</CardAuthorTitle>
+        <CardAuthorCompany>{testimonial.company}</CardAuthorCompany>
+      </CardAuthorInfo>
+    </CardAuthor>
+  </TestimonialCard>
+));
+
+TestimonialGridItem.propTypes = {
+  testimonial: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    quote: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    company: PropTypes.string.isRequired,
+    image: PropTypes.string
+  }).isRequired,
+  index: PropTypes.number.isRequired
+};
+
+// View toggle component
+const ViewToggleComponent = memo(({ view, setView }) => (
+  <ViewToggle>
+    <ToggleButton 
+      $active={view === 'slider'} 
+      onClick={() => setView('slider')}
+      aria-pressed={view === 'slider'}
+    >
+      Showcase View
+    </ToggleButton>
+    <ToggleButton 
+      $active={view === 'grid'} 
+      onClick={() => setView('grid')}
+      aria-pressed={view === 'grid'}
+    >
+      Grid View
+    </ToggleButton>
+  </ViewToggle>
+));
+
+ViewToggleComponent.propTypes = {
+  view: PropTypes.string.isRequired,
+  setView: PropTypes.func.isRequired
+};
+
+// Main Testimonials component
 const Testimonials = () => {
   // State for current testimonial
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -376,42 +565,6 @@ const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Create a loading state UI indicator component
-  const LoadingState = () => (
-    <div className="testimonials-loading">
-      {loading && <div className="loading-spinner">Loading testimonials...</div>}
-      {error && <div className="error-message">{error}</div>}
-    </div>
-  );
-  
-  // Mock testimonials data for fallback - defined before useEffect to avoid dependency issues
-  const mockTestimonials = [
-    {
-      id: 1,
-      quote: "Hiring CodingBull was a game-changer for our business. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
-      author: "Deep Varma",
-      title: "Managing Director",
-      company: "Gujju-Masla",
-      image: "/logos/gujju-masla.png"
-    },
-    {
-      id: 2,
-      quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
-      author: "Dr. Rajavi Dixit",
-      title: "Founder & CEO",
-      company: "Physioway",
-      image: "/logos/physioway.png"
-    },
-    {
-      id: 3,
-      quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
-      author: "Harsh Patel",
-      title: "CEO",
-      company: "Harsh Patel Enterprises",
-      image: "/logos/harsh-patel.png"
-    }
-  ];
   
   // Fetch testimonials from API
   useEffect(() => {
@@ -421,10 +574,12 @@ const Testimonials = () => {
       
       try {
         const response = await apiService.testimonials.getTestimonials();
-        if (response && response.results && response.results.length > 0) {
+        if (response && Array.isArray(response)) {
+          setTestimonials(response);
+        } else if (response && response.results && Array.isArray(response.results)) {
           setTestimonials(response.results);
         } else {
-          // Fallback to mock data
+          console.warn('API response format unexpected, falling back to mock data');
           setTestimonials(mockTestimonials);
         }
       } catch (err) {
@@ -440,8 +595,8 @@ const Testimonials = () => {
     fetchTestimonials();
   }, []);
   
-  // Get current testimonial
-  const currentTestimonial = testimonials[currentIndex];
+  // Get current testimonial safely
+  const currentTestimonial = testimonials.length > 0 ? testimonials[currentIndex] : null;
   
   // Handle navigation
   const handlePrev = useCallback(() => {
@@ -456,20 +611,21 @@ const Testimonials = () => {
     );
   }, [testimonials.length]);
   
-  const handleDotClick = (index) => {
+  const handleDotClick = useCallback((index) => {
     setCurrentIndex(index);
-  };
+  }, []);
   
   // Auto-rotate testimonials
   useEffect(() => {
-    if (view === 'slider') {
+    if (view === 'slider' && testimonials.length > 1) {
       const interval = setInterval(() => {
         handleNext();
       }, 8000);
       
       return () => clearInterval(interval);
     }
-  }, [currentIndex, view, handleNext]);
+    return undefined;
+  }, [currentIndex, view, handleNext, testimonials.length]);
   
   return (
     <TestimonialsContainer id="testimonials">
@@ -495,69 +651,29 @@ const Testimonials = () => {
           </SectionDescription>
         </SectionHeader>
         
-        <ViewToggle>
-          <ToggleButton 
-            $active={view === 'slider'} 
-            onClick={() => setView('slider')}
-          >
-            Showcase View
-          </ToggleButton>
-          <ToggleButton 
-            $active={view === 'grid'} 
-            onClick={() => setView('grid')}
-          >
-            Grid View
-          </ToggleButton>
-        </ViewToggle>
+        <ViewToggleComponent view={view} setView={setView} />
         
         {view === 'slider' && (
           <TestimonialShowcase>
-            <AnimatePresence mode="wait">
-              <TestimonialItem
-                key={currentTestimonial.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.5 }}
-              >
-                <TestimonialQuote>
-                  {currentTestimonial.quote}
-                </TestimonialQuote>
-                <TestimonialAuthor>
-                  <AuthorImage>
-                    <img src={currentTestimonial.image} alt={`${currentTestimonial.company} logo`} />
-                  </AuthorImage>
-                  <AuthorName>{currentTestimonial.author}</AuthorName>
-                  <AuthorTitle>{currentTestimonial.title}</AuthorTitle>
-                  <AuthorCompany>{currentTestimonial.company}</AuthorCompany>
-                </TestimonialAuthor>
-              </TestimonialItem>
-            </AnimatePresence>
-            
-            <TestimonialNav>
-              <NavButton 
-                onClick={handlePrev}
-                disabled={testimonials.length <= 1}
-              >
-                ←
-              </NavButton>
-              <NavButton 
-                onClick={handleNext}
-                disabled={testimonials.length <= 1}
-              >
-                →
-              </NavButton>
-            </TestimonialNav>
-            
-            <NavDots>
-              {testimonials.map((_, index) => (
-                <NavDot 
-                  key={index}
-                  $active={index === currentIndex}
-                  onClick={() => handleDotClick(index)}
+            {loading || error ? (
+              <LoadingState isLoading={loading} error={error} />
+            ) : currentTestimonial ? (
+              <>
+                <AnimatePresence mode="wait">
+                  <TestimonialSliderItem testimonial={currentTestimonial} />
+                </AnimatePresence>
+                
+                <TestimonialNavigation 
+                  currentIndex={currentIndex}
+                  testimonials={testimonials}
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
+                  handleDotClick={handleDotClick}
                 />
-              ))}
-            </NavDots>
+              </>
+            ) : (
+              <div>No testimonials available</div>
+            )}
           </TestimonialShowcase>
         )}
         
@@ -568,30 +684,19 @@ const Testimonials = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.id}
-                variants={slideUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                custom={index * 0.1}
-              >
-                <CardQuote>
-                  {testimonial.quote}
-                </CardQuote>
-                <CardAuthor>
-                  <CardAuthorImage>
-                    <img src={testimonial.image} alt={`${testimonial.company} logo`} />
-                  </CardAuthorImage>
-                  <CardAuthorInfo>
-                    <CardAuthorName>{testimonial.author}</CardAuthorName>
-                    <CardAuthorTitle>{testimonial.title}</CardAuthorTitle>
-                    <CardAuthorCompany>{testimonial.company}</CardAuthorCompany>
-                  </CardAuthorInfo>
-                </CardAuthor>
-              </TestimonialCard>
-            ))}
+            {loading || error ? (
+              <LoadingState isLoading={loading} error={error} />
+            ) : testimonials.length > 0 ? (
+              testimonials.map((testimonial, index) => (
+                <TestimonialGridItem 
+                  key={testimonial.id} 
+                  testimonial={testimonial} 
+                  index={index} 
+                />
+              ))
+            ) : (
+              <div>No testimonials available</div>
+            )}
           </TestimonialGrid>
         )}
       </TestimonialsContent>

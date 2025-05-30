@@ -704,7 +704,7 @@ const BlogPostPage = () => {
             // Fallback to mock related posts
             const related = mockPosts
               .filter(p => p.id !== postData.id)
-              .filter(p => p.category === postData.category.name)
+              .filter(p => (typeof p.category === 'object' ? p.category.name : p.category) === postData.category.name)
               .slice(0, 3);
             setRelatedPosts(related);
           }
@@ -720,8 +720,11 @@ const BlogPostPage = () => {
           const related = mockPosts
             .filter(p => p.id !== foundPost.id)
             .filter(p => 
-              p.category === foundPost.category || 
-              p.tags.some(tag => foundPost.tags.includes(tag))
+              (typeof p.category === 'object' ? p.category.name : p.category) === (typeof foundPost.category === 'object' ? foundPost.category.name : foundPost.category) || 
+              p.tags.some(tag => {
+                const tagName = typeof tag === 'object' ? tag.name : tag;
+                return foundPost.tags.some(t => (typeof t === 'object' ? t.name : t) === tagName);
+              })
             )
             .slice(0, 3);
           
@@ -826,7 +829,7 @@ const BlogPostPage = () => {
             <BlogPostHero>
               <img src={post.image} alt={post.title} />
               <HeroContent>
-                <BlogCategory>{post.category}</BlogCategory>
+                <BlogCategory>{typeof post.category === 'object' ? post.category.name : post.category}</BlogCategory>
                 <BlogTitle
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -845,7 +848,7 @@ const BlogPostPage = () => {
                     <span>📅</span> {formatDate(post.date)}
                   </BlogDate>
                   <ReadingTime>
-                    <span>⏱️</span> {post.readingTime}
+                    <span>⏱️</span> {typeof post.readingTime === 'object' ? post.readingTime.text : post.readingTime}
                   </ReadingTime>
                 </BlogMeta>
               </HeroContent>
@@ -858,7 +861,7 @@ const BlogPostPage = () => {
                   
                   <BlogTags>
                     {post.tags.map((tag, index) => (
-                      <BlogTag key={index}>{tag}</BlogTag>
+                      <BlogTag key={index}>{typeof tag === 'object' ? tag.name : tag}</BlogTag>
                     ))}
                   </BlogTags>
                   
@@ -937,12 +940,12 @@ const BlogPostPage = () => {
                   >
                     <h3>Categories</h3>
                     <CategoriesList>
-                      {Array.from(new Set(mockPosts.map(p => p.category))).map((category, index) => (
+                      {Array.from(new Set(mockPosts.map(p => typeof p.category === 'object' ? p.category.name : p.category))).map((categoryName, index) => (
                         <CategoryItem key={index}>
-                          <Link to={`/blog?category=${category}`}>
-                            <span>{category}</span>
+                          <Link to={`/blog?category=${categoryName}`}>
+                            <span>{categoryName}</span>
                             <span className="count">
-                              {mockPosts.filter(p => p.category === category).length}
+                              {mockPosts.filter(p => (typeof p.category === 'object' ? p.category.name : p.category) === categoryName).length}
                             </span>
                           </Link>
                         </CategoryItem>

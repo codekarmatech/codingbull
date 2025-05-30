@@ -4,8 +4,8 @@
  */
 
 // Base API URL from environment variables
-// Use the direct API URL with the /api prefix
-const API_BASE_URL = '/api';
+// Use the direct API URL with the /api/v1 prefix to match Django's router configuration
+const API_BASE_URL = '/api/v1';
 const API_TIMEOUT = parseInt(process.env.REACT_APP_API_TIMEOUT || '10000', 10);
 
 /**
@@ -101,17 +101,17 @@ const apiService = {
         page,
         ...filters
       });
-      return fetchWithTimeout(`${API_BASE_URL}/posts/?${queryParams}`);
+      return fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
     },
     
     // Get a single blog post by slug
     getPost: async (slug) => {
-      return fetchWithTimeout(`${API_BASE_URL}/posts/${slug}/`);
+      return fetchWithTimeout(`${API_BASE_URL}/blogs/${slug}/`);
     },
     
     // Get featured blog posts
     getFeaturedPosts: async () => {
-      return fetchWithTimeout(`${API_BASE_URL}/posts/featured/`);
+      return fetchWithTimeout(`${API_BASE_URL}/blogs/featured/`);
     },
     
     // Get all categories
@@ -119,21 +119,27 @@ const apiService = {
       return fetchWithTimeout(`${API_BASE_URL}/categories/`);
     },
     
+    // Get categories with post count
+    getCategoriesWithCount: async () => {
+      return fetchWithTimeout(`${API_BASE_URL}/categories/with_post_count/`);
+    },
+    
     // Get posts by category
-    getPostsByCategory: async (categorySlug, page = 1) => {
-      const queryParams = new URLSearchParams({ page });
-      return fetchWithTimeout(`${API_BASE_URL}/posts/by_category/?slug=${categorySlug}&${queryParams}`);
+    getPostsByCategory: async (category, page = 1) => {
+      const queryParams = new URLSearchParams({ 
+        page,
+        category
+      });
+      return fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
     },
     
-    // Get all tags
-    getTags: async () => {
-      return fetchWithTimeout(`${API_BASE_URL}/tags/`);
-    },
-    
-    // Get posts by tag
-    getPostsByTag: async (tagSlug, page = 1) => {
-      const queryParams = new URLSearchParams({ page });
-      return fetchWithTimeout(`${API_BASE_URL}/posts/by_tag/?slug=${tagSlug}&${queryParams}`);
+    // Alternative method using the by_category endpoint
+    getPostsByCategoryEndpoint: async (category, page = 1) => {
+      const queryParams = new URLSearchParams({ 
+        page,
+        category
+      });
+      return fetchWithTimeout(`${API_BASE_URL}/blogs/by_category/?${queryParams}`);
     }
   },
   
