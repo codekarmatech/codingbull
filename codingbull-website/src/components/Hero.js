@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import Button from './Button';
 import FluidBackground from './FluidBackground';
@@ -589,6 +589,9 @@ const CodeLine = styled(motion.div).attrs(props => {
 `;
 
 const Hero = () => {
+  // Get theme from context for use in component
+  const theme = React.useContext(ThemeContext);
+  
   // Animation variants for staggered code lines
   const codeLineVariants = {
     hidden: { opacity: 0, x: -20 },
@@ -964,7 +967,8 @@ const Hero = () => {
             animate="visible"
             whileHover={{ 
               scale: 1.03, 
-              boxShadow: `${props => props.theme.shadows.xl}, 0 0 50px rgba(106, 13, 173, 0.3)`,
+              boxShadow: theme ? `${theme.shadows.xl}, 0 0 50px rgba(106, 13, 173, 0.3)` : 
+                '0 15px 35px rgba(0, 0, 0, 0.3), 0 10px 15px rgba(0, 0, 0, 0.2), 0 0 50px rgba(106, 13, 173, 0.3)',
               transition: { duration: 0.4, ease: "backOut" }
             }}
           >
