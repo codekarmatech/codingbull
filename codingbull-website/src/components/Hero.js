@@ -605,36 +605,7 @@ const CodeLine = styled(motion.div).attrs(props => {
 `;
 
 const Hero = () => {
-  // Get theme from context for use in component
-  const theme = React.useContext(ThemeContext);
   
-  // Code animation variants for typing effect
-  const codeLineVariants = {
-    hidden: { opacity: 0, y: 5 },
-    visible: custom => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: custom * 0.15,
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    })
-  };
-  
-  // Typing effect for code content
-  const typingEffect = {
-    hidden: { width: 0, opacity: 0 },
-    visible: custom => ({
-      width: "100%",
-      opacity: 1,
-      transition: {
-        delay: custom * 0.15 + 0.1,
-        duration: 0.8,
-        ease: "easeInOut"
-      }
-    })
-  };
   
   // Animation controls for sequential animations
   const controls = useAnimation();
@@ -914,11 +885,12 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 style={{
-                  background: "linear-gradient(90deg, #2979FF 0%, #00B0FF 100%)", // Professional blue gradient
+                  background: "linear-gradient(90deg, #0D47A1 0%, #1565C0 100%)", // Dark blue gradient
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   display: "inline-block",
-                  textShadow: "0 5px 20px rgba(33, 150, 243, 0.3)",
+                  textShadow: "0 5px 20px rgba(13, 71, 161, 0.5)", // Darker blue shadow
+                  filter: "drop-shadow(0 0 8px rgba(21, 101, 192, 0.4))", // Additional glow
                   fontSize: "clamp(2.5rem, 5vw, 3.8rem)", // Optimized font size
                   fontWeight: "900", // Extra bold
                   letterSpacing: "-0.5px", // Tighter letter spacing for luxury feel
@@ -974,14 +946,14 @@ const Hero = () => {
                       color: letter === " " ? "transparent" : "rgba(255, 255, 255, 0.95)",
                       textShadow: letter === " " ? "none" : "0 0 10px rgba(33, 150, 243, 0.4)",
                       marginRight: letter === " " ? "0.4em" : "0",
-                      background: letter === " " ? "none" : "linear-gradient(135deg, #4B91F1 0%, #1976D2 100%)",
+                      background: letter === " " ? "none" : "linear-gradient(135deg, #42A5F5 0%, #1976D2 100%)", // Lighter blue gradient
                       WebkitBackgroundClip: letter === " " ? "none" : "text",
                       WebkitTextFillColor: letter === " " ? "transparent" : "transparent",
                     }}
                     whileHover={{
                       y: -3,
                       scale: 1.1,
-                      color: "#2196F3",
+                      color: "#64B5F6", // Lighter blue
                       textShadow: "0 0 15px rgba(33, 150, 243, 0.5)",
                       transition: { duration: 0.2 }
                     }}
@@ -1116,16 +1088,16 @@ const Hero = () => {
                 alignItems: 'center'
               }}
             >
-              {/* Central glowing orb */}
+              {/* Enhanced central glowing orb with improved CODING BULL styling */}
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ 
-                  scale: [0.9, 1.1, 0.9],
+                  scale: [0.95, 1.05, 0.95],
                   opacity: 1,
                   boxShadow: [
-                    '0 0 30px rgba(33, 150, 243, 0.4)',
-                    '0 0 50px rgba(33, 150, 243, 0.6)',
-                    '0 0 30px rgba(33, 150, 243, 0.4)'
+                    '0 0 30px rgba(13, 71, 161, 0.5)',
+                    '0 0 50px rgba(13, 71, 161, 0.7)',
+                    '0 0 30px rgba(13, 71, 161, 0.5)'
                   ]
                 }}
                 transition={{ 
@@ -1135,26 +1107,85 @@ const Hero = () => {
                 }}
                 style={{
                   position: 'absolute',
-                  width: '80px',
-                  height: '80px',
+                  width: '100px', // Increased size
+                  height: '100px', // Increased size
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle at 30%, #2196F3, #0D47A1)',
-                  zIndex: 2,
+                  background: 'radial-gradient(circle at 30%, #1565C0, #0D47A1)', // Darker blue gradient
+                  zIndex: 5, // Higher z-index to ensure it's on top
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
                   color: 'white',
                   fontWeight: 'bold',
-                  fontSize: '12px',
+                  fontSize: '14px', // Larger font
                   letterSpacing: '0.5px',
-                  boxShadow: '0 0 30px rgba(33, 150, 243, 0.4)',
-                  border: '2px solid rgba(255, 255, 255, 0.2)'
+                  boxShadow: '0 0 30px rgba(13, 71, 161, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.2)',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  overflow: 'hidden' // Ensure content stays within the circle
+                }}
+                whileHover={{
+                  scale: 1.1,
+                  boxShadow: '0 0 40px rgba(13, 71, 161, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.3)',
+                  transition: { duration: 0.3 }
                 }}
               >
-                <span>CODING<br/>BULL</span>
+                {/* Inner content with improved styling */}
+                <motion.div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    width: '100%',
+                    height: '100%',
+                    background: 'radial-gradient(circle at center, rgba(21, 101, 192, 0.7), rgba(13, 71, 161, 0.9))',
+                    padding: '5px'
+                  }}
+                  animate={{
+                    background: [
+                      'radial-gradient(circle at center, rgba(21, 101, 192, 0.7), rgba(13, 71, 161, 0.9))',
+                      'radial-gradient(circle at center, rgba(25, 118, 210, 0.7), rgba(10, 50, 120, 0.9))',
+                      'radial-gradient(circle at center, rgba(21, 101, 192, 0.7), rgba(13, 71, 161, 0.9))'
+                    ]
+                  }}
+                  transition={{
+                    background: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                >
+                  <motion.span
+                    style={{
+                      fontWeight: '800',
+                      fontSize: '15px',
+                      textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+                      letterSpacing: '0.8px',
+                      lineHeight: '1.2',
+                      marginBottom: '2px'
+                    }}
+                    animate={{ textShadow: ['0 0 8px rgba(255, 255, 255, 0.4)', '0 0 12px rgba(255, 255, 255, 0.6)', '0 0 8px rgba(255, 255, 255, 0.4)'] }}
+                    transition={{ textShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
+                  >
+                    CODING
+                  </motion.span>
+                  <motion.span
+                    style={{
+                      fontWeight: '900',
+                      fontSize: '18px',
+                      textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+                      letterSpacing: '1px',
+                      background: 'linear-gradient(to bottom, #FFFFFF, #E0E0E0)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}
+                    animate={{ textShadow: ['0 0 8px rgba(255, 255, 255, 0.4)', '0 0 12px rgba(255, 255, 255, 0.6)', '0 0 8px rgba(255, 255, 255, 0.4)'] }}
+                    transition={{ textShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
+                  >
+                    BULL
+                  </motion.span>
+                </motion.div>
               </motion.div>
               
-              {/* Orbital ring */}
+              {/* Enhanced orbital ring with double rings and glow effect */}
               <motion.div
                 initial={{ opacity: 0, rotateZ: 0 }}
                 animate={{ 
@@ -1163,24 +1194,76 @@ const Hero = () => {
                 }}
                 transition={{ 
                   opacity: { duration: 1 },
-                  rotateZ: { duration: 20, repeat: Infinity, ease: "linear" }
+                  rotateZ: { duration: 25, repeat: Infinity, ease: "linear" }
                 }}
                 style={{
                   position: 'absolute',
-                  width: '280px',
-                  height: '280px',
+                  width: '300px', // Slightly larger
+                  height: '300px', // Slightly larger
                   borderRadius: '50%',
-                  border: '1px solid rgba(33, 150, 243, 0.3)',
-                  boxShadow: 'inset 0 0 20px rgba(33, 150, 243, 0.1), 0 0 10px rgba(33, 150, 243, 0.2)',
-                  zIndex: 1
+                  border: '2px solid rgba(33, 150, 243, 0.4)', // Thicker and more visible border
+                  boxShadow: 'inset 0 0 25px rgba(33, 150, 243, 0.15), 0 0 15px rgba(33, 150, 243, 0.25)',
+                  zIndex: 1,
+                  background: 'radial-gradient(circle at center, transparent 40%, rgba(33, 150, 243, 0.05) 70%, transparent 100%)'
                 }}
               />
               
-              {/* Development cycle elements */}
-              {['BUILD', 'TEST', 'DEPLOY', 'INNOVATE'].map((item, index) => {
+              {/* Second orbital ring rotating in opposite direction */}
+              <motion.div
+                initial={{ opacity: 0, rotateZ: 360 }}
+                animate={{ 
+                  opacity: 1, 
+                  rotateZ: 0,
+                }}
+                transition={{ 
+                  opacity: { duration: 1.5 },
+                  rotateZ: { duration: 30, repeat: Infinity, ease: "linear" }
+                }}
+                style={{
+                  position: 'absolute',
+                  width: '320px', // Larger than first ring
+                  height: '320px', // Larger than first ring
+                  borderRadius: '50%',
+                  border: '1px solid rgba(33, 150, 243, 0.25)', // Thinner border for contrast
+                  boxShadow: 'inset 0 0 20px rgba(33, 150, 243, 0.1), 0 0 12px rgba(33, 150, 243, 0.2)',
+                  zIndex: 1,
+                  background: 'radial-gradient(circle at center, transparent 50%, rgba(33, 150, 243, 0.03) 80%, transparent 100%)'
+                }}
+              />
+              
+              {/* Pulsing glow effect behind the rings */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ 
+                  opacity: [0.3, 0.5, 0.3], 
+                  scale: [0.95, 1.05, 0.95],
+                }}
+                transition={{ 
+                  opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
+                style={{
+                  position: 'absolute',
+                  width: '340px',
+                  height: '340px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle at center, rgba(33, 150, 243, 0.15) 0%, transparent 70%)',
+                  filter: 'blur(15px)',
+                  zIndex: 0
+                }}
+              />
+              
+              {/* Enhanced development cycle elements with improved styling */}
+              {[
+                { text: 'BUILD', icon: '🔨', color: '#1E88E5' },
+                { text: 'TEST', icon: '✓', color: '#42A5F5' },
+                { text: 'DEPLOY', icon: '🚀', color: '#2979FF' },
+                { text: 'INNOVATE', icon: '💡', color: '#1565C0' }
+              ].map((item, index) => {
                 const angle = (index * 90) * (Math.PI / 180);
-                const x = Math.cos(angle) * 140;
-                const y = Math.sin(angle) * 140;
+                const radius = 150; // Slightly increased radius for better spacing
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
                 
                 return (
                   <motion.div
@@ -1188,108 +1271,260 @@ const Hero = () => {
                     initial={{ opacity: 0, x, y, scale: 0.7 }}
                     animate={{ 
                       opacity: 1, 
-                      x: [x, x + (x * 0.05), x],
-                      y: [y, y + (y * 0.05), y],
-                      scale: [0.8, 1, 0.8],
+                      x: [x, x + (x * 0.03), x], // Subtle movement
+                      y: [y, y + (y * 0.03), y], // Subtle movement
+                      scale: [0.9, 1.05, 0.9],
                       boxShadow: [
-                        '0 0 15px rgba(33, 150, 243, 0.3)',
-                        '0 0 25px rgba(33, 150, 243, 0.5)',
-                        '0 0 15px rgba(33, 150, 243, 0.3)'
+                        `0 0 15px rgba(33, 150, 243, 0.4)`,
+                        `0 0 25px rgba(33, 150, 243, 0.6)`,
+                        `0 0 15px rgba(33, 150, 243, 0.4)`
                       ]
                     }}
                     transition={{ 
                       opacity: { duration: 0.8, delay: 0.3 + (index * 0.2) },
-                      x: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
-                      y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
-                      scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
-                      boxShadow: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
+                      x: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      scale: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      boxShadow: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
                     }}
                     whileHover={{
                       scale: 1.2,
-                      boxShadow: '0 0 30px rgba(33, 150, 243, 0.7)',
+                      boxShadow: `0 0 30px ${item.color}`,
                       transition: { duration: 0.3 }
                     }}
                     style={{
                       position: 'absolute',
-                      width: '60px',
-                      height: '60px',
+                      width: '70px', // Larger circles
+                      height: '70px', // Larger circles
                       borderRadius: '50%',
-                      background: 'radial-gradient(circle at 30%, rgba(33, 150, 243, 0.9), rgba(13, 71, 161, 0.9))',
+                      background: `radial-gradient(circle at 30%, ${item.color}CC, ${item.color})`,
                       display: 'flex',
+                      flexDirection: 'column',
                       justifyContent: 'center',
                       alignItems: 'center',
                       color: 'white',
                       fontWeight: 'bold',
-                      fontSize: '10px',
+                      fontSize: '11px',
                       letterSpacing: '0.5px',
-                      boxShadow: '0 0 15px rgba(33, 150, 243, 0.3)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      zIndex: 3
+                      boxShadow: `0 0 15px ${item.color}99, inset 0 0 10px rgba(255, 255, 255, 0.2)`,
+                      border: '1.5px solid rgba(255, 255, 255, 0.3)',
+                      zIndex: 3,
+                      cursor: 'pointer',
+                      padding: '5px'
                     }}
                   >
-                    {item}
+                    <span style={{ 
+                      fontSize: '16px', 
+                      marginBottom: '3px',
+                      filter: 'drop-shadow(0 0 3px rgba(255, 255, 255, 0.5))'
+                    }}>
+                      {item.icon}
+                    </span>
+                    <span style={{ 
+                      textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+                      fontWeight: '700',
+                      letterSpacing: '0.8px'
+                    }}>
+                      {item.text}
+                    </span>
                   </motion.div>
                 );
               })}
               
-              {/* Connecting lines */}
+              {/* Enhanced connecting lines with animated particles */}
               {[0, 1, 2, 3].map((index) => {
                 const startAngle = (index * 90) * (Math.PI / 180);
                 const endAngle = ((index + 1) % 4 * 90) * (Math.PI / 180);
                 
-                const startX = Math.cos(startAngle) * 140;
-                const startY = Math.sin(startAngle) * 140;
-                const endX = Math.cos(endAngle) * 140;
-                const endY = Math.sin(endAngle) * 140;
+                const radius = 150; // Match the radius used for the circles
+                const startX = Math.cos(startAngle) * radius;
+                const startY = Math.sin(startAngle) * radius;
+                const endX = Math.cos(endAngle) * radius;
+                const endY = Math.sin(endAngle) * radius;
                 
                 // Calculate the length and angle of the line
                 const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
                 const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
                 
+                // Get colors from the circles
+                const colors = ['#1E88E5', '#42A5F5', '#2979FF', '#1565C0'];
+                const startColor = colors[index];
+                const endColor = colors[(index + 1) % 4];
+                
+                return (
+                  <React.Fragment key={`line-container-${index}`}>
+                    {/* Main connecting line with enhanced styling */}
+                    <motion.div
+                      key={`line-${index}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: [0.4, 0.8, 0.4],
+                      }}
+                      transition={{ 
+                        opacity: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        width: `${length}px`,
+                        height: '2px', // Thicker line
+                        background: `linear-gradient(to right, ${startColor}80, ${endColor}80)`,
+                        boxShadow: `0 0 10px ${startColor}80`,
+                        transform: `rotate(${angle}deg)`,
+                        transformOrigin: '0 0',
+                        left: `${startX + 150}px`, // Adjusted for new radius
+                        top: `${startY + 150}px`, // Adjusted for new radius
+                        zIndex: 2,
+                        borderRadius: '1px'
+                      }}
+                    />
+                    
+                    {/* Glowing underline effect */}
+                    <motion.div
+                      key={`glow-${index}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{ 
+                        opacity: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 + 0.5 }
+                      }}
+                      style={{
+                        position: 'absolute',
+                        width: `${length}px`,
+                        height: '4px',
+                        background: `linear-gradient(to right, ${startColor}30, ${endColor}30)`,
+                        filter: 'blur(3px)',
+                        transform: `rotate(${angle}deg)`,
+                        transformOrigin: '0 0',
+                        left: `${startX + 150}px`,
+                        top: `${startY + 150}px`,
+                        zIndex: 1
+                      }}
+                    />
+                    
+                    {/* Moving particles along the line */}
+                    {[...Array(3)].map((_, particleIndex) => {
+                      const delay = particleIndex * 1.5 + index * 0.5;
+                      return (
+                        <motion.div
+                          key={`particle-${index}-${particleIndex}`}
+                          initial={{ 
+                            opacity: 0,
+                            left: `${startX + 150}px`,
+                            top: `${startY + 150}px`
+                          }}
+                          animate={{ 
+                            opacity: [0, 1, 0],
+                            left: [`${startX + 150}px`, `${endX + 150}px`],
+                            top: [`${startY + 150}px`, `${endY + 150}px`]
+                          }}
+                          transition={{ 
+                            opacity: { 
+                              duration: 2, 
+                              repeat: Infinity, 
+                              ease: "easeInOut", 
+                              delay,
+                              repeatDelay: 1
+                            },
+                            left: { 
+                              duration: 2, 
+                              repeat: Infinity, 
+                              ease: "easeInOut", 
+                              delay,
+                              repeatDelay: 1
+                            },
+                            top: { 
+                              duration: 2, 
+                              repeat: Infinity, 
+                              ease: "easeInOut", 
+                              delay,
+                              repeatDelay: 1
+                            }
+                          }}
+                          style={{
+                            position: 'absolute',
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: `radial-gradient(circle at center, white, ${startColor})`,
+                            boxShadow: `0 0 8px ${startColor}`,
+                            zIndex: 3
+                          }}
+                        />
+                      );
+                    })}
+                  </React.Fragment>
+                );
+              })}
+              
+              {/* Enhanced particle effects with varied colors and sizes */}
+              {[...Array(30)].map((_, index) => { // Increased number of particles
+                const size = Math.random() * 5 + 1; // Slightly larger particles
+                const angle = Math.random() * 360 * (Math.PI / 180);
+                const distance = Math.random() * 160 + 20; // Wider distribution
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                const duration = Math.random() * 8 + 4;
+                
+                // Varied colors for particles
+                const colors = ['#1E88E5', '#42A5F5', '#2979FF', '#1565C0', '#64B5F6', '#0D47A1'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Varied particle types
+                const particleType = Math.random() > 0.8 ? 'star' : 'circle';
+                
                 return (
                   <motion.div
-                    key={`line-${index}`}
-                    initial={{ opacity: 0 }}
+                    key={`particle-${index}`}
+                    initial={{ opacity: 0, x, y, scale: 0, rotate: 0 }}
                     animate={{ 
-                      opacity: [0.3, 0.7, 0.3],
+                      opacity: [0, 0.8, 0],
+                      x: [x, x * (1 + Math.random() * 0.4)],
+                      y: [y, y * (1 + Math.random() * 0.4)],
+                      scale: [0, 1, 0],
+                      rotate: particleType === 'star' ? [0, 180] : 0 // Rotate stars
                     }}
                     transition={{ 
-                      opacity: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
+                      duration,
+                      repeat: Infinity,
+                      delay: Math.random() * 5,
+                      ease: "easeInOut"
                     }}
                     style={{
                       position: 'absolute',
-                      width: `${length}px`,
-                      height: '1px',
-                      background: 'linear-gradient(to right, rgba(33, 150, 243, 0.3), rgba(33, 150, 243, 0.7), rgba(33, 150, 243, 0.3))',
-                      boxShadow: '0 0 8px rgba(33, 150, 243, 0.5)',
-                      transform: `rotate(${angle}deg)`,
-                      transformOrigin: '0 0',
-                      left: `${startX + 140}px`,
-                      top: `${startY + 140}px`,
-                      zIndex: 0
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      borderRadius: particleType === 'circle' ? '50%' : '0%',
+                      background: particleType === 'circle' 
+                        ? `radial-gradient(circle at center, white, ${color})`
+                        : `${color}`,
+                      boxShadow: `0 0 ${size * 2}px ${color}`,
+                      zIndex: 1,
+                      clipPath: particleType === 'star' 
+                        ? 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' 
+                        : 'none'
                     }}
                   />
                 );
               })}
               
-              {/* Particle effects */}
-              {[...Array(20)].map((_, index) => {
-                const size = Math.random() * 4 + 1;
+              {/* Additional subtle floating dots */}
+              {[...Array(15)].map((_, index) => {
+                const size = Math.random() * 2 + 0.5; // Very small dots
                 const angle = Math.random() * 360 * (Math.PI / 180);
-                const distance = Math.random() * 120 + 20;
+                const distance = Math.random() * 200 + 50; // Even wider distribution
                 const x = Math.cos(angle) * distance;
                 const y = Math.sin(angle) * distance;
-                const duration = Math.random() * 8 + 4;
+                const duration = Math.random() * 15 + 10; // Slower movement
                 
                 return (
                   <motion.div
-                    key={`particle-${index}`}
-                    initial={{ opacity: 0, x, y, scale: 0 }}
+                    key={`floating-dot-${index}`}
+                    initial={{ opacity: 0, x, y }}
                     animate={{ 
-                      opacity: [0, 0.7, 0],
-                      x: [x, x * 1.2],
-                      y: [y, y * 1.2],
-                      scale: [0, 1, 0]
+                      opacity: [0, 0.4, 0],
+                      x: [x, x + (Math.random() * 20 - 10)],
+                      y: [y, y + (Math.random() * 20 - 10)]
                     }}
                     transition={{ 
                       duration,
@@ -1302,8 +1537,8 @@ const Hero = () => {
                       width: `${size}px`,
                       height: `${size}px`,
                       borderRadius: '50%',
-                      background: 'rgba(33, 150, 243, 0.8)',
-                      boxShadow: '0 0 5px rgba(33, 150, 243, 0.8)',
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      boxShadow: '0 0 3px rgba(255, 255, 255, 0.5)',
                       zIndex: 1
                     }}
                   />

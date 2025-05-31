@@ -334,42 +334,7 @@ const ServicesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Create a loading state UI indicator component
-  const ServiceLoadingState = () => (
-    <div className="services-loading">
-      {loading && <div className="loading-spinner">Loading services...</div>}
-      {error && <div className="error-message">{error}</div>}
-    </div>
-  );
-  
-  // Fetch services from API
-  useEffect(() => {
-    const fetchServices = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        const response = await apiService.services.getServices();
-        if (response && response.results) {
-          setServices(response.results);
-        } else {
-          // Fallback to mock data
-          setServices(mockServices);
-        }
-      } catch (err) {
-        console.error('Error fetching services:', err);
-        setError('Failed to load services. Please try again later.');
-        // Fallback to mock data
-        setServices(mockServices);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchServices();
-  }, [mockServices]); // Add mockServices as a dependency
-  
-  // Mock services data for fallback - defined before useEffect to avoid dependency issues
+  // Mock services data for fallback
   const mockServices = [
     {
       id: 1,
@@ -480,6 +445,41 @@ const ServicesPage = () => {
       description: 'After thorough testing, we deploy your solution and provide training and documentation.'
     }
   ];
+  
+  // Create a loading state UI indicator component
+  const ServiceLoadingState = () => (
+    <div className="services-loading">
+      {loading && <div className="loading-spinner">Loading services...</div>}
+      {error && <div className="error-message">{error}</div>}
+    </div>
+  );
+  
+  // Fetch services from API
+  useEffect(() => {
+    const fetchServices = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await apiService.services.getServices();
+        if (response && response.results) {
+          setServices(response.results);
+        } else {
+          // Fallback to mock data
+          setServices(mockServices);
+        }
+      } catch (err) {
+        console.error('Error fetching services:', err);
+        setError('Failed to load services. Please try again later.');
+        // Fallback to mock data
+        setServices(mockServices);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchServices();
+  }, []); // Empty dependency array since mockServices is now constant
   
   return (
     <>

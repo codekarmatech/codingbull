@@ -1,22 +1,22 @@
 // Enhanced theme configuration with expanded color palette and gradients
 const theme = {
   colors: {
-    // Primary colors
-    electricBlue: '#00BFFF', // Bright electric blue for accents
-    deepPurple: '#6A0DAD',   // Deep purple for secondary accents
-    brightPurple: '#9B30FF', // Brighter purple for highlights
-    deepBlue: '#0070FF',     // Deep blue for secondary accents
-    neonCyan: '#00FFFF',     // Neon cyan for glowing effects
+    // Primary colors - Dark glowing blue theme
+    electricBlue: '#0D47A1', // Darker electric blue for accents
+    deepBlue: '#0A1929',     // Very deep blue for backgrounds
+    midBlue: '#1565C0',      // Mid-tone blue for secondary accents
+    lightBlue: '#42A5F5',    // Light blue for highlights
+    glowingBlue: '#2196F3',  // Glowing blue for effects
     
     // Grey scale
-    darkGrey: '#121212',     // Almost black, for backgrounds
-    mediumGrey: '#2D2D2D',   // For cards, containers
-    lightGrey: '#757575',    // For less important text
-    deepGrey: '#1A1A1A',     // Slightly lighter than black for subtle contrast
+    darkGrey: '#050510',     // Almost black with blue tint, for backgrounds
+    mediumGrey: '#0A0A1A',   // Dark blue-grey for cards, containers
+    lightGrey: '#4B6A8A',    // Blue-tinted grey for less important text
+    deepGrey: '#0A1525',     // Deep blue-black for subtle contrast
     
     // Text colors
     textPrimary: '#FFFFFF',  // White text for dark backgrounds
-    textSecondary: '#E0E0E0', // Slightly off-white for secondary text
+    textSecondary: '#B0C4DE', // Light steel blue for secondary text
     
     // Additional colors
     success: '#4CAF50',      // Green for success messages
@@ -25,35 +25,35 @@ const theme = {
     
     // Syntax highlighting colors
     syntaxKeyword: '#00AAFF',
-    syntaxFunction: '#BD93F9',
+    syntaxFunction: '#64B5F6',
     syntaxString: '#50FA7B',
     syntaxComment: '#6272A4',
     syntaxOperator: '#FFB86C',
-    syntaxVariable: '#FF79C6',
+    syntaxVariable: '#90CAF9',
     syntaxProperty: '#8BE9FD',
     
-    // Gradients
-    gradientPrimary: 'linear-gradient(135deg, #00BFFF 0%, #6A0DAD 100%)',
-    gradientSecondary: 'linear-gradient(135deg, #6A0DAD 0%, #00BFFF 100%)',
-    gradientPurple: 'linear-gradient(135deg, #6A0DAD 0%, #9B30FF 50%, #4B0082 100%)',
-    gradientBlue: 'linear-gradient(135deg, #00BFFF 0%, #0070FF 50%, #00BFFF 100%)',
-    gradientCyan: 'linear-gradient(135deg, #00FFFF 0%, #00BFFF 100%)',
+    // Gradients - Dark blue theme
+    gradientPrimary: 'linear-gradient(135deg, #0D47A1 0%, #1565C0 100%)',
+    gradientSecondary: 'linear-gradient(135deg, #1565C0 0%, #0D47A1 100%)',
+    gradientBlue: 'linear-gradient(135deg, #0D47A1 0%, #1976D2 50%, #0D47A1 100%)',
+    gradientLightBlue: 'linear-gradient(135deg, #1976D2 0%, #42A5F5 50%, #1976D2 100%)',
+    gradientDarkBlue: 'linear-gradient(135deg, #0A1929 0%, #0D47A1 100%)',
     
     // Button gradients
-    buttonPrimary: 'linear-gradient(135deg, #6A0DAD 0%, #9B30FF 50%, #4B0082 100%)',
-    buttonSecondary: 'linear-gradient(135deg, #00BFFF 0%, #0070FF 50%, #00BFFF 100%)',
-    buttonHoverPrimary: 'linear-gradient(135deg, #9B30FF 0%, #6A0DAD 50%, #9B30FF 100%)',
-    buttonHoverSecondary: 'linear-gradient(135deg, #00BFFF 0%, #0070FF 50%, #00BFFF 100%)',
+    buttonPrimary: 'linear-gradient(135deg, #0D47A1 0%, #1976D2 50%, #0D47A1 100%)',
+    buttonSecondary: 'linear-gradient(135deg, #1565C0 0%, #42A5F5 50%, #1565C0 100%)',
+    buttonHoverPrimary: 'linear-gradient(135deg, #1976D2 0%, #0D47A1 50%, #1976D2 100%)',
+    buttonHoverSecondary: 'linear-gradient(135deg, #42A5F5 0%, #1565C0 50%, #42A5F5 100%)',
     
     // Glow effects
-    glowPurple: '0 0 15px rgba(106, 13, 173, 0.6)',
-    glowBlue: '0 0 15px rgba(0, 191, 255, 0.6)',
-    glowCyan: '0 0 15px rgba(0, 255, 255, 0.6)',
+    glowBlue: '0 0 15px rgba(13, 71, 161, 0.6)',
+    glowLightBlue: '0 0 15px rgba(33, 150, 243, 0.6)',
+    glowIntense: '0 0 20px rgba(21, 101, 192, 0.8)',
     
     // Overlay colors
-    overlayDark: 'rgba(0, 0, 0, 0.7)',
-    overlayLight: 'rgba(255, 255, 255, 0.1)',
-    gradientOverlay: 'linear-gradient(135deg, rgba(106, 13, 173, 0.1) 0%, rgba(0, 191, 255, 0.1) 100%)',
+    overlayDark: 'rgba(10, 25, 41, 0.7)',
+    overlayLight: 'rgba(33, 150, 243, 0.1)',
+    gradientOverlay: 'linear-gradient(135deg, rgba(13, 71, 161, 0.1) 0%, rgba(33, 150, 243, 0.1) 100%)',
   },
   
   // Typography
@@ -63,24 +63,24 @@ const theme = {
     code: "'Fira Code', monospace",
   },
   
-  // Font sizes
+  // Font sizes - Reduced for more professional look
   fontSizes: {
     xs: '0.75rem',    // 12px
-    sm: '0.875rem',   // 14px
-    md: '1rem',       // 16px
-    lg: '1.125rem',   // 18px
-    xl: '1.25rem',    // 20px
-    '2xl': '1.5rem',  // 24px
-    '3xl': '1.875rem', // 30px
-    '4xl': '2.25rem',  // 36px
-    '5xl': '3rem',     // 48px
-    '6xl': '4rem',     // 64px
+    sm: '0.8125rem',  // 13px
+    md: '0.875rem',   // 14px
+    lg: '1rem',       // 16px
+    xl: '1.125rem',   // 18px
+    '2xl': '1.25rem', // 20px
+    '3xl': '1.5rem',  // 24px
+    '4xl': '1.75rem', // 28px
+    '5xl': '2rem',    // 32px
+    '6xl': '2.5rem',  // 40px
   },
   
-  // Spacing
+  // Spacing - Increased for more spacious look
   spacing: {
-    xs: '0.25rem',    // 4px
-    sm: '0.5rem',     // 8px
+    xs: '0.5rem',     // 8px
+    sm: '0.75rem',    // 12px
     md: '1rem',       // 16px
     lg: '1.5rem',     // 24px
     xl: '2rem',       // 32px
@@ -123,23 +123,27 @@ const theme = {
     full: '9999px',   // Fully rounded
   },
   
-  // Enhanced shadows with colored glows
+  // Enhanced shadows with dark blue glows
   shadows: {
     sm: '0 2px 5px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.3)',
     md: '0 4px 10px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.3)',
     lg: '0 10px 25px rgba(0, 0, 0, 0.25), 0 5px 10px rgba(0, 0, 0, 0.2)',
     xl: '0 15px 35px rgba(0, 0, 0, 0.3), 0 10px 15px rgba(0, 0, 0, 0.2)',
     // Colored shadows
-    purple: '0 5px 20px rgba(106, 13, 173, 0.4)',
-    blue: '0 5px 20px rgba(0, 191, 255, 0.4)',
+    darkBlue: '0 5px 20px rgba(13, 71, 161, 0.4)',
+    blue: '0 5px 20px rgba(33, 150, 243, 0.4)',
     // Button shadows
-    buttonPrimary: '0 4px 15px rgba(106, 13, 173, 0.4)',
-    buttonSecondary: '0 4px 15px rgba(0, 191, 255, 0.2)',
-    buttonHoverPrimary: '0 8px 25px rgba(106, 13, 173, 0.6)',
-    buttonHoverSecondary: '0 8px 25px rgba(0, 191, 255, 0.4)',
+    buttonPrimary: '0 4px 15px rgba(13, 71, 161, 0.4)',
+    buttonSecondary: '0 4px 15px rgba(33, 150, 243, 0.2)',
+    buttonHoverPrimary: '0 8px 25px rgba(13, 71, 161, 0.6)',
+    buttonHoverSecondary: '0 8px 25px rgba(33, 150, 243, 0.4)',
     // Inset shadows
     insetSm: 'inset 0 1px 3px rgba(0, 0, 0, 0.2)',
     insetMd: 'inset 0 2px 5px rgba(0, 0, 0, 0.3)',
+    // Glow shadows
+    glowDark: '0 0 20px rgba(13, 71, 161, 0.5)',
+    glowMedium: '0 0 25px rgba(21, 101, 192, 0.6)',
+    glowLight: '0 0 30px rgba(33, 150, 243, 0.7)',
   },
   
   // Z-index

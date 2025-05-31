@@ -5,20 +5,20 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 import bullLogo from '../assets/bull-logo.svg';
 
-// Navbar container
+// Navbar container - Reduced size for a sleeker look
 const NavbarContainer = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: ${props => props.theme.zIndex.fixed};
-  padding: 1rem 2rem;
+  padding: 0.7rem 1.5rem; // Reduced padding
   transition: all 0.3s ease;
   background: ${props => props.$scrolled 
-    ? props.theme.colors.darkGrey 
-    : 'rgba(18, 18, 18, 0.8)'};
+    ? props.theme.colors.deepGrey 
+    : 'rgba(10, 25, 41, 0.8)'}; // Darker blue-black background
   backdrop-filter: ${props => props.$scrolled ? 'blur(10px)' : 'none'};
-  box-shadow: ${props => props.$scrolled ? props.theme.shadows.md : 'none'};
+  box-shadow: ${props => props.$scrolled ? '0 4px 15px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(13, 71, 161, 0.2)' : 'none'};
 `;
 
 // Navbar content wrapper
@@ -37,21 +37,22 @@ const LogoContainer = styled(motion.div)`
   gap: 0.5rem;
 `;
 
-// Logo text
+// Logo text - Updated for dark blue theme
 const LogoText = styled.h1`
-  font-size: ${props => props.theme.fontSizes.xl};
+  font-size: ${props => props.theme.fontSizes.lg}; // Slightly smaller
   font-weight: 700;
   margin: 0;
-  background: ${props => props.theme.colors.gradientPrimary};
+  background: ${props => props.theme.colors.gradientBlue}; // Dark blue gradient
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(13, 71, 161, 0.5)); // Subtle glow effect
 `;
 
-// Navigation links container
+// Navigation links container - Reduced spacing
 const NavLinks = styled.nav`
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem; // Reduced gap between links
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     display: none;
@@ -68,22 +69,25 @@ const NavLink = styled(({ to, children, ...props }) => (
 ))`
   color: ${props => props.theme.colors.textPrimary};
   font-weight: 500;
+  font-size: ${props => props.theme.fontSizes.sm}; // Smaller font size
   position: relative;
   cursor: pointer;
   
   &:after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: -4px; // Slightly higher
     left: 0;
     width: 0;
-    height: 2px;
-    background: ${props => props.theme.colors.electricBlue};
-    transition: width 0.3s ease;
+    height: 1.5px; // Thinner line
+    background: ${props => props.theme.colors.glowingBlue}; // Glowing blue
+    transition: width 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 0 rgba(33, 150, 243, 0);
   }
   
   &:hover:after, &.active:after {
     width: 100%;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.6); // Glow effect on hover
   }
 `;
 
@@ -227,7 +231,7 @@ const Navbar = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src={bullLogo} alt="CodingBull Logo" style={{ height: '40px', marginRight: '10px' }} />
+          <img src={bullLogo} alt="CodingBull Logo" style={{ height: '32px', marginRight: '8px' }} />
           <LogoText>CodingBull</LogoText>
         </LogoContainer>
         

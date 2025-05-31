@@ -10,16 +10,16 @@ const shouldForwardProp = prop =>
 // Button variants using theme variables
 const VARIANTS = {
   primary: {
-    background: props => props.theme.colors.buttonPrimary,
-    color: props => props.theme.colors.textPrimary,
+    background: 'linear-gradient(135deg, #0D47A1 0%, #082f6b 100%)',
+    color: 'white',
     border: 'none',
-    boxShadow: props => props.theme.shadows.buttonPrimary,
+    boxShadow: '0 4px 20px rgba(13, 71, 161, 0.5)',
   },
   secondary: {
-    background: 'rgba(0, 112, 255, 0.1)',
-    color: props => props.theme.colors.electricBlue,
-    border: props => `2px solid ${props.theme.colors.electricBlue}`,
-    boxShadow: props => props.theme.shadows.buttonSecondary,
+    background: 'rgba(13, 71, 161, 0.1)',
+    color: '#0D47A1',
+    border: '2px solid #0D47A1',
+    boxShadow: '0 4px 15px rgba(13, 71, 161, 0.2)',
   },
   outline: {
     background: 'transparent',
@@ -35,19 +35,19 @@ const VARIANTS = {
   },
 };
 
-// Button sizes
+// Button sizes - Reduced for a more compact look
 const SIZES = {
   sm: {
+    padding: '0.3rem 0.6rem',
+    fontSize: props => props.theme.fontSizes.xs,
+  },
+  md: {
     padding: '0.5rem 1rem',
     fontSize: props => props.theme.fontSizes.sm,
   },
-  md: {
-    padding: '0.75rem 1.5rem',
-    fontSize: props => props.theme.fontSizes.md,
-  },
   lg: {
-    padding: '1rem 2rem',
-    fontSize: props => props.theme.fontSizes.lg,
+    padding: '0.7rem 1.4rem',
+    fontSize: props => props.theme.fontSizes.sm,
   },
 };
 
@@ -84,7 +84,7 @@ const StyledButton = styled(motion.button).withConfig({
   opacity: ${props => props.disabled ? 0.6 : 1};
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 
-  // Glow effect
+  // Glow effect - Updated for dark blue theme
   &::before {
     content: '';
     position: absolute;
@@ -94,9 +94,9 @@ const StyledButton = styled(motion.button).withConfig({
     bottom: -2px;
     z-index: -1;
     background: ${props => props.variant === 'primary' 
-      ? 'linear-gradient(135deg, #9b30ff 0%, #6a0dad 50%, #9b30ff 100%)' 
+      ? 'linear-gradient(135deg, #1976D2 0%, #0D47A1 50%, #1976D2 100%)' 
       : props.variant === 'secondary' 
-        ? 'linear-gradient(135deg, #00bfff 0%, #0070ff 50%, #00bfff 100%)'
+        ? 'linear-gradient(135deg, #42A5F5 0%, #1565C0 50%, #42A5F5 100%)'
         : 'transparent'};
     opacity: 0;
     border-radius: inherit;
