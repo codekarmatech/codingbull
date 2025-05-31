@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 
@@ -10,6 +10,8 @@ const BackgroundContainer = styled.div`
   bottom: 0;
   overflow: hidden;
   z-index: 0;
+  perspective: 1000px;
+  transform-style: preserve-3d;
 `;
 
 // Using .attrs to handle motion props and reduce class generation
@@ -97,98 +99,160 @@ const NoiseOverlay = styled.div`
   pointer-events: none;
 `;
 
+// Shooting star component
+const ShootingStar = styled(motion.div)`
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  z-index: 1;
+  overflow: visible;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(to left, white, transparent);
+    right: 1px;
+  }
+`;
+
+// Aurora effect
+const Aurora = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 40vh;
+  bottom: -20vh;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 30, 0),
+    rgba(76, 0, 153, 0.05) 20%,
+    rgba(0, 112, 255, 0.05) 40%,
+    rgba(0, 200, 255, 0.05) 60%,
+    rgba(0, 255, 200, 0.05) 80%,
+    rgba(10, 10, 30, 0)
+  );
+  filter: blur(40px);
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  transform-origin: bottom center;
+  z-index: 1;
+`;
+
 const FluidBackground = () => {
-  const controls1 = useAnimation();
-  const controls2 = useAnimation();
-  const controls3 = useAnimation();
-  const controls4 = useAnimation();
+  // Animation controls for blobs - create individually to avoid hooks in callbacks
+  const blobControl1 = useAnimation();
+  const blobControl2 = useAnimation();
+  const blobControl3 = useAnimation();
+  const blobControl4 = useAnimation();
+  const blobControls = [blobControl1, blobControl2, blobControl3, blobControl4];
   
-  // Create random motion values for more organic movement
+  // Create random motion values for more organic movement - individually to avoid hooks in callbacks
   const randomX1 = useMotionValue(0);
-  const randomY1 = useMotionValue(0);
   const randomX2 = useMotionValue(0);
+  const randomX = [randomX1, randomX2];
+  
+  const randomY1 = useMotionValue(0);
   const randomY2 = useMotionValue(0);
+  const randomY = [randomY1, randomY2];
   
-  // Transform the motion values to create larger movements
-  const x1 = useTransform(randomX1, [-1, 1], [-10, 10]);
-  const y1 = useTransform(randomY1, [-1, 1], [-10, 10]);
+  // Transform the motion values to create larger movements - individually to avoid hooks in callbacks
+  const x1 = useTransform(randomX1, [-1, 1], [-15, 15]);
   const x2 = useTransform(randomX2, [-1, 1], [-15, 15]);
-  const y2 = useTransform(randomY2, [-1, 1], [-15, 15]);
+  const x = [x1, x2];
   
-  // Animation sequences for each blob
-  const animateBlob1 = async () => {
-    await controls1.start({
+  const y1 = useTransform(randomY1, [-1, 1], [-15, 15]);
+  const y2 = useTransform(randomY2, [-1, 1], [-15, 15]);
+  const y = [y1, y2];
+  
+  // Animation configurations for blobs
+  const blobAnimations = [
+    {
       x: [0, 20, -20, 10, 0],
       y: [0, -30, 10, -20, 0],
       scale: [1, 1.1, 0.9, 1.05, 1],
       rotate: [0, 10, -10, 5, 0],
-      transition: { 
-        duration: 25, 
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
-    });
-  };
-  
-  const animateBlob2 = async () => {
-    await controls2.start({
+      duration: 25
+    },
+    {
       x: [0, -30, 20, -10, 0],
       y: [0, 20, -30, 10, 0],
       scale: [1, 0.9, 1.1, 0.95, 1],
       rotate: [0, -10, 15, -5, 0],
-      transition: { 
-        duration: 30, 
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
-    });
-  };
-  
-  const animateBlob3 = async () => {
-    await controls3.start({
+      duration: 30
+    },
+    {
       x: [0, 15, -25, 5, 0],
       y: [0, -15, -5, 25, 0],
       scale: [1, 1.05, 0.95, 1.1, 1],
       rotate: [0, 5, -15, 10, 0],
-      transition: { 
-        duration: 35, 
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
-    });
-  };
-  
-  const animateBlob4 = async () => {
-    await controls4.start({
+      duration: 35
+    },
+    {
       x: [0, -10, 30, -15, 0],
       y: [0, 25, 5, -20, 0],
       scale: [1, 0.95, 1.15, 0.9, 1],
       rotate: [0, -5, 10, -15, 0],
-      transition: { 
-        duration: 40, 
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "mirror"
-      }
+      duration: 40
+    }
+  ];
+  
+  // Generate shooting stars
+  const shootingStars = useMemo(() => {
+    return Array.from({ length: 15 }).map((_, i) => {
+      const startX = Math.random() * 100;
+      const startY = Math.random() * 100;
+      const angle = Math.random() * 45 + 15; // 15-60 degrees
+      const distance = 100 + Math.random() * 150; // Travel distance
+      const duration = 0.8 + Math.random() * 1.2; // Animation duration
+      const delay = Math.random() * 15; // Random delay
+      const size = 1 + Math.random() * 2; // Star size
+      const tailLength = 30 + Math.random() * 70; // Tail length
+      
+      // Calculate end position based on angle and distance
+      const radians = angle * (Math.PI / 180);
+      const endX = startX + Math.cos(radians) * distance;
+      const endY = startY + Math.sin(radians) * distance;
+      
+      return {
+        id: i,
+        startX,
+        startY,
+        endX,
+        endY,
+        duration,
+        delay,
+        size,
+        tailLength
+      };
     });
-  };
+  }, []);
   
   // Start animations on component mount
   useEffect(() => {
-    animateBlob1();
-    animateBlob2();
-    animateBlob3();
-    animateBlob4();
+    // Animate each blob with its configuration
+    blobAnimations.forEach((animation, index) => {
+      blobControls[index].start({
+        ...animation,
+        transition: { 
+          duration: animation.duration, 
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "mirror"
+        }
+      });
+    });
     
     // Add subtle random movement for more organic feel
     const interval = setInterval(() => {
-      randomX1.set(Math.random() * 2 - 1);
-      randomY1.set(Math.random() * 2 - 1);
-      randomX2.set(Math.random() * 2 - 1);
-      randomY2.set(Math.random() * 2 - 1);
+      randomX.forEach(val => val.set(Math.random() * 2 - 1));
+      randomY.forEach(val => val.set(Math.random() * 2 - 1));
     }, 2000);
     
     return () => clearInterval(interval);
@@ -199,31 +263,84 @@ const FluidBackground = () => {
     <BackgroundContainer>
       {/* Deep purple blob */}
       <PurpleBlob
-        animate={controls1}
+        animate={blobControls[0]}
         style={{ 
-          x: x1, 
-          y: y1
+          x: x[0], 
+          y: y[0]
         }}
       />
       
       {/* Electric blue blob */}
       <BlueBlob
-        animate={controls2}
+        animate={blobControls[1]}
         style={{ 
-          x: x2, 
-          y: y2
+          x: x[1], 
+          y: y[1]
         }}
       />
       
       {/* Cyan accent blob */}
       <CyanBlob
-        animate={controls3}
+        animate={blobControls[2]}
       />
       
       {/* Magenta accent blob */}
       <MagentaBlob
-        animate={controls4}
+        animate={blobControls[3]}
       />
+      
+      {/* Aurora effect */}
+      <Aurora 
+        animate={{
+          scaleY: [1, 1.2, 0.9, 1.1, 1],
+          opacity: [0.4, 0.5, 0.3, 0.45, 0.4],
+          filter: [
+            'blur(40px)',
+            'blur(45px)',
+            'blur(35px)',
+            'blur(42px)',
+            'blur(40px)'
+          ]
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut"
+        }}
+      />
+      
+      {/* Shooting stars */}
+      {shootingStars.map(star => (
+        <ShootingStar
+          key={star.id}
+          initial={{ 
+            x: `${star.startX}vw`, 
+            y: `${star.startY}vh`,
+            opacity: 0,
+            scale: 0,
+            width: `${star.size}px`,
+            height: `${star.size}px`
+          }}
+          animate={{
+            x: [`${star.startX}vw`, `${star.endX}vw`],
+            y: [`${star.startY}vh`, `${star.endY}vh`],
+            opacity: [0, 1, 1, 0],
+            scale: [0, 1, 1, 0]
+          }}
+          transition={{
+            duration: star.duration,
+            delay: star.delay,
+            repeat: Infinity,
+            repeatDelay: 15 + Math.random() * 20,
+            times: [0, 0.1, 0.9, 1]
+          }}
+          style={{
+            boxShadow: `0 0 ${star.size * 2}px rgba(255, 255, 255, 0.8)`,
+            zIndex: 3
+          }}
+        />
+      ))}
       
       {/* Noise texture overlay for grain effect */}
       <NoiseOverlay />

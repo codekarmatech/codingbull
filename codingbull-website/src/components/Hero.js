@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import Button from './Button';
@@ -6,24 +6,22 @@ import FluidBackground from './FluidBackground';
 import { 
   fadeIn, 
   slideUp, 
-  textReveal, 
-  staggerContainer,
-  bounce
+  staggerContainer
 } from '../animations/variants';
 
-// Hero container with modern styling
+// Hero container with enhanced dark styling and optimized layout
 const HeroContainer = styled.section`
-  min-height: 100vh;
+  min-height: 100vh; /* Fit in viewport without scrolling */
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 80px 2rem 0; /* Added top padding to prevent navbar overlap */
-  background: #000000; /* Pure black for slick look */
+  padding: 80px 2.5rem 1.5rem; /* Adjusted padding to fit in viewport */
+  background: #050510; /* Deep space blue-black for ultra slick look */
   perspective: 2000px; /* Enhanced perspective for 3D effect */
   transform-style: preserve-3d; /* Preserve 3D for children */
   
-  /* Dark gradient overlay for better text readability */
+  /* Enhanced dark gradient overlay with subtle animation */
   &::before {
     content: '';
     position: absolute;
@@ -31,108 +29,296 @@ const HeroContainer = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 100%);
-    z-index: 2; /* Above FluidBackground but below content */
+    background: linear-gradient(
+      135deg, 
+      rgba(5, 5, 20, 0.95) 0%, 
+      rgba(10, 10, 30, 0.85) 50%,
+      rgba(5, 5, 20, 0.95) 100%
+    );
+    z-index: 1; /* Above FluidBackground but below content */
     pointer-events: none;
+    animation: gradientShift 15s infinite alternate ease-in-out;
+  }
+  
+  /* Additional subtle vignette for professional depth with animation */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at center,
+      transparent 30%,
+      rgba(0, 0, 15, 0.4) 100%
+    );
+    z-index: 3; /* Above background elements but below content */
+    pointer-events: none;
+    animation: pulseVignette 10s infinite alternate ease-in-out;
+  }
+  
+  /* Dark color wave animations */
+  @keyframes gradientShift {
+    0% {
+      background: linear-gradient(
+        135deg, 
+        rgba(5, 5, 20, 0.95) 0%, 
+        rgba(10, 10, 30, 0.85) 50%,
+        rgba(5, 5, 20, 0.95) 100%
+      );
+    }
+    50% {
+      background: linear-gradient(
+        135deg, 
+        rgba(10, 10, 30, 0.95) 0%, 
+        rgba(5, 5, 20, 0.85) 50%,
+        rgba(15, 15, 40, 0.95) 100%
+      );
+    }
+    100% {
+      background: linear-gradient(
+        135deg, 
+        rgba(15, 15, 40, 0.95) 0%, 
+        rgba(10, 10, 30, 0.85) 50%,
+        rgba(5, 5, 20, 0.95) 100%
+      );
+    }
+  }
+  
+  @keyframes pulseVignette {
+    0% {
+      opacity: 0.8;
+      background: radial-gradient(
+        circle at center,
+        transparent 30%,
+        rgba(0, 0, 15, 0.4) 100%
+      );
+    }
+    50% {
+      opacity: 1;
+      background: radial-gradient(
+        circle at center,
+        transparent 35%,
+        rgba(0, 0, 25, 0.5) 100%
+      );
+    }
+    100% {
+      opacity: 0.9;
+      background: radial-gradient(
+        circle at center,
+        transparent 25%,
+        rgba(0, 0, 20, 0.45) 100%
+      );
+    }
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    padding: 80px 2rem 1.5rem; /* Adjusted padding for larger screens */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    padding: 70px 1.5rem 1.5rem; /* Adjusted padding for medium screens */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    padding: 60px 1rem 1rem; /* Adjusted padding for small screens */
   }
 `;
 
-// Content wrapper
+// Content wrapper with optimized spacing for a classy feel that fits in viewport
 const HeroContent = styled(motion.div)`
-  max-width: 1400px;
+  max-width: 1400px; /* Optimized max-width */
   margin: 0 auto;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 3; /* Above both FluidBackground and ParticlesContainer */
+  z-index: 5; /* Above all background elements including gradient waves and vignette */
   position: relative;
   transform-style: preserve-3d; /* Preserve 3D for children */
+  padding: 1rem 2rem; /* Optimized padding to fit in viewport */
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     flex-direction: column;
-    gap: 3rem;
+    gap: 3rem; /* Optimized gap between sections */
     text-align: center;
-    padding: 0 1rem;
+    padding: 1rem 2rem; /* Consistent padding */
   }
   
   @media (max-width: ${props => props.theme.breakpoints.md}) {
-    gap: 2rem;
+    gap: 2.5rem; /* Optimized gap for medium screens */
+    padding: 0.75rem 1.5rem; /* Slightly reduced padding */
   }
   
   @media (max-width: ${props => props.theme.breakpoints.sm}) {
-    gap: 1.5rem;
+    gap: 2rem; /* Optimized spacing for small screens */
+    padding: 0.5rem 1rem; /* Adjusted padding */
   }
 `;
 
-// Left side content
+// Left side content with optimized spacing
 const HeroTextContent = styled(motion.div)`
   flex: 1;
-  max-width: 600px;
+  max-width: 600px; /* Optimized max-width */
+  padding-right: 2.5rem; /* Optimized spacing between columns */
+  margin-top: 0.5rem; /* Reduced top margin to fit in viewport */
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     max-width: 100%;
     order: 2;
+    padding-right: 0; /* Remove padding on mobile */
+    margin-bottom: 2rem; /* Optimized bottom margin */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    width: 100%; /* Ensure full width */
+    max-width: 600px; /* Limit width for better readability */
+    margin: 0 auto 2rem; /* Center content with optimized margin */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    margin-bottom: 1.5rem; /* Optimized margin on small screens */
   }
 `;
 
-// Right side content (image/animation)
+// Right side content (development cycle) with optimized spacing
 const HeroVisual = styled(motion.div)`
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-left: 2.5rem; /* Optimized spacing between columns */
+  margin-top: 0.5rem; /* Reduced top margin to fit in viewport */
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     order: 1;
     width: 100%;
+    margin-left: 0; /* Remove margin on mobile */
+    margin-top: 2rem; /* Optimized top margin */
   }
-`;
-
-// Headline
-const Headline = styled(motion.h1)`
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  background: ${props => props.theme.colors.gradientPrimary};
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   
-  span {
-    display: block;
-    color: ${props => props.theme.colors.textPrimary};
-    -webkit-text-fill-color: ${props => props.theme.colors.textPrimary};
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    max-width: 600px; /* Optimized max-width */
+    margin: 2rem auto 0; /* Center content with optimized margin */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    margin-top: 1.5rem; /* Optimized margin on small screens */
   }
 `;
 
-// Subheadline
-const Subheadline = styled(motion.p)`
-  font-size: ${props => props.theme.fontSizes.xl};
-  color: ${props => props.theme.colors.textSecondary};
-  margin-bottom: 2rem;
-  line-height: 1.6;
+// Headline with enhanced gradient effect and optimized styling
+const Headline = styled(motion.h1)`
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem); /* Optimized font size */
+  line-height: 1.2; /* Improved line height */
+  margin-bottom: 1.5rem; /* Optimized bottom margin */
+  position: relative;
+  font-family: 'Montserrat', sans-serif; /* More elegant font */
+  font-weight: 800; /* Bolder weight for more impact */
+  letter-spacing: -0.5px; /* Tighter letter spacing for luxury feel */
+  
+  /* Animated glow effect */
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: ${props => props.theme.colors.gradientPrimary};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(10px); /* Increased blur for more dramatic effect */
+    opacity: 0.4; /* Slightly increased opacity */
+    animation: glowPulse 3s infinite alternate ease-in-out;
+  }
+  
+  @keyframes glowPulse {
+    0% {
+      filter: blur(8px);
+      opacity: 0.3;
+    }
+    100% {
+      filter: blur(12px);
+      opacity: 0.5;
+    }
+  }
+  
+  .main-title {
+    display: inline-block;
+    margin-bottom: 1rem; /* Optimized margin */
+  }
+  
+  .company-name {
+    display: block;
+    margin-top: 1rem; /* Optimized margin */
+    font-weight: bold;
+    font-size: 0.8em;
+    letter-spacing: 1.5px;
+  }
+  
+  .letter {
+    display: inline-block;
+    background: ${props => props.theme.colors.gradientPrimary};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    &:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.3);
+      transition: all 0.2s ease;
+    }
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    margin-bottom: 1.5rem;
+  }
 `;
 
-// Trusted by section
+// Subheadline with enhanced styling
+const Subheadline = styled(motion.p)`
+  font-size: clamp(1rem, 2.2vw, 1.2rem); /* Optimized font size */
+  color: ${props => props.theme.colors.textSecondary};
+  margin-bottom: 2rem; /* Optimized bottom margin */
+  line-height: 1.7; /* Improved line height */
+  max-width: 95%; /* Slightly wider */
+  font-family: 'Open Sans', sans-serif; /* More elegant font */
+  letter-spacing: 0.3px; /* Slight letter spacing for readability */
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+`;
+
+// Trusted by section with optimized spacing
 const TrustedBy = styled(motion.div)`
-  margin-top: 3rem;
+  margin-top: 2.5rem; /* Optimized top margin */
+  padding: 1.5rem 0; /* Optimized vertical padding */
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Added subtle separator */
   
   h4 {
-    font-size: ${props => props.theme.fontSizes.md};
+    font-size: ${props => props.theme.fontSizes.md}; /* Optimized font size */
     color: ${props => props.theme.colors.lightGrey};
-    margin-bottom: 1rem;
+    margin-bottom: 1rem; /* Optimized bottom margin */
+    font-family: 'Montserrat', sans-serif; /* More elegant font */
+    letter-spacing: 0.5px; /* Added letter spacing */
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    margin-top: 2rem;
+    padding: 1rem 0;
   }
 `;
 
-// We'll add client logos in the future if needed
-
-// Button group with enhanced styling
+// Button group with enhanced styling and optimized spacing
 const ButtonGroup = styled(motion.div)`
   display: flex;
-  gap: 1.5rem;
-  margin-top: 2.5rem;
+  gap: 1.5rem; /* Optimized gap between buttons */
+  margin-top: 2.5rem; /* Optimized top margin */
   position: relative;
+  padding: 0.5rem 0; /* Added vertical padding */
   
   &::after {
     content: '';
@@ -141,207 +327,37 @@ const ButtonGroup = styled(motion.div)`
     left: 0;
     width: 100%;
     height: 15px;
-    background: linear-gradient(to bottom, rgba(106, 13, 173, 0.2), transparent);
+    background: linear-gradient(to bottom, rgba(33, 150, 243, 0.2), transparent); /* Blue glow */
     filter: blur(10px);
     border-radius: 50%;
-    opacity: 0.5;
+    opacity: 0.6;
     pointer-events: none;
+    animation: glowFloat 3s infinite alternate ease-in-out;
+  }
+  
+  @keyframes glowFloat {
+    0% {
+      opacity: 0.4;
+      filter: blur(8px);
+    }
+    100% {
+      opacity: 0.7;
+      filter: blur(12px);
+    }
   }
   
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     flex-direction: column;
     width: 100%;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
     gap: 1rem;
+    margin-top: 1.5rem;
   }
 `;
-
-// 3D Particles container with adjusted z-index
-const ParticlesContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1; /* Above the FluidBackground but below the content */
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  transition: transform 0.6s ease-out;
-  will-change: transform;
-  pointer-events: none; /* Allow clicks to pass through */
-`;
-
-// Individual star particle - using attrs for all dynamic styles
-const Particle = styled(motion.div).attrs(props => {
-  // Extract values with defaults
-  const color = props.$color || props.theme.colors.electricBlue;
-  const glow = props.$glow || '5px';
-  const opacity = props.$opacity || 0.6;
-  const size = props.$size || '2px';
-  const blur = props.$blur || '0px';
-
-  return {
-    // Forward ALL motion props
-    animate: props.animate,
-    initial: props.initial,
-    exit: props.exit,
-    transition: props.transition,
-    whileHover: props.whileHover,
-    whileTap: props.whileTap,
-    whileFocus: props.whileFocus,
-    whileDrag: props.whileDrag,
-    whileInView: props.whileInView,
-    variants: props.variants,
-    
-    // Apply all dynamic styles through the style prop, including CSS variables
-    style: {
-      ...props.style,
-      width: size,
-      height: size,
-      background: color, // Main background can still be direct for the element itself
-      opacity: opacity, // Main opacity can still be direct
-      filter: `blur(${blur})`,
-      boxShadow: `0 0 ${glow} ${color}`, // Main boxShadow can still be direct
-      // CSS Variables for use in pseudo-elements and keyframes
-      '--particle-color': color,
-      '--particle-glow': glow,
-      '--particle-opacity': opacity,
-      '--particle-glow-after': props.$glow ? `${props.$glow}` : '10px' // Specific for ::after
-    },
-    
-    // Preserve className if provided
-    className: props.className,
-  };
-})`
-  position: absolute;
-  border-radius: 50%;
-  z-index: 0;
-  will-change: transform, opacity, box-shadow;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  
-  /* Define default values for CSS variables at the component level */
-  --particle-color-default: ${props => props.theme.colors.electricBlue};
-  --particle-glow-default: 5px;
-  --particle-opacity-default: 0.6;
-  --particle-glow-after-default: 10px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    transform: translate(-50%, -50%);
-    background: var(--particle-color, var(--particle-color-default));
-    box-shadow: 0 0 var(--particle-glow-after, var(--particle-glow-after-default)) var(--particle-color, var(--particle-color-default));
-    border-radius: 50%;
-    opacity: 0.3; /* This opacity seems static for the ::after, so it's fine */
-  }
-  
-  &.pulsate {
-    animation: pulsate 4s ease-in-out infinite alternate;
-  }
-  
-  &.twinkle {
-    animation: twinkle 7s ease-in-out infinite;
-  }
-  
-  @keyframes pulsate {
-    0% {
-      box-shadow: 0 0 var(--particle-glow, var(--particle-glow-default)) var(--particle-color, var(--particle-color-default));
-      opacity: var(--particle-opacity, var(--particle-opacity-default));
-    }
-    50% {
-      /* For calc inside var, it's tricky. We might need to pass the calculated value or simplify. */
-      /* Simpler: use a multiplier variable if possible, or accept less dynamic keyframes. */
-      /* For now, let's assume glow can be passed as a direct value for keyframe steps if complex calc is an issue */
-      box-shadow: 0 0 calc(var(--particle-glow, var(--particle-glow-default)) * 1.5) var(--particle-color, var(--particle-color-default));
-      opacity: calc(var(--particle-opacity, var(--particle-opacity-default)) * 1.3); /* Ensure this doesn't exceed 1 */
-    }
-    100% {
-      box-shadow: 0 0 calc(var(--particle-glow, var(--particle-glow-default)) * 2.5) var(--particle-color, var(--particle-color-default));
-      opacity: calc(var(--particle-opacity, var(--particle-opacity-default)) * 1.7); /* Ensure this doesn't exceed 1 */
-    }
-  }
-  
-  @keyframes twinkle {
-    0%, 100% {
-      opacity: var(--particle-opacity, var(--particle-opacity-default));
-      box-shadow: 0 0 var(--particle-glow, var(--particle-glow-default)) var(--particle-color, var(--particle-color-default));
-    }
-    25% {
-      opacity: calc(var(--particle-opacity, var(--particle-opacity-default)) * 0.3);
-      box-shadow: 0 0 calc(var(--particle-glow, var(--particle-glow-default)) * 0.5) var(--particle-color, var(--particle-color-default));
-    }
-    50% {
-      opacity: calc(var(--particle-opacity, var(--particle-opacity-default)) * 1.5);
-      box-shadow: 0 0 calc(var(--particle-glow, var(--particle-glow-default)) * 2) var(--particle-color, var(--particle-color-default));
-    }
-    75% {
-      opacity: calc(var(--particle-opacity, var(--particle-opacity-default)) * 0.5);
-      box-shadow: 0 0 calc(var(--particle-glow, var(--particle-glow-default)) * 0.7) var(--particle-color, var(--particle-color-default));
-    }
-  }
-`;
-
-// Nebula cloud for galaxy effect - using attrs for all dynamic styles
-const Nebula = styled(motion.div).attrs(props => {
-  // Extract values with defaults
-  const size = props.$size || '300px';
-  const color = props.$color || 'rgba(106, 13, 173, 0.2)';
-  const borderRadius = props.$borderRadius || '50%';
-  const opacity = props.$opacity || 0.15;
-  const blur = props.$blur || '40px';
-  
-  return {
-    // Forward ALL motion props
-    animate: props.animate,
-    initial: props.initial,
-    exit: props.exit,
-    transition: props.transition,
-    whileHover: props.whileHover,
-    whileTap: props.whileTap,
-    whileFocus: props.whileFocus,
-    whileDrag: props.whileDrag,
-    whileInView: props.whileInView,
-    variants: props.variants,
-    
-    // Apply all dynamic styles through the style prop
-    style: {
-      ...props.style,
-      width: size,
-      height: size,
-      borderRadius: borderRadius,
-      background: `radial-gradient(ellipse, ${color} 0%, rgba(0,0,0,0) 70%)`,
-      opacity: opacity,
-      filter: `blur(${blur})`,
-    },
-  };
-})`
-  position: absolute;
-  z-index: 0;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: inherit;
-    background: radial-gradient(ellipse at 30% 40%, 
-      rgba(255, 255, 255, 0.05) 0%, 
-      rgba(0,0,0,0) 70%);
-    filter: blur(15px);
-    opacity: 0.5;
-  }
-`;
-
-
 
 // Animated code block using theme variables and attrs for all dynamic styles
 const CodeBlock = styled(motion.div).attrs(props => {
@@ -592,29 +608,32 @@ const Hero = () => {
   // Get theme from context for use in component
   const theme = React.useContext(ThemeContext);
   
-  // Animation variants for staggered code lines
+  // Code animation variants for typing effect
   const codeLineVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: i => ({
+    hidden: { opacity: 0, y: 5 },
+    visible: custom => ({
       opacity: 1,
-      x: 0,
+      y: 0,
       transition: {
-        delay: i * 0.1 + 0.5,
-        duration: 0.5
+        delay: custom * 0.15,
+        duration: 0.4,
+        ease: "easeOut"
       }
     })
   };
   
-  // We'll use this for the typing effect on the code lines
+  // Typing effect for code content
   const typingEffect = {
-    initial: { width: 0 },
-    animate: { 
+    hidden: { width: 0, opacity: 0 },
+    visible: custom => ({
       width: "100%",
-      transition: { 
-        duration: 1.5, 
-        ease: "easeInOut" 
+      opacity: 1,
+      transition: {
+        delay: custom * 0.15 + 0.1,
+        duration: 0.8,
+        ease: "easeInOut"
       }
-    }
+    })
   };
   
   // Animation controls for sequential animations
@@ -624,9 +643,9 @@ const Hero = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
-  // Transform mouse position for parallax effect
-  const rotateX = useTransform(mouseY, [0, 300], [5, -5]);
-  const rotateY = useTransform(mouseX, [0, 500], [-5, 5]);
+  // Transform mouse position for parallax effect - used for subtle background movement
+  const backgroundY = useTransform(mouseY, [0, 300], [-15, 15]);
+  const backgroundX = useTransform(mouseX, [0, 500], [-15, 15]);
   
   // Start animations in sequence
   useEffect(() => {
@@ -652,254 +671,358 @@ const Hero = () => {
     const mouseYPercent = (clientY - top) / height - 0.5;
     
     // Apply subtle rotation to the container based on mouse position
-    document.querySelector('.particles-container')?.style.setProperty(
+    document.querySelector('.hero-content')?.style.setProperty(
       'transform', 
-      `rotateY(${mouseXPercent * 10}deg) rotateX(${-mouseYPercent * 10}deg)`
+      `rotateY(${mouseXPercent * 3}deg) rotateX(${-mouseYPercent * 3}deg) translateZ(0px)`
     );
   };
-  
-  // Generate random particles for galaxy star field effect
-  const particles = useMemo(() => {
-    return Array.from({ length: 200 }).map((_, i) => {
-      // Random positions in 3D space
-      const x = Math.random() * 100; // % of container width
-      const y = Math.random() * 100; // % of container height
-      const z = Math.random() * 2000 - 1000; // z-depth (-1000px to 1000px) for enhanced deep space effect
-      
-      // Star size distribution - mostly small with a few larger ones
-      const sizeRandom = Math.random();
-      const size = sizeRandom > 0.97 ? 4 + Math.random() * 3 : // Extra large stars (3%)
-                  sizeRandom > 0.9 ? 2.5 + Math.random() * 1.5 : // Large stars (7%)
-                  sizeRandom > 0.7 ? 1.5 + Math.random() * 1 : // Medium stars (20%)
-                  0.5 + Math.random() * 0.8; // Small stars (70%)
-      
-      // Blur and glow effects
-      const blur = sizeRandom > 0.9 ? 0 : Math.random() * 1.2; // Sharper large stars
-      const glow = sizeRandom > 0.95 ? `${8 + Math.random() * 12}px` : // Extra bright glow for largest stars
-                  sizeRandom > 0.85 ? `${4 + Math.random() * 8}px` : // Bright glow for large stars
-                  `${1 + Math.random() * 3}px`; // Subtle glow for smaller stars
-      
-      // Opacity - brighter for larger stars
-      const opacity = sizeRandom > 0.95 ? 0.9 + Math.random() * 0.1 : // Brightest stars
-                     sizeRandom > 0.8 ? 0.6 + Math.random() * 0.3 : // Bright stars
-                     sizeRandom > 0.6 ? 0.3 + Math.random() * 0.3 : // Medium brightness
-                     0.1 + Math.random() * 0.2; // Dim stars
-      
-      // Star colors - galaxy-like distribution with more vibrant colors on black background
-      const colorRandom = Math.random();
-      const colors = colorRandom > 0.92 ? ['#FF9D00', '#FF5500', '#FF8800'] : // Yellow/orange/red stars (8%)
-                    colorRandom > 0.85 ? ['#FF00FF', '#FF66FF', '#CC33FF'] : // Pink/magenta stars (7%)
-                    colorRandom > 0.7 ? ['#FFFFFF', '#F8F8FF', '#E6E6FA'] : // White stars (15%)
-                    colorRandom > 0.4 ? ['#00BFFF', '#1E90FF', '#87CEFA', '#00FFFF'] : // Blue/cyan stars (30%)
-                    ['#9370DB', '#8A2BE2', '#9932CC', '#6A0DAD', '#7B68EE']; // Purple/violet stars (40%)
-      
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      
-      // Random animation durations - slower for distant stars (parallax effect)
-      const zFactor = Math.abs(z) / 1000; // 0 to 1 based on z-distance
-      const duration = 25 + zFactor * 65; // 25-90 seconds
-      const delay = Math.random() * 10;
-      
-      // Enhanced animation values for more dynamic movement
-      const xOffset = Math.sin(i * 0.5) * (15 + Math.random() * 10);
-      const yOffset = Math.cos(i * 0.5) * (8 + Math.random() * 7);
-      
-      // Animation effects for stars
-      const pulsate = sizeRandom > 0.9; // Only the largest stars pulsate
-      const twinkle = !pulsate && sizeRandom > 0.7 && sizeRandom <= 0.9; // Medium stars twinkle
-      
-      return {
-        id: i,
-        x,
-        y,
-        z,
-        size,
-        blur,
-        opacity,
-        color,
-        glow,
-        xOffset,
-        yOffset,
-        duration,
-        delay,
-        pulsate,
-        twinkle
-      };
-    });
-  }, []);
 
   return (
     <HeroContainer>
       {/* Modern fluid gradient background */}
       <FluidBackground />
       
-      {/* 3D Particles Animation */}
-      <ParticlesContainer className="particles-container">
-        {/* Enhanced nebula clouds for cinematic effect */}
-        <Nebula 
-          $size="550px"
-          $color="rgba(76, 0, 153, 0.15)"
-          $blur="65px"
-          style={{ top: '15%', right: '8%', transform: 'translateZ(-700px)' }}
-          animate={{ 
-            scale: [1, 1.15, 1],
-            opacity: [0.15, 0.22, 0.15],
-            rotate: [0, 7, 0],
-            x: [0, 20, 0],
-            y: [0, -15, 0]
+      {/* Enhanced gradient background with subtle dark color wave animations */}
+      <div className="gradient-background" style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        overflow: 'hidden',
+        zIndex: 2,
+        pointerEvents: 'none'
+      }}>
+        {/* Gradient overlays with subtle motion */}
+        <motion.div 
+          style={{
+            position: 'absolute',
+            top: '0%',
+            left: '0%',
+            width: '100%',
+            height: '100%',
+            background: 'radial-gradient(circle at 30% 30%, rgba(10, 36, 99, 0.1) 0%, transparent 70%)',
+            zIndex: 2
           }}
-          transition={{ 
-            duration: 70, 
-            repeat: Infinity, 
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }}
+          animate={{ x: backgroundX, y: backgroundY }}
+          transition={{ type: 'spring', stiffness: 10, damping: 20 }}
         />
-        <Nebula 
-          $size="450px"
-          $color="rgba(0, 112, 255, 0.12)"
-          $blur="55px"
-          style={{ bottom: '12%', left: '12%', transform: 'translateZ(-600px)' }}
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.12, 0.18, 0.12],
-            rotate: [0, -5, 0],
-            x: [0, -25, 0],
-            y: [0, 15, 0]
+        
+        <motion.div 
+          style={{
+            position: 'absolute',
+            bottom: '0%',
+            right: '0%',
+            width: '100%',
+            height: '100%',
+            background: 'radial-gradient(circle at 70% 70%, rgba(33, 150, 243, 0.1) 0%, transparent 70%)',
+            zIndex: 2
           }}
-          transition={{ 
-            duration: 60, 
-            repeat: Infinity, 
-            repeatType: "reverse",
-            ease: "easeInOut"
-          }}
+          animate={{ x: backgroundX, y: backgroundY }}
+          transition={{ type: 'spring', stiffness: 8, damping: 25, delay: 0.1 }}
         />
-        <Nebula 
-          $size="380px"
-          $color="rgba(106, 13, 173, 0.15)"
-          $borderRadius="60% 40% 50% 50% / 40% 50% 50% 60%"
-          $blur="50px"
-          style={{ top: '60%', right: '25%', transform: 'translateZ(-650px)' }}
-          animate={{ 
-            scale: [1, 1.12, 1],
-            opacity: [0.15, 0.25, 0.15],
-            rotate: [0, 10, 0],
-            x: [0, 15, 0],
-            y: [0, 20, 0]
+        
+        {/* Dark color wave animations - multiple subtle waves */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '-10%',
+            width: '120%',
+            height: '200px',
+            background: 'linear-gradient(90deg, rgba(5, 5, 20, 0.05), rgba(10, 10, 30, 0.08))',
+            borderRadius: '50%',
+            filter: 'blur(60px)',
+            opacity: 0.2,
+            zIndex: 2
           }}
-          transition={{ 
-            duration: 80, 
-            repeat: Infinity, 
-            repeatType: "reverse",
-            ease: "easeInOut"
+          animate={{
+            y: ['0%', '5%', '0%'],
           }}
-        />
-        <Nebula 
-          $size="320px"
-          $color="rgba(255, 0, 128, 0.08)"
-          $borderRadius="40% 60% 60% 40% / 60% 30% 70% 40%"
-          $blur="45px"
-          style={{ top: '30%', left: '20%', transform: 'translateZ(-550px)' }}
-          animate={{ 
-            scale: [1, 1.18, 1],
-            opacity: [0.08, 0.14, 0.08],
-            rotate: [0, -8, 0],
-            x: [0, -10, 0],
-            y: [0, -15, 0]
-          }}
-          transition={{ 
-            duration: 65, 
-            repeat: Infinity, 
-            repeatType: "reverse",
-            ease: "easeInOut"
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
           }}
         />
         
-        {/* Star particles */}
-        {particles.map((particle) => (
-          <Particle
-            key={particle.id}
-            $size={`${particle.size}px`}
-            $color={particle.color}
-            $opacity={particle.opacity}
-            $blur={`${particle.blur}px`}
-            $glow={particle.glow}
-            className={particle.pulsate ? 'pulsate' : particle.twinkle ? 'twinkle' : ''}
-            style={{ 
-              left: `${particle.x}%`, 
-              top: `${particle.y}%`,
-              transform: `translateZ(${particle.z}px)`
-            }}
-            animate={{
-              // Enhanced circular/elliptical motion for stars
-              x: [
-                0,
-                particle.xOffset, 
-                0,
-                -particle.xOffset,
-                0
-              ],
-              y: [
-                0,
-                particle.yOffset,
-                0,
-                -particle.yOffset,
-                0
-              ],
-              // Subtle scaling for stars that aren't animated via CSS
-              scale: particle.pulsate || particle.twinkle ? 
-                [1, 1] : // No scale animation for stars with CSS animations
-                [
-                  1,
-                  particle.size > 2 ? 1.3 : 1.15,
-                  1
-                ],
-              // Subtle opacity changes for stars that aren't animated via CSS
-              opacity: particle.pulsate || particle.twinkle ?
-                [particle.opacity, particle.opacity] : // No opacity animation for stars with CSS animations
-                [
-                  particle.opacity,
-                  particle.opacity * (particle.size > 2 ? 1.6 : 1.3),
-                  particle.opacity
-                ]
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              repeatType: "loop",
-              ease: "easeInOut",
-              delay: particle.delay,
-              // Different timing for each property for more natural movement
-              x: { duration: particle.duration * 0.8 },
-              y: { duration: particle.duration * 1.2 },
-              scale: { duration: 3 + Math.random() * 7, repeatType: "reverse" },
-              opacity: { duration: 4 + Math.random() * 6, repeatType: "reverse" }
-            }}
-          />
-        ))}
-      </ParticlesContainer>
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: '30%',
+            right: '-10%',
+            width: '120%',
+            height: '180px',
+            background: 'linear-gradient(90deg, rgba(10, 10, 30, 0.08), rgba(15, 15, 40, 0.05))',
+            borderRadius: '50%',
+            filter: 'blur(70px)',
+            opacity: 0.15,
+            zIndex: 2
+          }}
+          animate={{
+            y: ['0%', '-4%', '0%'],
+          }}
+          transition={{
+            duration: 20,
+            delay: 3,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
+        
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: '20%',
+            left: '-5%',
+            width: '110%',
+            height: '150px',
+            background: 'linear-gradient(90deg, rgba(15, 15, 40, 0.06), rgba(10, 36, 99, 0.08))',
+            borderRadius: '50%',
+            filter: 'blur(50px)',
+            opacity: 0.2,
+            zIndex: 2
+          }}
+          animate={{
+            y: ['0%', '6%', '0%'],
+          }}
+          transition={{
+            duration: 15,
+            delay: 2,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
+        
+        {/* Blue accent waves */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: '40%',
+            left: '-10%',
+            width: '120%',
+            height: '200px',
+            background: 'linear-gradient(90deg, rgba(10, 36, 99, 0.04), rgba(33, 150, 243, 0.06))',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+            opacity: 0.15,
+            zIndex: 2
+          }}
+          animate={{
+            y: ['0%', '3%', '0%'],
+          }}
+          transition={{
+            duration: 22,
+            delay: 1,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
+        
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: '15%',
+            right: '-10%',
+            width: '120%',
+            height: '220px',
+            background: 'linear-gradient(90deg, rgba(33, 150, 243, 0.06), rgba(10, 36, 99, 0.04))',
+            borderRadius: '50%',
+            filter: 'blur(80px)',
+            opacity: 0.15,
+            zIndex: 2
+          }}
+          animate={{
+            y: ['0%', '-3%', '0%'],
+          }}
+          transition={{
+            duration: 20,
+            delay: 5,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
+        
+        {/* Animated border glows */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, rgba(62, 146, 204, 0.4), transparent)',
+            opacity: 0.4
+          }}
+          animate={{ 
+            opacity: [0.3, 0.5, 0.3],
+            backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
+          }}
+          transition={{ 
+            opacity: { duration: 8, repeat: Infinity, repeatType: 'reverse' },
+            backgroundPosition: { duration: 15, repeat: Infinity, repeatType: 'reverse' }
+          }}
+        />
+        
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '100%',
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, rgba(33, 150, 243, 0.4), transparent)',
+            opacity: 0.4
+          }}
+          animate={{ 
+            opacity: [0.3, 0.5, 0.3],
+            backgroundPosition: ['100% 0%', '0% 0%', '100% 0%']
+          }}
+          transition={{ 
+            opacity: { duration: 8, delay: 4, repeat: Infinity, repeatType: 'reverse' },
+            backgroundPosition: { duration: 15, delay: 2, repeat: Infinity, repeatType: 'reverse' }
+          }}
+        />
+      </div>
       
       <HeroContent
+        className="hero-content"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
         onMouseMove={handleMouseMove}
+        style={{ transformStyle: 'preserve-3d' }}
       >
         <HeroTextContent>
           <Headline
-            variants={textReveal}
+            data-text="CodingBull Technovations"
+            style={{ 
+              marginBottom: "2rem", // Optimized spacing
+              lineHeight: 1.3, // Improved line height for better readability
+              padding: "0.5rem 0" // Added vertical padding
+            }}
           >
-            Transform Ideas into Digital Products <span>with CodingBull Technovations</span>
+            {/* Company name now as the main title with larger, more prominent styling */}
+            <div className="main-title" style={{ marginBottom: "1.5rem" }}>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{
+                  background: "linear-gradient(90deg, #2979FF 0%, #00B0FF 100%)", // Professional blue gradient
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  display: "inline-block",
+                  textShadow: "0 5px 20px rgba(33, 150, 243, 0.3)",
+                  fontSize: "clamp(2.5rem, 5vw, 3.8rem)", // Optimized font size
+                  fontWeight: "900", // Extra bold
+                  letterSpacing: "-0.5px", // Tighter letter spacing for luxury feel
+                  wordBreak: "keep-all", // Prevents breaking words in awkward places
+                  hyphens: "auto", // Allows hyphenation for better text wrapping
+                  paddingRight: "0.5rem", // Ensures space at the end of lines
+                  fontFamily: "'Montserrat', sans-serif" // More elegant font
+                }}
+              >
+                CodingBull Technovations
+              </motion.div>
+            </div>
+            
+            {/* Transform Ideas now as the secondary tagline with enhanced styling */}
+            <motion.div 
+              className="company-name"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              style={{
+                display: "block", // Changed to block for better mobile layout
+                borderTop: "1px solid rgba(33, 150, 243, 0.3)",
+                paddingTop: "1.2rem",
+                marginTop: "1.5rem", // Optimized spacing
+                position: "relative"
+              }}
+            >
+              {/* Animated gradient text with letter animation */}
+              <motion.div
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                  fontSize: "clamp(1.3rem, 2.8vw, 1.6rem)", // Optimized font size
+                  fontWeight: "600", // Semi-bold
+                  letterSpacing: "0.5px",
+                  lineHeight: 1.4,
+                  fontFamily: "'Open Sans', sans-serif" // More elegant font
+                }}
+              >
+                {/* Split text into individual letters for animation */}
+                {"Transform Ideas into Digital Products".split("").map((letter, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: 0.5 + index * 0.03, 
+                      duration: 0.3,
+                      ease: "easeOut"
+                    }}
+                    style={{
+                      display: "inline-block",
+                      color: letter === " " ? "transparent" : "rgba(255, 255, 255, 0.95)",
+                      textShadow: letter === " " ? "none" : "0 0 10px rgba(33, 150, 243, 0.4)",
+                      marginRight: letter === " " ? "0.4em" : "0",
+                      background: letter === " " ? "none" : "linear-gradient(135deg, #4B91F1 0%, #1976D2 100%)",
+                      WebkitBackgroundClip: letter === " " ? "none" : "text",
+                      WebkitTextFillColor: letter === " " ? "transparent" : "transparent",
+                    }}
+                    whileHover={{
+                      y: -3,
+                      scale: 1.1,
+                      color: "#2196F3",
+                      textShadow: "0 0 15px rgba(33, 150, 243, 0.5)",
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    {letter === " " ? "\u00A0" : letter}
+                  </motion.span>
+                ))}
+              </motion.div>
+              
+              {/* Animated underline */}
+              <motion.div
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "100%", opacity: 1 }}
+                transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+                style={{
+                  height: "2px",
+                  background: "linear-gradient(to right, rgba(33, 150, 243, 0.3), rgba(33, 150, 243, 0.7), rgba(33, 150, 243, 0.3))",
+                  marginTop: "0.5rem",
+                  boxShadow: "0 0 10px rgba(33, 150, 243, 0.3)"
+                }}
+              />
+            </motion.div>
           </Headline>
           
           <Subheadline
             variants={fadeIn}
+            style={{
+              fontSize: "clamp(1rem, 2.5vw, 1.25rem)", // Responsive font size
+              lineHeight: 1.7, // Improved line height for better readability
+              color: "rgba(255, 255, 255, 0.85)", // Slightly softer white for better contrast
+              marginBottom: "2.5rem", // Increased spacing
+              maxWidth: "95%", // Ensure text doesn't stretch too wide
+              letterSpacing: "0.3px" // Slightly improved letter spacing
+            }}
           >
             We build enterprise-grade web & mobile applications that scale—powered by modern technologies and proven expertise.
           </Subheadline>
           
           <ButtonGroup
             variants={fadeIn}
+            style={{ marginTop: "3rem" }} // Increased spacing
           >
             <Button 
               variant="primary" 
@@ -915,6 +1038,12 @@ const Hero = () => {
                   ease: [0.175, 0.885, 0.32, 1.275]
                 }
               }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: '0 10px 25px rgba(106, 13, 173, 0.5)',
+                transition: { duration: 0.2 }
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               Explore Our Work
             </Button>
@@ -932,6 +1061,12 @@ const Hero = () => {
                   ease: [0.175, 0.885, 0.32, 1.275]
                 }
               }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: '0 10px 25px rgba(0, 112, 255, 0.3)',
+                transition: { duration: 0.2 }
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               Our Services
             </Button>
@@ -952,147 +1087,230 @@ const Hero = () => {
         </HeroTextContent>
         
         <HeroVisual>
-          
-          {/* Interactive code block with enhanced 3D effect */}
-          <CodeBlock
-            style={{ 
-              perspective: "1500px",
-              transformStyle: "preserve-3d",
-              rotateX,
-              rotateY,
-              filter: "drop-shadow(0 0 30px rgba(0, 112, 255, 0.1))"
-            }}
-            variants={bounce}
+          {/* Modern 3D development cycle display */}
+          <motion.div
+            variants={fadeIn}
             initial="hidden"
             animate="visible"
-            whileHover={{ 
-              scale: 1.03, 
-              boxShadow: theme ? `${theme.shadows.xl}, 0 0 50px rgba(106, 13, 173, 0.3)` : 
-                '0 15px 35px rgba(0, 0, 0, 0.3), 0 10px 15px rgba(0, 0, 0, 0.2), 0 0 50px rgba(106, 13, 173, 0.3)',
-              transition: { duration: 0.4, ease: "backOut" }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{ 
+              width: '100%',
+              maxWidth: '500px',
+              height: 'auto',
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              transform: 'perspective(1000px)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
-            <div className="code-header">codingbull-solution.js</div>
-            <div style={{ marginTop: '20px' }}>
-              {[
-                {
-                  lineNumber: "01",
-                  content: <><span className="keyword">import</span> &#123; <span className="function">initBackend</span> &#125; <span className="keyword">from</span> <span className="string">'@codingbull/core'</span>;</>
-                },
-                {
-                  lineNumber: "02",
-                  content: <><span className="keyword">import</span> &#123; <span className="function">setupFrontend</span> &#125; <span className="keyword">from</span> <span className="string">'@codingbull/react-ui'</span>;</>
-                },
-                {
-                  lineNumber: "03",
-                  content: <><span className="keyword">import</span> &#123; <span className="function">runAnalytics</span> &#125; <span className="keyword">from</span> <span className="string">'@codingbull/analytics'</span>;</>
-                },
-                {
-                  lineNumber: "04",
-                  content: <><span className="keyword">import</span> &#123; <span className="function">deployToCloud</span> &#125; <span className="keyword">from</span> <span className="string">'@codingbull/devops'</span>;</>
-                }
-              ].map((line, index) => (
-                <CodeLine 
-                  key={index}
-                  custom={index + 1} 
-                  variants={codeLineVariants} 
-                  initial="hidden" 
-                  animate="visible"
-                >
-                  <span className="line-number">{line.lineNumber}</span>
-                  <div className="code-content">
-                    {line.content}
-                  </div>
-                </CodeLine>
-              ))}
-              {/* Special typing effect line */}
-              <CodeLine 
-                custom={5} 
-                variants={codeLineVariants} 
-                initial="hidden" 
-                animate="visible" 
-                className="highlight active typing"
+            {/* Floating 3D elements representing development cycle */}
+            <motion.div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '400px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              {/* Central glowing orb */}
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ 
+                  scale: [0.9, 1.1, 0.9],
+                  opacity: 1,
+                  boxShadow: [
+                    '0 0 30px rgba(33, 150, 243, 0.4)',
+                    '0 0 50px rgba(33, 150, 243, 0.6)',
+                    '0 0 30px rgba(33, 150, 243, 0.4)'
+                  ]
+                }}
+                transition={{ 
+                  scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  opacity: { duration: 1 },
+                  boxShadow: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }}
+                style={{
+                  position: 'absolute',
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle at 30%, #2196F3, #0D47A1)',
+                  zIndex: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '12px',
+                  letterSpacing: '0.5px',
+                  boxShadow: '0 0 30px rgba(33, 150, 243, 0.4)',
+                  border: '2px solid rgba(255, 255, 255, 0.2)'
+                }}
               >
-                <span className="line-number">05</span>
-                <div className="code-content" style={{ overflow: 'hidden' }}>
-                  <motion.span 
-                    initial={typingEffect.initial}
-                    animate={typingEffect.animate}
-                    style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
-                  >
-                    <span className="keyword">export default async function</span> <span className="function">createSolution</span>(&#123; <span className="variable">client</span> &#125;) &#123;
-                  </motion.span>
-                </div>
-              </CodeLine>
+                <span>CODING<br/>BULL</span>
+              </motion.div>
               
-              {/* Remaining code lines */}
-              {[
-                {
-                  lineNumber: "06",
-                  content: <><span className="keyword">try</span> &#123;</>,
-                  custom: 6
-                },
-                {
-                  lineNumber: "07",
-                  content: <><span className="keyword">const</span> <span className="variable">api</span> = <span className="keyword">await</span> <span className="function">initBackend</span>(&#123; <span className="property">project</span>: <span className="variable">client</span>, <span className="property">stack</span>: [<span className="string">'Django'</span>, <span className="string">'Docker'</span>] &#125;)</>,
-                  custom: 7
-                },
-                {
-                  lineNumber: "08",
-                  content: <><span className="keyword">const</span> <span className="variable">ui</span> = <span className="keyword">await</span> <span className="function">setupFrontend</span>(&#123; <span className="property">endpoint</span>: <span className="variable">api</span>.<span className="property">url</span>, <span className="property">framework</span>: <span className="string">'React'</span> &#125;)</>,
-                  custom: 8
-                },
-                {
-                  lineNumber: "09",
-                  content: <><span className="keyword">await</span> <span className="function">runAnalytics</span>(&#123; <span className="property">projectId</span>: <span className="variable">api</span>.<span className="property">id</span> &#125;)</>,
-                  custom: 9
-                },
-                {
-                  lineNumber: "10",
-                  content: <><span className="keyword">return</span> <span className="function">deployToCloud</span>(&#123; <span className="variable">api</span>, <span className="variable">ui</span> &#125;)</>,
-                  custom: 10
-                },
-                {
-                  lineNumber: "11",
-                  content: <>&#125; <span className="keyword">catch</span> (<span className="variable">err</span>) &#123;</>,
-                  custom: 11
-                },
-                {
-                  lineNumber: "12",
-                  content: <><span className="variable">console</span>.<span className="function">error</span>(<span className="string">'Build failed:'</span>, <span className="variable">err</span>)</>,
-                  custom: 12
-                },
-                {
-                  lineNumber: "13",
-                  content: <><span className="keyword">throw</span> <span className="variable">err</span></>,
-                  custom: 13
-                },
-                {
-                  lineNumber: "14",
-                  content: <>&#125;</>,
-                  custom: 14
-                },
-                {
-                  lineNumber: "15",
-                  content: <>&#125;<span className="cursor"></span></>,
-                  custom: 15
-                }
-              ].map((line) => (
-                <CodeLine 
-                  key={line.custom}
-                  custom={line.custom} 
-                  variants={codeLineVariants} 
-                  initial="hidden" 
-                  animate="visible"
-                >
-                  <span className="line-number">{line.lineNumber}</span>
-                  <div className="code-content">
-                    {line.content}
-                  </div>
-                </CodeLine>
-              ))}
-            </div>
-          </CodeBlock>
+              {/* Orbital ring */}
+              <motion.div
+                initial={{ opacity: 0, rotateZ: 0 }}
+                animate={{ 
+                  opacity: 1, 
+                  rotateZ: 360,
+                }}
+                transition={{ 
+                  opacity: { duration: 1 },
+                  rotateZ: { duration: 20, repeat: Infinity, ease: "linear" }
+                }}
+                style={{
+                  position: 'absolute',
+                  width: '280px',
+                  height: '280px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(33, 150, 243, 0.3)',
+                  boxShadow: 'inset 0 0 20px rgba(33, 150, 243, 0.1), 0 0 10px rgba(33, 150, 243, 0.2)',
+                  zIndex: 1
+                }}
+              />
+              
+              {/* Development cycle elements */}
+              {['BUILD', 'TEST', 'DEPLOY', 'INNOVATE'].map((item, index) => {
+                const angle = (index * 90) * (Math.PI / 180);
+                const x = Math.cos(angle) * 140;
+                const y = Math.sin(angle) * 140;
+                
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x, y, scale: 0.7 }}
+                    animate={{ 
+                      opacity: 1, 
+                      x: [x, x + (x * 0.05), x],
+                      y: [y, y + (y * 0.05), y],
+                      scale: [0.8, 1, 0.8],
+                      boxShadow: [
+                        '0 0 15px rgba(33, 150, 243, 0.3)',
+                        '0 0 25px rgba(33, 150, 243, 0.5)',
+                        '0 0 15px rgba(33, 150, 243, 0.3)'
+                      ]
+                    }}
+                    transition={{ 
+                      opacity: { duration: 0.8, delay: 0.3 + (index * 0.2) },
+                      x: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 },
+                      boxShadow: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
+                    }}
+                    whileHover={{
+                      scale: 1.2,
+                      boxShadow: '0 0 30px rgba(33, 150, 243, 0.7)',
+                      transition: { duration: 0.3 }
+                    }}
+                    style={{
+                      position: 'absolute',
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      background: 'radial-gradient(circle at 30%, rgba(33, 150, 243, 0.9), rgba(13, 71, 161, 0.9))',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: '10px',
+                      letterSpacing: '0.5px',
+                      boxShadow: '0 0 15px rgba(33, 150, 243, 0.3)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      zIndex: 3
+                    }}
+                  >
+                    {item}
+                  </motion.div>
+                );
+              })}
+              
+              {/* Connecting lines */}
+              {[0, 1, 2, 3].map((index) => {
+                const startAngle = (index * 90) * (Math.PI / 180);
+                const endAngle = ((index + 1) % 4 * 90) * (Math.PI / 180);
+                
+                const startX = Math.cos(startAngle) * 140;
+                const startY = Math.sin(startAngle) * 140;
+                const endX = Math.cos(endAngle) * 140;
+                const endY = Math.sin(endAngle) * 140;
+                
+                // Calculate the length and angle of the line
+                const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
+                
+                return (
+                  <motion.div
+                    key={`line-${index}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                      opacity: [0.3, 0.7, 0.3],
+                    }}
+                    transition={{ 
+                      opacity: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }
+                    }}
+                    style={{
+                      position: 'absolute',
+                      width: `${length}px`,
+                      height: '1px',
+                      background: 'linear-gradient(to right, rgba(33, 150, 243, 0.3), rgba(33, 150, 243, 0.7), rgba(33, 150, 243, 0.3))',
+                      boxShadow: '0 0 8px rgba(33, 150, 243, 0.5)',
+                      transform: `rotate(${angle}deg)`,
+                      transformOrigin: '0 0',
+                      left: `${startX + 140}px`,
+                      top: `${startY + 140}px`,
+                      zIndex: 0
+                    }}
+                  />
+                );
+              })}
+              
+              {/* Particle effects */}
+              {[...Array(20)].map((_, index) => {
+                const size = Math.random() * 4 + 1;
+                const angle = Math.random() * 360 * (Math.PI / 180);
+                const distance = Math.random() * 120 + 20;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                const duration = Math.random() * 8 + 4;
+                
+                return (
+                  <motion.div
+                    key={`particle-${index}`}
+                    initial={{ opacity: 0, x, y, scale: 0 }}
+                    animate={{ 
+                      opacity: [0, 0.7, 0],
+                      x: [x, x * 1.2],
+                      y: [y, y * 1.2],
+                      scale: [0, 1, 0]
+                    }}
+                    transition={{ 
+                      duration,
+                      repeat: Infinity,
+                      delay: Math.random() * 5,
+                      ease: "easeInOut"
+                    }}
+                    style={{
+                      position: 'absolute',
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      borderRadius: '50%',
+                      background: 'rgba(33, 150, 243, 0.8)',
+                      boxShadow: '0 0 5px rgba(33, 150, 243, 0.8)',
+                      zIndex: 1
+                    }}
+                  />
+                );
+              })}
+            </motion.div>
+          </motion.div>
         </HeroVisual>
       </HeroContent>
     </HeroContainer>

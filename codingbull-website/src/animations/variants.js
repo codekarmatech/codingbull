@@ -162,3 +162,66 @@ export const bounce = {
     }
   }
 };
+
+// 3D float animation
+export const float3D = {
+  hidden: { 
+    opacity: 0,
+    rotateX: 15,
+    rotateY: -15,
+    z: -100
+  },
+  visible: { 
+    opacity: 1,
+    rotateX: 0,
+    rotateY: 0,
+    z: 0,
+    transition: { 
+      type: "spring", 
+      stiffness: 50, 
+      damping: 15,
+      duration: 0.8
+    }
+  }
+};
+
+// Glitch effect animation
+export const glitch = {
+  hidden: { 
+    opacity: 0,
+    skewX: 0,
+    x: 0
+  },
+  visible: {
+    opacity: 1,
+    skewX: [0, -5, 3, 0, 2, -1, 0],
+    x: [0, -5, 3, 0, 5, -2, 0],
+    transition: { 
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+// Enhanced shooting star animation with smoother motion at 45-degree angle
+export const shootingStar = {
+  hidden: { 
+    x: '-5%',
+    y: '-5%',
+    opacity: 0,
+    scale: 0.8
+  },
+  visible: {
+    x: '105%',
+    y: '105%',
+    opacity: [0, 0.2, 0.8, 1, 0.8, 0.2, 0],
+    scale: [0.8, 1, 1.2, 1.2, 1, 0.8],
+    transition: {
+      duration: 3.5, // Longer duration for smoother flow
+      ease: [0.2, 0.4, 0.2, 1], // Custom cubic-bezier for ultra-smooth motion
+      times: [0, 0.05, 0.2, 0.5, 0.8, 0.95, 1],
+      repeat: Infinity,
+      repeatDelay: 0.5 // Short delay for continuous flow
+    }
+  }
+};
