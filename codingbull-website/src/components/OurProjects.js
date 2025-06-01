@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { slideInLeft, slideInRight, staggerContainer, fadeIn, slideUp } from '../animations/variants'; // Removed hoverScale
 import Button from './Button';
+import apiService from '../services/api';
 
 // Projects section container
 const ProjectsContainer = styled.section`
@@ -213,66 +214,113 @@ const MotionNavDot = styled(motion.button)` // Made motion component
 `;
 
 const OurProjects = () => {
-  // State for current project
+  // State for current project and data
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Projects data
-  const projects = [
-    {
-      id: 1,
-      title: "Gujju-Masla E-commerce Platform",
-      client: "Gujju-Masla",
-      logo: "/logos/gujju-masla.png",
-      category: 'E-commerce',
-      challenge: "Gujju-Masla needed to modernize its 40-year-old brand with an online ordering system to reach new customers.",
-      solution: "Built on Django, React, Tailwind CSS, and Docker for rapid, reliable deployments.",
-      outcome: "Launched in 4 weeks; online orders rose by 30% within the first month.",
-      techUsed: 'Django, React, Tailwind CSS, Docker',
-      testimonial: {
-        quote: "Hiring CodingBull was a game-changer. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
-        author: "Deep Varma",
-        title: "Managing Director",
-        company: "Gujju-Masla",
-        image: "/logos/gujju-masla.png"
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await apiService.projects.getProjects();
+        if (response && response.results && Array.isArray(response.results)) {
+          // Transform API data to match component expectations
+          const transformedProjects = response.results.map(project => ({
+            id: project.id,
+            title: project.title,
+            client: project.client_name,
+            logo: project.image, // Use project image for project display
+            category: project.category,
+            challenge: project.challenge,
+            solution: project.solution,
+            outcome: project.outcome,
+            techUsed: Array.isArray(project.technologies) 
+              ? project.technologies.map(tech => tech.name || tech).join(', ')
+              : (typeof project.technologies === 'string' ? project.technologies : 'Various technologies'),
+            testimonial: project.testimonial || {
+              quote: "Great project experience with CodingBull team.",
+              author: "Client",
+              title: "Position",
+              company: project.client_name,
+              image: project.logo // Use client logo for testimonial
+            }
+          }));
+          setProjects(transformedProjects);
+        } else {
+          throw new Error('Invalid API response format');
+        }
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError('Failed to load projects. Please try again later.');
+        // Fallback to mock data (no hardcoded image paths)
+        setProjects([
+          {
+            id: 'fallback-1',
+            title: "E-commerce Platform",
+            client: "Client Company",
+            logo: null, // No hardcoded paths - will use fallback image component
+            category: 'E-commerce',
+            challenge: "Client needed to modernize their brand with an online ordering system to reach new customers.",
+            solution: "Built on Django, React, Tailwind CSS, and Docker for rapid, reliable deployments.",
+            outcome: "Launched in 4 weeks; online orders rose by 30% within the first month.",
+            techUsed: 'Django, React, Tailwind CSS, Docker',
+            testimonial: {
+              quote: "Working with this development team was a game-changer. They delivered our platform on time and exceeded expectations.",
+              author: "Business Owner",
+              title: "Managing Director",
+              company: "Client Company",
+              image: null // No hardcoded paths
+            }
+          },
+          {
+            id: 'fallback-2',
+            title: "Enterprise Management System",
+            client: "Healthcare Client",
+            logo: null, // No hardcoded paths
+            category: 'Healthcare Tech',
+            challenge: "Client required a secure, enterprise-grade application to manage operations across multiple locations.",
+            solution: "Developed with Django REST Framework, React, and integrated security features for compliance.",
+            outcome: "Deployed in 8 weeks; operational efficiency improved by 40%, and satisfaction scores rose 15%.",
+            techUsed: 'Django, React, PostgreSQL, Docker',
+            testimonial: {
+              quote: "The enterprise system transformed our workflow. The solution is robust, user-friendly, and fully compliant.",
+              author: "Technical Director",
+              title: "Founder & CEO",
+              company: "Healthcare Client",
+              image: null // No hardcoded paths
+            }
+          },
+          {
+            id: 'fallback-3',
+            title: "Analytics Dashboard",
+            client: "Enterprise Client",
+            logo: null, // No hardcoded paths
+            category: 'Enterprise Solution',
+            challenge: "Client needed real-time tracking and analytics for their distributed teams.",
+            solution: "Built a custom dashboard using modern technologies for live reporting and analytics.",
+            outcome: "Saved over 20 hours of manual work per month and reduced errors by 90%.",
+            techUsed: 'Flask, MongoDB, Chart.js, Docker',
+            testimonial: {
+              quote: "Our custom dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours.",
+              author: "Operations Manager",
+              title: "CEO",
+              company: "Enterprise Client",
+              image: null // No hardcoded paths
+            }
+          }
+        ]);
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: 2,
-      title: "Physioway Enterprise Physiotherapy System",
-      client: "Physioway",
-      logo: "/logos/physioway.png",
-      category: 'Healthcare Tech',
-      challenge: "Physioway required a secure, enterprise-grade application to manage patient assessments and treatment plans across multiple clinics.",
-      solution: "Developed with Django REST Framework, React, and integrated audit logs for HIPAA-style compliance.",
-      outcome: "Deployed in 8 weeks; clinic efficiency improved by 40%, and patient satisfaction scores rose 15%.",
-      techUsed: 'Django, React, PostgreSQL, Docker',
-      testimonial: {
-        quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
-        author: "Dr. Rajavi Dixit",
-        title: "Founder & CEO",
-        company: "Physioway",
-        image: "/logos/physioway.png"
-      }
-    },
-    {
-      id: 3,
-      title: "Harsh Patel Attendance Management Dashboard",
-      client: "Harsh Patel Enterprises",
-      logo: "/logos/harsh-patel.png",
-      category: 'Enterprise Solution',
-      challenge: "Harsh Patel Enterprises needed real-time attendance tracking and analytics for their distributed teams.",
-      solution: "Built a custom dashboard using Flask, MongoDB, and Chart.js for live reporting, containerized with Docker.",
-      outcome: "Saved over 20 hours of manual reporting per month and slashed errors by 90%.",
-      techUsed: 'Flask, MongoDB, Chart.js, Docker',
-      testimonial: {
-        quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
-        author: "Harsh Patel",
-        title: "CEO",
-        company: "Harsh Patel Enterprises",
-        image: "/logos/harsh-patel.png"
-      }
-    }
-  ];
+    };
+    
+    fetchProjects();
+  }, []);
   
   // Get current project
   const currentProject = projects[currentIndex];
@@ -282,6 +330,75 @@ const OurProjects = () => {
     setCurrentIndex(index);
   };
   
+  // Show loading state
+  if (loading) {
+    return (
+      <ProjectsContainer id="our-projects">
+        <ProjectsContent>
+          <SectionHeader>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Our Projects
+            </SectionTitle>
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#fff' }}>
+              Loading projects...
+            </div>
+          </SectionHeader>
+        </ProjectsContent>
+      </ProjectsContainer>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <ProjectsContainer id="our-projects">
+        <ProjectsContent>
+          <SectionHeader>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Our Projects
+            </SectionTitle>
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#ff6b6b' }}>
+              {error}
+            </div>
+          </SectionHeader>
+        </ProjectsContent>
+      </ProjectsContainer>
+    );
+  }
+
+  // Show empty state
+  if (!projects.length) {
+    return (
+      <ProjectsContainer id="our-projects">
+        <ProjectsContent>
+          <SectionHeader>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Our Projects
+            </SectionTitle>
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#fff' }}>
+              No projects available at the moment.
+            </div>
+          </SectionHeader>
+        </ProjectsContent>
+      </ProjectsContainer>
+    );
+  }
+
   return (
     <ProjectsContainer id="our-projects">
       <ProjectsContent>

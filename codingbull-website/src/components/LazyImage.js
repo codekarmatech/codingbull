@@ -15,7 +15,7 @@ const StyledImage = styled.img`
   height: 100%;
   object-fit: ${props => props.objectFit || 'cover'};
   object-position: ${props => props.objectPosition || 'center'};
-  opacity: ${props => (props.isLoaded ? 1 : 0)};
+  opacity: ${props => (props.$isLoaded ? 1 : 0)};
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -29,7 +29,7 @@ const Placeholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${props => (props.isLoaded ? 0 : 1)};
+  opacity: ${props => (props.$isLoaded ? 0 : 1)};
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -91,13 +91,13 @@ const LazyImage = ({
           src={src}
           alt={alt}
           onLoad={handleImageLoad}
-          isLoaded={isLoaded}
+          $isLoaded={isLoaded}
           objectFit={objectFit}
           objectPosition={objectPosition}
           loading="lazy"
         />
       )}
-      <Placeholder isLoaded={isLoaded}>
+      <Placeholder $isLoaded={isLoaded}>
         {placeholderIcon || (
           <svg
             width="24"

@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from .models import Category, BlogPost, Project, Service, ContactInquiry, Testimonial
 from .serializers import CategorySerializer, BlogPostSerializer, ProjectSerializer, ServiceSerializer, ContactInquirySerializer, TestimonialSerializer
 
@@ -119,3 +119,52 @@ class TestimonialViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+@api_view(['GET'])
+def technologies_list(request):
+    """
+    Get all available technologies
+    Returns the same technology data that's used in the TechStack component
+    """
+    technologies = [
+        # Frontend
+        {'id': 1, 'name': 'HTML5', 'slug': 'html5', 'category': 'frontend', 'color': '#E34F26'},
+        {'id': 2, 'name': 'CSS3', 'slug': 'css3', 'category': 'frontend', 'color': '#1572B6'},
+        {'id': 3, 'name': 'JavaScript', 'slug': 'javascript', 'category': 'frontend', 'color': '#F7DF1E'},
+        {'id': 4, 'name': 'TypeScript', 'slug': 'typescript', 'category': 'frontend', 'color': '#3178C6'},
+        {'id': 5, 'name': 'React', 'slug': 'react', 'category': 'frontend', 'color': '#61DAFB'},
+        {'id': 6, 'name': 'Redux Toolkit', 'slug': 'redux-toolkit', 'category': 'frontend', 'color': '#764ABC'},
+        {'id': 7, 'name': 'Tailwind CSS', 'slug': 'tailwind-css', 'category': 'frontend', 'color': '#06B6D4'},
+
+        # Backend
+        {'id': 8, 'name': 'Python', 'slug': 'python', 'category': 'backend', 'color': '#3776AB'},
+        {'id': 9, 'name': 'Django', 'slug': 'django', 'category': 'backend', 'color': '#092E20'},
+        {'id': 10, 'name': 'Flask', 'slug': 'flask', 'category': 'backend', 'color': '#000000'},
+        {'id': 11, 'name': 'Node.js', 'slug': 'nodejs', 'category': 'backend', 'color': '#339933'},
+        {'id': 12, 'name': 'Express', 'slug': 'express', 'category': 'backend', 'color': '#000000'},
+
+        # Database
+        {'id': 13, 'name': 'MongoDB', 'slug': 'mongodb', 'category': 'database', 'color': '#47A248'},
+        {'id': 14, 'name': 'PostgreSQL', 'slug': 'postgresql', 'category': 'database', 'color': '#336791'},
+        {'id': 15, 'name': 'Redis', 'slug': 'redis', 'category': 'database', 'color': '#DC382D'},
+
+        # DevOps
+        {'id': 16, 'name': 'Docker', 'slug': 'docker', 'category': 'devops', 'color': '#2496ED'},
+        {'id': 17, 'name': 'GitHub Actions', 'slug': 'github-actions', 'category': 'devops', 'color': '#2088FF'},
+        {'id': 18, 'name': 'AWS', 'slug': 'aws', 'category': 'devops', 'color': '#FF9900'},
+        {'id': 19, 'name': 'Azure', 'slug': 'azure', 'category': 'devops', 'color': '#0078D4'},
+
+        # 3D & Visualization
+        {'id': 20, 'name': 'Three.js', 'slug': 'threejs', 'category': '3d', 'color': '#000000'},
+        {'id': 21, 'name': 'WebGL', 'slug': 'webgl', 'category': '3d', 'color': '#990000'},
+        {'id': 22, 'name': 'React Three Fiber', 'slug': 'react-three-fiber', 'category': '3d', 'color': '#61DAFB'},
+
+        # Additional common technologies
+        {'id': 23, 'name': 'Chart.js', 'slug': 'chartjs', 'category': 'frontend', 'color': '#FF6384'},
+        {'id': 24, 'name': 'Redux', 'slug': 'redux', 'category': 'frontend', 'color': '#764ABC'},
+    ]
+    
+    return Response({
+        'results': technologies,
+        'count': len(technologies)
+    })

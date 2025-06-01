@@ -1,12 +1,23 @@
 /**
  * API Service for CodingBull website
- * Handles all API requests to the backend
+ * Handles all API requests to the backend with fallback to mock data
  */
+
+import { 
+  getMockPosts, 
+  getMockPostBySlug, 
+  getMockFeaturedPosts, 
+  getMockCategoriesWithCount, 
+  getMockPostsByCategory 
+} from '../data/mockBlogData';
 
 // Base API URL from environment variables
 // Use the direct API URL with the /api/v1 prefix to match Django's router configuration
 const API_BASE_URL = '/api/v1';
 const API_TIMEOUT = parseInt(process.env.REACT_APP_API_TIMEOUT || '10000', 10);
+
+// Flag to enable/disable fallback to mock data
+const ENABLE_MOCK_FALLBACK = process.env.REACT_APP_ENABLE_MOCK_FALLBACK !== 'false';
 
 /**
  * Custom fetch with timeout and error handling
@@ -92,54 +103,114 @@ const fetchWithTimeout = async (url, options = {}) => {
  */
 const apiService = {
   /**
-   * Blog API methods
+   * Blog API methods with fallback to mock data
    */
   blog: {
     // Get all blog posts with optional filters
     getPosts: async (page = 1, filters = {}) => {
-      const queryParams = new URLSearchParams({
-        page,
-        ...filters
-      });
-      return fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
+      try {
+        const queryParams = new URLSearchParams({
+          page,
+          ...filters
+        });
+        const response = await fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
+        console.log('API response for getPosts:', response);
+        return response;
+      } catch (error) {
+        console.warn('API request failed for getPosts, falling back to mock data:', error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          console.log('Using mock data for getPosts');
+          return getMockPosts(page, filters);
+        }
+        throw error;
+      }
     },
     
     // Get a single blog post by slug
     getPost: async (slug) => {
-      return fetchWithTimeout(`${API_BASE_URL}/blogs/${slug}/`);
+      try {
+        const response = await fetchWithTimeout(`${API_BASE_URL}/blogs/${slug}/`);
+        console.log('API response for getPost:', response);
+        return response;
+      } catch (error) {
+        console.warn(`API request failed for getPost(${slug}), falling back to mock data:`, error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          const mockPost = getMockPostBySlug(slug);
+          if (mockPost) {
+            console.log('Using mock data for getPost');
+            return mockPost;
+          }
+        }
+        throw error;
+      }
     },
     
     // Get featured blog posts
     getFeaturedPosts: async () => {
-      return fetchWithTimeout(`${API_BASE_URL}/blogs/featured/`);
+      try {
+        const response = await fetchWithTimeout(`${API_BASE_URL}/blogs/featured/`);
+        console.log('API response for getFeaturedPosts:', response);
+        return response;
+      } catch (error) {
+        console.warn('API request failed for getFeaturedPosts, falling back to mock data:', error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          console.log('Using mock data for getFeaturedPosts');
+          return getMockFeaturedPosts();
+        }
+        throw error;
+      }
     },
     
     // Get all categories
     getCategories: async () => {
-      return fetchWithTimeout(`${API_BASE_URL}/categories/`);
+      try {
+        const response = await fetchWithTimeout(`${API_BASE_URL}/categories/`);
+        console.log('API response for getCategories:', response);
+        return response;
+      } catch (error) {
+        console.warn('API request failed for getCategories, falling back to mock data:', error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          console.log('Using mock data for getCategories');
+          return getMockCategoriesWithCount();
+        }
+        throw error;
+      }
     },
     
     // Get categories with post count
     getCategoriesWithCount: async () => {
-      return fetchWithTimeout(`${API_BASE_URL}/categories/with_post_count/`);
+      try {
+        const response = await fetchWithTimeout(`${API_BASE_URL}/categories/with_post_count/`);
+        console.log('API response for getCategoriesWithCount:', response);
+        return response;
+      } catch (error) {
+        console.warn('API request failed for getCategoriesWithCount, falling back to mock data:', error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          console.log('Using mock data for getCategoriesWithCount');
+          return getMockCategoriesWithCount();
+        }
+        throw error;
+      }
     },
     
     // Get posts by category
     getPostsByCategory: async (category, page = 1) => {
-      const queryParams = new URLSearchParams({ 
-        page,
-        category
-      });
-      return fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
-    },
-    
-    // Alternative method using the by_category endpoint
-    getPostsByCategoryEndpoint: async (category, page = 1) => {
-      const queryParams = new URLSearchParams({ 
-        page,
-        category
-      });
-      return fetchWithTimeout(`${API_BASE_URL}/blogs/by_category/?${queryParams}`);
+      try {
+        const queryParams = new URLSearchParams({ 
+          page,
+          category: category
+        });
+        const response = await fetchWithTimeout(`${API_BASE_URL}/blogs/?${queryParams}`);
+        console.log('API response for getPostsByCategory:', response);
+        return response;
+      } catch (error) {
+        console.warn(`API request failed for getPostsByCategory(${category}), falling back to mock data:`, error.message);
+        if (ENABLE_MOCK_FALLBACK) {
+          console.log('Using mock data for getPostsByCategory');
+          return getMockPostsByCategory(category, page);
+        }
+        throw error;
+      }
     }
   },
   

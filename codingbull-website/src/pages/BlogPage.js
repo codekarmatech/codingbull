@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { pageTransition, staggerContainer, slideUp } from '../animations/variant
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import SEO from '../components/SEO';
+import ImageWithFallback from '../components/ImageWithFallback';
 import apiService from '../services/api';
 
 // Blog page container
@@ -368,126 +369,23 @@ const BlogPage = () => {
   const pageParam = parseInt(queryParams.get('page') || '1', 10);
   
   // State for blog posts
-  const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(pageParam);
   const [category, setCategory] = useState(categoryParam);
   const [searchTerm, setSearchTerm] = useState(searchParam);
   const [categories, setCategories] = useState([{id: 'all', name: 'All Categories'}]);
+  const [posts, setPosts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const postsPerPage = 6;
   
-  // State for API data
-  const [error, setError] = useState(null); // Used for error handling
+  const [error, setError] = useState(null);
   
-  // Legacy mock data (no longer used - kept for reference only)
-  const mockPostsRef = useRef([
-    {
-      id: 1,
-      title: 'The Future of Web Development: Trends to Watch in 2024',
-      excerpt: 'Explore the cutting-edge technologies and methodologies that are shaping the future of web development.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Alex Johnson',
-      date: '2024-06-15',
-      category: { id: 1, name: 'Technology' },
-      tags: ['Web Development', 'Trends', 'JavaScript'],
-      image: 'https://placehold.co/600x400',
-      slug: 'future-web-development-trends-2024'
-    },
-    {
-      id: 2,
-      title: 'How AI is Transforming Software Development',
-      excerpt: 'Discover how artificial intelligence is revolutionizing the way we build, test, and deploy software.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Sarah Chen',
-      date: '2024-06-10',
-      category: { id: 2, name: 'Artificial Intelligence' },
-      tags: ['AI', 'Machine Learning', 'Software Development'],
-      image: 'https://placehold.co/600x400',
-      slug: 'ai-transforming-software-development'
-    },
-    {
-      id: 3,
-      title: 'Building Scalable Microservices Architecture',
-      excerpt: 'Learn the best practices for designing, implementing, and maintaining microservices at scale.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Michael Rodriguez',
-      date: '2024-06-05',
-      category: { id: 3, name: 'Architecture' },
-      tags: ['Microservices', 'Scalability', 'System Design'],
-      image: 'https://placehold.co/600x400',
-      slug: 'building-scalable-microservices-architecture'
-    },
-    {
-      id: 4,
-      title: 'The Complete Guide to Cybersecurity for Businesses',
-      excerpt: 'Protect your digital assets with this comprehensive guide to modern cybersecurity practices.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Emily Williams',
-      date: '2024-05-28',
-      category: { id: 4, name: 'Cybersecurity' },
-      tags: ['Security', 'Business', 'Data Protection'],
-      image: 'https://placehold.co/600x400',
-      slug: 'complete-guide-cybersecurity-businesses'
-    },
-    {
-      id: 5,
-      title: 'Optimizing React Applications for Performance',
-      excerpt: 'Practical techniques to improve the speed and responsiveness of your React applications.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'David Kim',
-      date: '2024-05-20',
-      category: { id: 5, name: 'Frontend' },
-      tags: ['React', 'Performance', 'JavaScript'],
-      image: 'https://placehold.co/600x400',
-      slug: 'optimizing-react-applications-performance'
-    },
-    {
-      id: 6,
-      title: 'Cloud Migration Strategies for Enterprise Applications',
-      excerpt: 'A step-by-step approach to migrating legacy enterprise applications to the cloud.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Jennifer Patel',
-      date: '2024-05-15',
-      category: { id: 6, name: 'Cloud' },
-      tags: ['Cloud Computing', 'Migration', 'Enterprise'],
-      image: 'https://placehold.co/600x400',
-      slug: 'cloud-migration-strategies-enterprise'
-    },
-    {
-      id: 7,
-      title: 'The Rise of Low-Code Development Platforms',
-      excerpt: 'How low-code platforms are democratizing software development and accelerating digital transformation.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Robert Thompson',
-      date: '2024-05-08',
-      category: { id: 1, name: 'Technology' },
-      tags: ['Low-Code', 'Digital Transformation', 'Productivity'],
-      image: 'https://placehold.co/600x400',
-      slug: 'rise-low-code-development-platforms'
-    },
-    {
-      id: 8,
-      title: 'Implementing DevOps in Traditional Organizations',
-      excerpt: 'Strategies for successfully adopting DevOps practices in established, traditional business environments.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-      author: 'Lisa Martinez',
-      date: '2024-05-01',
-      category: { id: 7, name: 'DevOps' },
-      tags: ['DevOps', 'Organizational Change', 'CI/CD'],
-      image: 'https://placehold.co/600x400',
-      slug: 'implementing-devops-traditional-organizations'
-    }
-  ]);
-  
-  // Fetch blog posts from API
-  // Fetch categories
+  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await apiService.blog.getCategoriesWithCount();
-        if (response) {
-          // Add "All Categories" option
+        if (response && Array.isArray(response)) {
           setCategories([
             { id: 'all', name: 'All Categories' },
             ...response
@@ -495,122 +393,100 @@ const BlogPage = () => {
         }
       } catch (err) {
         console.error('Error fetching categories:', err);
+        // Categories will fall back to the default state with 'All Categories'
       }
     };
     
     fetchCategories();
   }, []);
-
-  // Fetch blog posts
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      setError(null);
+  
+  // Fetch blog posts based on filters
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const params = {
+        page: currentPage,
+        search: searchTerm
+      };
       
-      try {
-        console.log('Fetching blog posts with category:', category, 'page:', currentPage, 'search:', searchTerm);
-        
-        // Use the API service to fetch posts
-        let response;
-        
-        if (category !== 'all' && category) {
-          // If a category is selected, fetch posts by category
-          response = await apiService.blog.getPostsByCategory(category, currentPage);
-        } else {
-          // Otherwise fetch all posts with optional search
-          response = await apiService.blog.getPosts(currentPage, {
-            search: searchTerm
-          });
-        }
-        
-        console.log('API response:', response);
-        
-        if (response && response.results) {
-          console.log('Using API data with results property');
-          setPosts(response.results);
-          setFilteredPosts(response.results);
-        } else if (response) {
-          // If response exists but no results property, assume it's an array
-          console.log('Using API data (no results property)');
-          setPosts(response);
-          setFilteredPosts(response);
-        } else {
-          console.log('No results found from API');
-          setPosts([]);
-          setFilteredPosts([]);
-          setError('No results found. Please try different search criteria.');
-        }
-      } catch (err) {
-        console.error('Error fetching blog posts:', err);
-        setError('Failed to load blog posts. Please try again later.');
-        console.log('API request failed');
-        // Set empty arrays instead of using mock data
-        setPosts([]);
-        setFilteredPosts([]);
-      } finally {
-        setLoading(false);
+      if (category !== 'all') {
+        params.category = category;
       }
-    };
-    
-    fetchPosts();
-  }, [currentPage, category, searchTerm]);
-  
-  // Filter posts based on search term only (category filtering is done by the API)
-  useEffect(() => {
-    let results = posts;
-    
-    // Filter by search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      results = results.filter(post => 
-        post.title.toLowerCase().includes(term) || 
-        post.excerpt.toLowerCase().includes(term) ||
-        (post.tags && Array.isArray(post.tags) && post.tags.some(tag => {
-          const tagText = typeof tag === 'string' ? tag : (tag.name || '');
-          return tagText.toLowerCase().includes(term);
-        }))
-      );
+      
+      const response = await apiService.blog.getPosts(currentPage, params);
+      
+      if (response && response.results) {
+        setPosts(response.results);
+        setTotalPages(Math.ceil(response.count / postsPerPage));
+      } else if (response && Array.isArray(response)) {
+        // Handle case where response is directly an array (mock data)
+        setPosts(response);
+        setTotalPages(1);
+      } else {
+        setPosts([]);
+        setTotalPages(1);
+        setError('No results found. Please try different search criteria.');
+      }
+    } catch (err) {
+      console.error('Error fetching blog posts:', err);
+      // Don't show error if we're using fallback data
+      if (!err.message.includes('falling back to mock data')) {
+        setError('Failed to load blog posts. Please try again later.');
+      }
+      setPosts([]);
+      setTotalPages(1);
+    } finally {
+      setLoading(false);
     }
+  }, [currentPage, category, searchTerm]);
+
+  // Fetch posts when filters change
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+  
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
     
-    setFilteredPosts(results);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [searchTerm, posts]);
-  
-  // Categories are now fetched from the API
-  
-  // Get current posts for pagination
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  
-  // Change page
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    
-    // Update URL with new page number
     const newParams = new URLSearchParams(location.search);
-    newParams.set('page', pageNumber.toString());
+    newParams.set('page', page.toString());
     navigate(`/blog?${newParams.toString()}`);
   };
   
-  // Format date
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-  
-  // Get author initials
-  const getInitials = (name) => {
-    if (!name) return 'CB'; // Default initials for CodingBull if name is missing
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
+    setCurrentPage(1);
     
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase();
+    const newParams = new URLSearchParams(location.search);
+    if (newCategory === 'all') {
+      newParams.delete('category');
+    } else {
+      newParams.set('category', newCategory);
+    }
+    newParams.delete('page');
+    navigate(`/blog?${newParams.toString()}`);
   };
   
-  // State for newsletter form
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+    
+    const newParams = new URLSearchParams(location.search);
+    if (term) {
+      newParams.set('search', term);
+    } else {
+      newParams.delete('search');
+    }
+    newParams.delete('page');
+    navigate(`/blog?${newParams.toString()}`);
+  };
+  
+  
+    
+  
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [isNewsletterSubmitting, setIsNewsletterSubmitting] = useState(false);
   const [newsletterSuccess, setNewsletterSuccess] = useState(false);
@@ -632,9 +508,11 @@ const BlogPage = () => {
       // Use the contact API to submit newsletter subscription
       await apiService.contact.submitInquiry({
         email: newsletterEmail,
+        phone: 'N/A',
         subject: 'Newsletter Subscription',
         message: 'Please add me to your newsletter',
-        name: 'Newsletter Subscriber'
+        name: 'Newsletter Subscriber',
+        inquiry_type: 'newsletter'
       });
       
       setNewsletterSuccess(true);
@@ -652,6 +530,22 @@ const BlogPage = () => {
     }
   };
   
+  // Format date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+  
+  // Get author initials
+  const getInitials = (name) => {
+    if (!name) return 'CB';
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+  };
+
   return (
     <>
       <SEO 
@@ -667,18 +561,8 @@ const BlogPage = () => {
       >
       <BlogHero>
         <HeroContent>
-          <HeroTitle
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Our Blog & Resources
-          </HeroTitle>
-          <HeroDescription
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          <HeroTitle>Our Blog & Resources</HeroTitle>
+          <HeroDescription>
             Insights, case studies, and expert perspectives on technology, innovation, and digital transformation.
           </HeroDescription>
         </HeroContent>
@@ -692,20 +576,7 @@ const BlogPage = () => {
               <select 
                 id="category" 
                 value={category}
-                onChange={(e) => {
-                  const newCategory = e.target.value;
-                  setCategory(newCategory);
-                  
-                  // Update URL with new category
-                  const newParams = new URLSearchParams(location.search);
-                  if (newCategory === 'all') {
-                    newParams.delete('category');
-                  } else {
-                    newParams.set('category', newCategory);
-                  }
-                  newParams.delete('page'); // Reset to page 1 when changing category
-                  navigate(`/blog?${newParams.toString()}`);
-                }}
+                onChange={(e) => handleCategoryChange(e.target.value)}
               >
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.id === 'all' ? 'all' : cat.name}>
@@ -721,58 +592,51 @@ const BlogPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  // Update URL with search term
-                  const newParams = new URLSearchParams(location.search);
-                  if (e.target.value) {
-                    newParams.set('search', e.target.value);
-                  } else {
-                    newParams.delete('search');
-                  }
-                  newParams.delete('page'); // Reset to page 1 when searching
-                  navigate(`/blog?${newParams.toString()}`);
-                }
+                if (e.key === 'Enter') handleSearch(e.target.value)
               }}
             />
           </BlogFilters>
           
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <div className="loading-container">
               <p>Loading posts...</p>
             </div>
-          ) : filteredPosts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '3rem' }}>
+          ) : error ? (
+            <div className="error-container">
+              <p>{error}</p>
+              <Button 
+                variant="secondary" 
+                onClick={() => window.location.reload()}
+              >
+                Try Again
+              </Button>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="no-results-container">
               <p>No posts found matching your criteria.</p>
               <Button 
                 variant="secondary" 
                 onClick={() => {
-                  setCategory('all');
-                  setSearchTerm('');
-                  // Reset URL to base blog URL
-                  navigate('/blog');
+                  handleCategoryChange('all');
+                  handleSearch('');
                 }}
-                style={{ marginTop: '1rem' }}
               >
                 Reset Filters
               </Button>
             </div>
           ) : (
             <>
-              <BlogGrid
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-                viewport={{ once: true }}
-              >
-                {currentPosts.map((post, index) => (
-                  <BlogCard
-                    key={post.id}
-                    variants={slideUp}
-                    custom={index * 0.1}
-                  >
+              <BlogGrid>
+                {posts.map((post, index) => (
+                  <BlogCard key={post.id}>
                     <BlogImage>
                       <BlogCategory>{post.category?.name || 'Uncategorized'}</BlogCategory>
-                      <img src={post.image} alt={post.title} />
+                      <ImageWithFallback 
+                        src={post.image_url || post.image} 
+                        alt={post.title}
+                        fallbackText="Blog Image"
+                        showFallbackText={false}
+                      />
                     </BlogImage>
                     <BlogCardContent>
                       <BlogMeta>
@@ -790,16 +654,9 @@ const BlogPage = () => {
                       <BlogExcerpt>{post.excerpt}</BlogExcerpt>
                       <BlogCardFooter>
                         <BlogTags>
-                          {post.tags && post.tags.length > 0 ? (
-                            <>
-                              {post.tags.slice(0, 2).map((tag, i) => (
-                                <BlogTag key={i}>{tag}</BlogTag>
-                              ))}
-                              {post.tags.length > 2 && <BlogTag>+{post.tags.length - 2}</BlogTag>}
-                            </>
-                          ) : (
-                            <BlogTag>{post.category?.name || 'General'}</BlogTag>
-                          )}
+                          {post.tags?.slice(0, 3).map((tag, i) => (
+                            <BlogTag key={i}>{typeof tag === 'object' ? tag.name : tag}</BlogTag>
+                          ))}
                         </BlogTags>
                         <Button 
                           as={Link} 
@@ -815,31 +672,30 @@ const BlogPage = () => {
                 ))}
               </BlogGrid>
               
-              {/* Pagination */}
-              {filteredPosts.length > postsPerPage && (
+              {totalPages > 1 && (
                 <Pagination>
                   <PageButton 
-                    onClick={() => paginate(currentPage - 1)}
+                    onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
-                    &lt;
+                    {"<"}
                   </PageButton>
                   
-                  {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }).map((_, index) => (
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                     <PageButton
-                      key={index}
-                      $active={currentPage === index + 1}
-                      onClick={() => paginate(index + 1)}
+                      key={page}
+                      $active={currentPage === page}
+                      onClick={() => handlePageChange(page)}
                     >
-                      {index + 1}
+                      {page}
                     </PageButton>
                   ))}
                   
                   <PageButton
-                    onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === Math.ceil(filteredPosts.length / postsPerPage)}
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
                   >
-                    &gt;
+                    {">"}
                   </PageButton>
                 </Pagination>
               )}

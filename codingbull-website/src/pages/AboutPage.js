@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
 import SEO from '../components/SEO';
+import ImageWithFallback from '../components/ImageWithFallback';
 
 // About page container
 const AboutPageContainer = styled(motion.div)`
@@ -671,7 +672,7 @@ const AboutPage = () => {
       name: 'Pranshu Dixit',
       position: 'Founder & CEO',
       bio: 'With a passion for technology and innovation, Pranshu founded CodingBull in 2025 to build a team of experts delivering cutting-edge digital solutions that help businesses thrive.',
-      image: 'https://placehold.co/300x400'
+      image: null
     }
   ];
   
@@ -769,7 +770,12 @@ const AboutPage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <img src="https://placehold.co/600x400" alt="CodingBull Team" />
+            <ImageWithFallback 
+              src={null} 
+              alt="CodingBull Team"
+              fallbackText="Team Photo"
+              showFallbackText={true}
+            />
           </HeroImage>
         </HeroContent>
       </AboutHero>
@@ -871,7 +877,12 @@ const AboutPage = () => {
                 custom={index * 0.1}
               >
                 <TeamImage>
-                  <img src={member.image} alt={member.name} />
+                  <ImageWithFallback 
+                    src={member.image} 
+                    alt={member.name}
+                    fallbackText="Team Member"
+                    showFallbackText={false}
+                  />
                 </TeamImage>
                 <TeamInfo>
                   <TeamName>{member.name}</TeamName>

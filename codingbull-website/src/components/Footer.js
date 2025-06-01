@@ -268,9 +268,11 @@ const Footer = () => {
       // Use the contact API to submit newsletter subscription
       await apiService.contact.submitInquiry({
         email,
+        phone: 'N/A',
         subject: 'Newsletter Subscription',
         message: 'Please add me to your newsletter',
-        name: 'Newsletter Subscriber'
+        name: 'Newsletter Subscriber',
+        inquiry_type: 'newsletter'
       });
       
       setSubmitSuccess(true);

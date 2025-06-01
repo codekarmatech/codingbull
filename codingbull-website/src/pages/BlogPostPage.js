@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // useNavigate will be used when implementing navigation features
+import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
+import ImageWithFallback from '../components/ImageWithFallback';
 import apiService from '../services/api';
-// apiService and SEO will be used when API integration is complete
-// import apiService from '../services/api';
+import { mockBlogPosts, mockCategories } from '../data/mockBlogData';
 // import SEO from '../components/SEO';
 
 // Blog post page container
@@ -558,115 +558,7 @@ const RelatedPostExcerpt = styled.p`
   flex: 1;
 `;
 
-// Mock blog data (would be fetched from API in production)
-const mockPosts = [
-  {
-    id: 1,
-    title: 'The Future of Web Development: Trends to Watch in 2024',
-    excerpt: 'Explore the cutting-edge technologies and methodologies that are shaping the future of web development.',
-    content: `
-      <p>The web development landscape is constantly evolving, with new technologies, frameworks, and methodologies emerging at a rapid pace. As we move further into 2024, several key trends are shaping the future of how we build and interact with web applications.</p>
-      
-      <h2>1. WebAssembly (Wasm) Goes Mainstream</h2>
-      <p>WebAssembly has been gaining traction for years, but 2024 is seeing it truly go mainstream. This binary instruction format provides near-native performance for web applications, allowing developers to run code written in languages like C, C++, and Rust directly in the browser.</p>
-      <p>Key applications include:</p>
-      <ul>
-        <li>High-performance web games</li>
-        <li>Complex data visualizations</li>
-        <li>CPU-intensive tasks like image/video editing</li>
-        <li>Porting existing desktop applications to the web</li>
-      </ul>
-      
-      <h2>2. AI-Assisted Development</h2>
-      <p>Artificial intelligence is revolutionizing how developers write code. Tools like GitHub Copilot and similar AI pair programmers are becoming essential parts of the development workflow, helping to:</p>
-      <ul>
-        <li>Generate boilerplate code</li>
-        <li>Suggest optimizations</li>
-        <li>Identify potential bugs</li>
-        <li>Explain complex code sections</li>
-      </ul>
-      <p>This trend is not about replacing developers but augmenting their capabilities and allowing them to focus on higher-level problems.</p>
-      
-      <h2>3. Edge Computing</h2>
-      <p>The edge computing paradigm continues to gain momentum, with more applications running code closer to the end user rather than in centralized data centers. This approach offers:</p>
-      <ul>
-        <li>Reduced latency</li>
-        <li>Improved performance</li>
-        <li>Better reliability</li>
-        <li>Reduced bandwidth costs</li>
-      </ul>
-      <p>Frameworks like Cloudflare Workers, Vercel Edge Functions, and Netlify Edge are making it easier than ever to deploy code to the edge.</p>
-      
-      <h2>4. Web Components and Micro-Frontends</h2>
-      <p>As applications grow in complexity, more teams are adopting component-based architectures and micro-frontend approaches. These methodologies allow:</p>
-      <ul>
-        <li>Independent deployment of different parts of an application</li>
-        <li>Team autonomy and specialized focus</li>
-        <li>Mixing of different technologies within the same application</li>
-        <li>Better scalability for large organizations</li>
-      </ul>
-      
-      <h2>5. Improved Accessibility as Standard</h2>
-      <p>Web accessibility is no longer an afterthought but a fundamental aspect of web development. In 2024, we're seeing:</p>
-      <ul>
-        <li>Better tooling for accessibility testing</li>
-        <li>Increased regulatory requirements</li>
-        <li>More awareness and training</li>
-        <li>Accessibility-first component libraries</li>
-      </ul>
-      <p>This shift is not just about compliance but about building better experiences for all users.</p>
-      
-      <h2>Conclusion</h2>
-      <p>The web development field continues to evolve at a rapid pace, with performance, developer experience, and user accessibility at the forefront. By staying informed about these trends and adopting the relevant technologies and methodologies, developers can build better, faster, and more inclusive web applications.</p>
-    `,
-    author: 'Alex Johnson',
-    date: '2024-06-15',
-    category: 'Technology',
-    tags: ['Web Development', 'Trends', 'JavaScript', 'WebAssembly', 'Edge Computing'],
-    image: 'https://placehold.co/1200x600',
-    slug: 'future-web-development-trends-2024',
-    readingTime: '8 min read'
-  },
-  {
-    id: 2,
-    title: 'How AI is Transforming Software Development',
-    excerpt: 'Discover how artificial intelligence is revolutionizing the way we build, test, and deploy software.',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    author: 'Sarah Chen',
-    date: '2024-06-10',
-    category: 'Artificial Intelligence',
-    tags: ['AI', 'Machine Learning', 'Software Development'],
-    image: 'https://placehold.co/1200x600',
-    slug: 'ai-transforming-software-development',
-    readingTime: '6 min read'
-  },
-  {
-    id: 3,
-    title: 'Building Scalable Microservices Architecture',
-    excerpt: 'Learn the best practices for designing, implementing, and maintaining microservices at scale.',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    author: 'Michael Rodriguez',
-    date: '2024-06-05',
-    category: 'Architecture',
-    tags: ['Microservices', 'Scalability', 'System Design'],
-    image: 'https://placehold.co/1200x600',
-    slug: 'building-scalable-microservices-architecture',
-    readingTime: '10 min read'
-  },
-  {
-    id: 4,
-    title: 'The Complete Guide to Cybersecurity for Businesses',
-    excerpt: 'Protect your digital assets with this comprehensive guide to modern cybersecurity practices.',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    author: 'Emily Williams',
-    date: '2024-05-28',
-    category: 'Cybersecurity',
-    tags: ['Security', 'Business', 'Data Protection'],
-    image: 'https://placehold.co/1200x600',
-    slug: 'complete-guide-cybersecurity-businesses',
-    readingTime: '12 min read'
-  }
-];
+
 
 const BlogPostPage = () => {
   const { slug } = useParams();
@@ -701,35 +593,14 @@ const BlogPostPage = () => {
             setRelatedPosts(related);
           } catch (error) {
             console.error('Error fetching related posts:', error);
-            // Fallback to mock related posts
-            const related = mockPosts
-              .filter(p => p.id !== postData.id)
-              .filter(p => (typeof p.category === 'object' ? p.category.name : p.category) === postData.category.name)
-              .slice(0, 3);
-            setRelatedPosts(related);
+        // Return empty array if no related posts found
+        setRelatedPosts([]);
           }
         }
       } catch (error) {
         console.error('Error fetching post:', error);
-        // Fallback to mock data if API fails
-        const foundPost = mockPosts.find(p => p.slug === slug);
-        setPost(foundPost || mockPosts[0]);
-        
-        // Get mock related posts
-        if (foundPost) {
-          const related = mockPosts
-            .filter(p => p.id !== foundPost.id)
-            .filter(p => 
-              (typeof p.category === 'object' ? p.category.name : p.category) === (typeof foundPost.category === 'object' ? foundPost.category.name : foundPost.category) || 
-              p.tags.some(tag => {
-                const tagName = typeof tag === 'object' ? tag.name : tag;
-                return foundPost.tags.some(t => (typeof t === 'object' ? t.name : t) === tagName);
-              })
-            )
-            .slice(0, 3);
-          
-          setRelatedPosts(related);
-        }
+        setPost(null);
+        setRelatedPosts([]);
       } finally {
         setLoading(false);
       }
@@ -761,98 +632,81 @@ const BlogPostPage = () => {
     e.target.reset();
   };
   
-  return (
-    <BlogPostPageContainer
-      variants={pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      <AnimatePresence mode="wait" initial={false}>
-        {loading ? (
-          <motion.div
-            key={`loading-${contentKey}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              height: '100vh',
-              background: '#121212',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 10
-            }}
-          >
-            <p>Loading article...</p>
-          </motion.div>
-        ) : !post ? (
-          <motion.div
-            key={`not-found-${contentKey}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ 
-              display: 'flex', 
-              flexDirection: 'column',
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              height: '100vh',
-              padding: '2rem',
-              textAlign: 'center',
-              background: '#121212'
-            }}
-          >
-            <h1>Article Not Found</h1>
-            <p>The article you're looking for doesn't exist or has been moved.</p>
-            <Button 
-              as={Link} 
-              to="/blog" 
-              variant="primary"
-              style={{ marginTop: '2rem' }}
-            >
-              Back to Blog
-            </Button>
-          </motion.div>
-        ) : (
-          <motion.div
-            key={`content-${contentKey}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <BlogPostHero>
-              <img src={post.image} alt={post.title} />
-              <HeroContent>
-                <BlogCategory>{typeof post.category === 'object' ? post.category.name : post.category}</BlogCategory>
-                <BlogTitle
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
+      return (
+        <BlogPostPageContainer
+          variants={pageTransition}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {loading ? (
+              <motion.div
+                key={`loading-${contentKey}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="blog-loading-container"
+              >
+                <p>Loading article...</p>
+              </motion.div>
+            ) : !post ? (
+              <motion.div
+                key={`not-found-${contentKey}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="blog-not-found-container"
+              >
+                <h1>Article Not Found</h1>
+                <p>The article you're looking for doesn't exist or has been moved.</p>
+                <Button 
+                  as={Link} 
+                  to="/blog" 
+                  variant="primary"
                 >
-                  {post.title}
-                </BlogTitle>
-                <BlogMeta>
-                  <BlogAuthor>
-                    <div className="avatar">{getInitials(post.author)}</div>
-                    <div>
-                      <div className="name">{post.author}</div>
+                  Back to Blog
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={`content-${contentKey}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <BlogPostHero>
+                  {post.image_url || post.image ? (
+                    <ImageWithFallback 
+                      src={post.image_url || post.image} 
+                      alt={post.title}
+                      fallbackText="Blog Post Image"
+                      showFallbackText={false}
+                    />
+                  ) : (
+                    <div className="blog-image-placeholder">
+                      <div className="placeholder-content">
+                        <div className="placeholder-text">No Image</div>
+                      </div>
                     </div>
-                  </BlogAuthor>
-                  <BlogDate>
-                    <span>📅</span> {formatDate(post.date)}
-                  </BlogDate>
-                  <ReadingTime>
-                    <span>⏱️</span> {typeof post.readingTime === 'object' ? post.readingTime.text : post.readingTime}
-                  </ReadingTime>
-                </BlogMeta>
-              </HeroContent>
-            </BlogPostHero>
+                  )}
+                  <HeroContent>
+                    <BlogCategory>{post.category?.name || 'Uncategorized'}</BlogCategory>
+                    <BlogTitle>{post.title}</BlogTitle>
+                    <BlogMeta>
+                      <BlogAuthor>
+                        <div className="avatar">{getInitials(post.author)}</div>
+                        <div className="name">{post.author || 'CodingBull Team'}</div>
+                      </BlogAuthor>
+                      <BlogDate>
+                        <span>📅</span> {formatDate(post.published_date || post.date)}
+                      </BlogDate>
+                      <ReadingTime>
+                        <span>⏱️</span> {post.readingTime || '5 min read'}
+                      </ReadingTime>
+                    </BlogMeta>
+                  </HeroContent>
+                </BlogPostHero>
             
             <ContentSection>
               <ContentWrapper>
@@ -917,14 +771,19 @@ const BlogPostPage = () => {
                   >
                     <h3>Recent Posts</h3>
                     <RecentPosts>
-                      {mockPosts.slice(0, 3).map(recentPost => (
+                      {mockBlogPosts.slice(0, 3).map(recentPost => (
                         <RecentPost key={recentPost.id} to={`/blog/${recentPost.slug}`}>
                           <div className="image">
-                            <img src={recentPost.image} alt={recentPost.title} />
+                            <ImageWithFallback 
+                              src={recentPost.image_url || recentPost.image} 
+                              alt={recentPost.title}
+                              fallbackText="Blog"
+                              showFallbackText={false}
+                            />
                           </div>
                           <div className="content">
                             <h4>{recentPost.title}</h4>
-                            <div className="date">{formatDate(recentPost.date)}</div>
+                            <div className="date">{formatDate(recentPost.published_date || recentPost.date)}</div>
                           </div>
                         </RecentPost>
                       ))}
@@ -940,12 +799,12 @@ const BlogPostPage = () => {
                   >
                     <h3>Categories</h3>
                     <CategoriesList>
-                      {Array.from(new Set(mockPosts.map(p => typeof p.category === 'object' ? p.category.name : p.category))).map((categoryName, index) => (
-                        <CategoryItem key={index}>
-                          <Link to={`/blog?category=${categoryName}`}>
-                            <span>{categoryName}</span>
+                      {mockCategories.map((category) => (
+                        <CategoryItem key={category.id}>
+                          <Link to={`/blog?category=${category.slug}`}>
+                            <span>{category.name}</span>
                             <span className="count">
-                              {mockPosts.filter(p => (typeof p.category === 'object' ? p.category.name : p.category) === categoryName).length}
+                              {category.post_count}
                             </span>
                           </Link>
                         </CategoryItem>

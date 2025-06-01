@@ -35,6 +35,7 @@ router.register(r'testimonials', views.TestimonialViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
+    path('api/v1/technologies/', views.technologies_list, name='technologies-list'),
 ]
 
 # Create a separate router for backward compatibility
@@ -49,7 +50,9 @@ legacy_router.register(r'testimonials', views.TestimonialViewSet)
 # Add legacy URL patterns for backward compatibility
 urlpatterns += [
     path('api/', include(legacy_router.urls)),
+    path('api/technologies/', views.technologies_list, name='technologies-list-legacy'),
     path('', include(legacy_router.urls)),
+    path('technologies/', views.technologies_list, name='technologies-list-root'),
 ]
 
 # Serve media files in development

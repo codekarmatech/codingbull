@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { pageTransition, fadeIn } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
@@ -588,7 +588,7 @@ const ProjectsPage = () => {
   const [filter, setFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
-  const [technologies, setTechnologies] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -665,14 +665,6 @@ const ProjectsPage = () => {
     }
   ], []);
   
-  // Stats data
-  const stats = [
-    { value: '10+', label: 'Projects Completed' },
-    { value: '8+', label: 'Happy Clients' },
-    { value: '2+', label: 'Years Experience' },
-    { value: '3+', label: 'Industries Served' }
-  ];
-  
   // Filter categories
   const filterCategories = [
     { id: 'all', label: 'All Projects' },
@@ -689,7 +681,7 @@ const ProjectsPage = () => {
       
       try {
         const response = await apiService.projects.getProjects();
-        if (response && response.results) {
+        if (response && response.results && response.results.length > 0) {
           setProjects(response.results);
         } else {
           // Fallback to mock data
@@ -705,20 +697,7 @@ const ProjectsPage = () => {
       }
     };
     
-    // Fetch technologies
-    const fetchTechnologies = async () => {
-      try {
-        const response = await apiService.projects.getTechnologies();
-        if (response && response.results) {
-          setTechnologies(response.results);
-        }
-      } catch (err) {
-        console.error('Error fetching technologies:', err);
-      }
-    };
-    
     fetchProjects();
-    fetchTechnologies();
   }, [mockProjects]);
   
   // Handle project selection from URL
@@ -738,11 +717,7 @@ const ProjectsPage = () => {
     return projects.filter(project => project.category === filter);
   }, [filter, projects]);
   
-  // Get unique categories from projects
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(projects.map(project => project.category))];
-    return uniqueCategories;
-  }, [projects]);
+
   
   // Handle filter change
   const handleFilterChange = (category) => {

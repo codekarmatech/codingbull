@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fadeIn, slideUp, staggerContainer } from '../animations/variants';
 import apiService from '../services/api';
 import PropTypes from 'prop-types';
+import ImageWithFallback from './ImageWithFallback';
 
 // Testimonials section container
 const TestimonialsContainer = styled.section`
@@ -371,7 +372,7 @@ const ToggleButton = styled.button`
 `;
 
 
-// Mock testimonials data for fallback
+// Mock testimonials data for fallback (without hardcoded image paths)
 const mockTestimonials = [
   {
     id: 1,
@@ -379,7 +380,7 @@ const mockTestimonials = [
     author: "Deep Varma",
     title: "Managing Director",
     company: "Gujju-Masla",
-    image: "/logos/gujju-masla.png"
+    image: null // Will use fallback image component
   },
   {
     id: 2,
@@ -387,7 +388,7 @@ const mockTestimonials = [
     author: "Dr. Rajavi Dixit",
     title: "Founder & CEO",
     company: "Physioway",
-    image: "/logos/physioway.png"
+    image: null // Will use fallback image component
   },
   {
     id: 3,
@@ -395,7 +396,7 @@ const mockTestimonials = [
     author: "Harsh Patel",
     title: "CEO",
     company: "Harsh Patel Enterprises",
-    image: "/logos/harsh-patel.png"
+    image: null // Will use fallback image component
   }
 ];
 
@@ -426,7 +427,13 @@ const TestimonialSliderItem = memo(({ testimonial }) => (
     </TestimonialQuote>
     <TestimonialAuthor>
       <AuthorImage>
-        <img src={testimonial.image} alt={`${testimonial.company} logo`} />
+        <ImageWithFallback 
+          src={testimonial.image} 
+          alt={`${testimonial.company} logo`}
+          fallbackText={testimonial.company}
+          showFallbackText={true}
+          iconSize="24px"
+        />
       </AuthorImage>
       <AuthorName>{testimonial.author}</AuthorName>
       <AuthorTitle>{testimonial.title}</AuthorTitle>
@@ -509,7 +516,13 @@ const TestimonialGridItem = memo(({ testimonial, index }) => (
     </CardQuote>
     <CardAuthor>
       <CardAuthorImage>
-        <img src={testimonial.image} alt={`${testimonial.company} logo`} />
+        <ImageWithFallback 
+          src={testimonial.image} 
+          alt={`${testimonial.company} logo`}
+          fallbackText={testimonial.company}
+          showFallbackText={true}
+          iconSize="20px"
+        />
       </CardAuthorImage>
       <CardAuthorInfo>
         <CardAuthorName>{testimonial.author}</CardAuthorName>
@@ -574,14 +587,20 @@ const Testimonials = () => {
       
       try {
         const response = await apiService.testimonials.getTestimonials();
+        console.log('Testimonials API response:', response);
+        
+        let testimonialsData = [];
         if (response && Array.isArray(response)) {
-          setTestimonials(response);
+          testimonialsData = response;
         } else if (response && response.results && Array.isArray(response.results)) {
-          setTestimonials(response.results);
+          testimonialsData = response.results;
         } else {
           console.warn('API response format unexpected, falling back to mock data');
           setTestimonials(mockTestimonials);
+          return;
         }
+        
+        setTestimonials(testimonialsData);
       } catch (err) {
         console.error('Error fetching testimonials:', err);
         setError('Failed to load testimonials. Please try again later.');

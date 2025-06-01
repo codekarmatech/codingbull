@@ -348,7 +348,8 @@ const ContactPage = () => {
     phone: '',
     subject: '',
     service: '',
-    message: ''
+    message: '',
+    inquiry_type: 'general'
   });
   
   // Form submission state
@@ -392,6 +393,13 @@ const ContactPage = () => {
       newErrors.email = 'Invalid email address';
     }
     
+    // Phone validation
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
     // Subject validation
     if (!formData.subject.trim()) {
       newErrors.subject = 'Subject is required';
@@ -432,7 +440,8 @@ const ContactPage = () => {
         phone: '',
         subject: '',
         service: '',
-        message: ''
+        message: '',
+        inquiry_type: 'general'
       });
       
       // Reset success message after 5 seconds
@@ -517,8 +526,8 @@ const ContactPage = () => {
                     <ContactMethodIcon>📱</ContactMethodIcon>
                     <ContactMethodContent>
                       <ContactMethodTitle>Call Us</ContactMethodTitle>
-                      <ContactMethodText>+91 9876543210</ContactMethodText>
-                      <ContactMethodText>Available Monday to Friday, 9am to 6pm IST</ContactMethodText>
+                      <ContactMethodText>+91 7575053969</ContactMethodText>
+                      <ContactMethodText>Available Monday to Friday, 10am to 7pm IST</ContactMethodText>
                     </ContactMethodContent>
                   </ContactMethod>
                   
@@ -610,7 +619,7 @@ const ContactPage = () => {
                   </FormGroup>
                   
                   <FormGroup>
-                    <FormLabel htmlFor="phone">Phone Number (Optional)</FormLabel>
+                    <FormLabel htmlFor="phone">Phone Number *</FormLabel>
                     <FormInput
                       type="tel"
                       id="phone"
@@ -619,6 +628,7 @@ const ContactPage = () => {
                       value={formData.phone}
                       onChange={handleChange}
                     />
+                    {errors.phone && <FormError>{errors.phone}</FormError>}
                   </FormGroup>
                   
                   <FormGroup>

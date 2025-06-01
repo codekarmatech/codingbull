@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
 import SEO from '../components/SEO';
+import ImageWithFallback from '../components/ImageWithFallback';
 import apiService from '../services/api';
 
 // Services page container
@@ -328,102 +329,102 @@ const CTAButtons = styled(motion.div)`
   }
 `;
 
-const ServicesPage = () => {
-  // State for services data
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  // Mock services data for fallback
-  const mockServices = [
+// Default services data for fallback when API fails
+const defaultServices = [
     {
       id: 1,
-      title: 'Full-Stack Development',
+      name: 'Full-Stack Development',
       slug: 'full-stack-development',
-      description: 'End-to-end development services from front-end interfaces to back-end systems.',
+      summary: 'End-to-end development services from front-end interfaces to back-end systems.',
+      description: 'Complete web application development using modern technologies and best practices.',
+      image: null,
       features: [
         'Responsive web applications',
         'RESTful API development',
         'Database design and optimization',
         'Third-party integrations',
         'Performance optimization'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     },
     {
       id: 2,
-      title: 'Mobile App Development',
+      name: 'Mobile App Development',
       slug: 'mobile-app-development',
-      description: 'Native and cross-platform mobile applications for iOS and Android.',
+      summary: 'Native and cross-platform mobile applications for iOS and Android.',
+      description: 'Professional mobile app development for all platforms.',
+      image: null,
       features: [
         'Native iOS and Android apps',
         'Cross-platform solutions (React Native, Flutter)',
         'UI/UX design for mobile',
         'App Store optimization',
         'Ongoing maintenance and updates'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     },
     {
       id: 3,
-      title: 'Cloud Solutions',
+      name: 'Cloud Solutions',
       slug: 'cloud-solutions',
-      description: 'Scalable, secure, and cost-effective cloud infrastructure and services.',
+      summary: 'Scalable, secure, and cost-effective cloud infrastructure and services.',
+      description: 'Modern cloud infrastructure and deployment solutions.',
+      image: null,
       features: [
         'Cloud migration strategies',
         'AWS, Azure, and Google Cloud expertise',
         'Serverless architecture',
         'Microservices implementation',
         'DevOps automation'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     },
     {
       id: 4,
-      title: 'DevOps & CI/CD',
+      name: 'DevOps & CI/CD',
       slug: 'devops-cicd',
-      description: 'Streamline your development workflow with automated testing and deployment.',
+      summary: 'Streamline your development workflow with automated testing and deployment.',
+      description: 'Professional DevOps services and automation solutions.',
+      image: null,
       features: [
         'CI/CD pipeline setup',
         'Infrastructure as Code (IaC)',
         'Containerization with Docker',
         'Kubernetes orchestration',
         'Monitoring and logging solutions'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     },
     {
       id: 5,
-      title: 'UI/UX Design',
+      name: 'UI/UX Design',
       slug: 'ui-ux-design',
-      description: 'User-centered design services that create intuitive, engaging digital experiences.',
+      summary: 'User-centered design services that create intuitive, engaging digital experiences.',
+      description: 'Professional design services focused on user experience.',
+      image: null,
       features: [
         'User research and personas',
         'Wireframing and prototyping',
         'Visual design and branding',
         'Usability testing',
         'Accessibility compliance'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     },
     {
       id: 6,
-      title: 'AI & Machine Learning',
+      name: 'AI & Machine Learning',
       slug: 'ai-machine-learning',
-      description: 'Harness the power of artificial intelligence to gain insights and automate processes.',
+      summary: 'Harness the power of artificial intelligence to gain insights and automate processes.',
+      description: 'Advanced AI and machine learning solutions for modern businesses.',
+      image: null,
       features: [
         'Predictive analytics',
         'Natural language processing',
         'Computer vision solutions',
         'Recommendation systems',
         'AI integration with existing systems'
-      ],
-      image: 'https://placehold.co/600x400'
+      ]
     }
-  ];
-  
-  // Process steps
-  const processSteps = [
+];
+
+// Process steps
+const processSteps = [
     {
       number: 1,
       title: 'Discovery',
@@ -444,16 +445,14 @@ const ServicesPage = () => {
       title: 'Delivery',
       description: 'After thorough testing, we deploy your solution and provide training and documentation.'
     }
-  ];
-  
-  // Create a loading state UI indicator component
-  const ServiceLoadingState = () => (
-    <div className="services-loading">
-      {loading && <div className="loading-spinner">Loading services...</div>}
-      {error && <div className="error-message">{error}</div>}
-    </div>
-  );
-  
+];
+
+const ServicesPage = () => {
+  // State for services data
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   // Fetch services from API
   useEffect(() => {
     const fetchServices = async () => {
@@ -462,17 +461,17 @@ const ServicesPage = () => {
       
       try {
         const response = await apiService.services.getServices();
-        if (response && response.results) {
+        if (response && response.results && response.results.length > 0) {
           setServices(response.results);
         } else {
-          // Fallback to mock data
-          setServices(mockServices);
+          // Fallback to default data when no services in database
+          setServices(defaultServices);
         }
       } catch (err) {
         console.error('Error fetching services:', err);
         setError('Failed to load services. Please try again later.');
-        // Fallback to mock data
-        setServices(mockServices);
+        // Fallback to default data
+        setServices(defaultServices);
       } finally {
         setLoading(false);
       }
@@ -515,31 +514,54 @@ const ServicesPage = () => {
       
       <ServicesSection>
         <ServicesContent>
-          <ServicesGrid
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {services.map((service, index) => (
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <p>Loading services...</p>
+            </div>
+          ) : error ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: '#ff6b6b' }}>
+              <p>{error}</p>
+              <Button 
+                variant="secondary" 
+                onClick={() => window.location.reload()}
+                style={{ marginTop: '1rem' }}
+              >
+                Try Again
+              </Button>
+            </div>
+          ) : (
+            <ServicesGrid
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {services.map((service, index) => (
               <ServiceCard
                 key={service.id}
                 variants={slideUp}
                 custom={index * 0.1}
               >
                 <ServiceImage>
-                  <img src={service.image} alt={service.title} />
+                  <ImageWithFallback 
+                    src={service.image} 
+                    alt={service.name || service.title}
+                    fallbackText="Service Image"
+                    showFallbackText={false}
+                  />
                 </ServiceImage>
                 <ServiceContent>
                   <ServiceTitle>
-                    <Link to={`/services/${service.slug}`}>{service.title}</Link>
+                    <Link to={`/services/${service.slug}`}>{service.name || service.title}</Link>
                   </ServiceTitle>
-                  <ServiceDescription>{service.description}</ServiceDescription>
-                  <ServiceFeatures>
-                    {service.features.map((feature, i) => (
-                      <li key={i}>{feature}</li>
-                    ))}
-                  </ServiceFeatures>
+                  <ServiceDescription>{service.summary || service.description}</ServiceDescription>
+                  {service.features && (
+                    <ServiceFeatures>
+                      {service.features.map((feature, i) => (
+                        <li key={i}>{feature}</li>
+                      ))}
+                    </ServiceFeatures>
+                  )}
                   <Button 
                     as={Link} 
                     to={`/services/${service.slug}`} 
@@ -549,8 +571,9 @@ const ServicesPage = () => {
                   </Button>
                 </ServiceContent>
               </ServiceCard>
-            ))}
-          </ServicesGrid>
+              ))}
+            </ServicesGrid>
+          )}
         </ServicesContent>
       </ServicesSection>
       

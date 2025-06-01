@@ -5,6 +5,7 @@ import Hero from '../components/Hero';
 import Services from '../components/Services';
 import OurProjects from '../components/OurProjects';
 import TechStack from '../components/TechStack';
+import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import { pageTransition } from '../animations/variants';
@@ -32,6 +33,7 @@ const HomePage = () => {
         <Services />
         <TechStack />
         <OurProjects />
+        <Testimonials />
         <Footer />
       </PageContainer>
     </>
