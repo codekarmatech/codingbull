@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -414,7 +414,9 @@ const FAQItem = styled(motion.div)`
 `;
 
 // FAQ question
-const FAQQuestion = styled.button`
+const FAQQuestion = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isOpen',
+})`
   width: 100%;
   text-align: left;
   padding: 1.5rem;
@@ -570,12 +572,8 @@ const RelatedServiceDescription = styled.p`
   flex: 1;
 `;
 
-const ServicePage = () => {
-  const { slug } = useParams();
-  const [openFAQ, setOpenFAQ] = React.useState(null);
-  
-  // Mock services data (would be fetched from API in production)
-  const services = [
+// Fallback services data for when API fails
+const fallbackServices = [
     {
       id: 1,
       title: 'Full-Stack Development',
@@ -841,15 +839,98 @@ const ServicePage = () => {
       ]
     }
   ];
+
+const ServicePage = () => {
+  const { slug } = useParams();
+  const [openFAQ, setOpenFAQ] = useState(null);
+  const [service, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Find the current service based on slug
-  const service = services.find(s => s.slug === slug) || services[0];
+  // Fetch service data from API
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://127.0.0.1:8000/api/services/${slug}/`);
+        if (!response.ok) {
+          throw new Error('Service not found');
+        }
+        const serviceData = await response.json();
+        setService(serviceData);
+      } catch (err) {
+        setError(err.message);
+        // Fallback to mock data if API fails
+        setService(fallbackServices.find(s => s.slug === slug) || fallbackServices[0]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchService();
+    }
+  }, [slug]);
   
   // Toggle FAQ
   const toggleFAQ = (index) => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
-  
+
+  // Loading state
+  if (loading) {
+    return (
+      <ServicePageContainer
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={pageTransition}
+      >
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '50vh',
+          fontSize: '1.2rem',
+          color: '#00BFFF'
+        }}>
+          Loading service details...
+        </div>
+      </ServicePageContainer>
+    );
+  }
+
+  // Error state
+  if (error && !service) {
+    return (
+      <ServicePageContainer
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={pageTransition}
+      >
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '50vh',
+          fontSize: '1.2rem',
+          color: '#ff6b6b',
+          textAlign: 'center'
+        }}>
+          <h2>Service Not Found</h2>
+          <p>The requested service could not be found.</p>
+          <Button as={Link} to="/services" variant="primary" style={{ marginTop: '1rem' }}>
+            View All Services
+          </Button>
+        </div>
+      </ServicePageContainer>
+    );
+  }
+
+  if (!service) return null;
+
   return (
     <ServicePageContainer
       variants={pageTransition}
@@ -865,14 +946,14 @@ const ServicePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              {service.title}
+              {service.name || service.title}
             </HeroTitle>
             <HeroDescription
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              {service.longDescription}
+              {service.long_description || service.longDescription}
             </HeroDescription>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -895,7 +976,7 @@ const ServicePage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <img src={service.image} alt={service.title} />
+            <img src={service.image || service.image_url} alt={service.name || service.title} />
           </HeroImage>
         </HeroContent>
       </ServiceHero>
@@ -917,7 +998,7 @@ const ServicePage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Our {service.title} services are designed to deliver exceptional results through these core capabilities.
+              Our {service.name || service.title} services are designed to deliver exceptional results through these core capabilities.
             </SectionDescription>
           </SectionHeader>
           
@@ -927,7 +1008,7 @@ const ServicePage = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {service.features.map((feature, index) => (
+            {(service.detailed_features || service.features || []).map((feature, index) => (
               <FeatureCard
                 key={index}
                 variants={slideUp}
@@ -971,7 +1052,7 @@ const ServicePage = () => {
           </SectionHeader>
           
           <ProcessSteps>
-            {service.process.map((step, index) => (
+            {(service.process_steps || service.process || []).map((step, index) => (
               <ProcessStep
                 key={index}
                 initial={{ opacity: 0, x: -50 }}
@@ -1017,7 +1098,7 @@ const ServicePage = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {service.technologies.map((tech, index) => (
+            {(service.technologies || []).map((tech, index) => (
               <TechnologyCard
                 key={index}
                 variants={fadeIn}
@@ -1050,12 +1131,12 @@ const ServicePage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Find answers to common questions about our {service.title} services.
+              Find answers to common questions about our {service.name || service.title} services.
             </SectionDescription>
           </SectionHeader>
           
           <FAQList>
-            {service.faqs.map((faq, index) => (
+            {(service.faqs || []).map((faq, index) => (
               <FAQItem
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -1104,7 +1185,7 @@ const ServicePage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Let's discuss how our {service.title} services can help you achieve your business goals. Our team is ready to bring your vision to life.
+            Let's discuss how our {service.name || service.title} services can help you achieve your business goals. Our team is ready to bring your vision to life.
           </CTADescription>
           <CTAButtons
             initial={{ opacity: 0, y: 20 }}
@@ -1132,7 +1213,8 @@ const ServicePage = () => {
         </CTAContent>
       </CTASection>
       
-      <RelatedServicesSection>
+      {service.relatedServices && service.relatedServices.length > 0 && (
+        <RelatedServicesSection>
         <RelatedServicesContent>
           <SectionHeader>
             <SectionTitle
@@ -1149,7 +1231,7 @@ const ServicePage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Explore other services that complement our {service.title} offerings.
+              Explore other services that complement our {service.name || service.title} offerings.
             </SectionDescription>
           </SectionHeader>
           
@@ -1159,7 +1241,7 @@ const ServicePage = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {service.relatedServices.map((relatedService, index) => (
+            {(service.related_services || service.relatedServices || []).map((relatedService, index) => (
               <RelatedServiceCard
                 key={relatedService.id}
                 variants={slideUp}
@@ -1186,7 +1268,8 @@ const ServicePage = () => {
             ))}
           </RelatedServicesGrid>
         </RelatedServicesContent>
-      </RelatedServicesSection>
+        </RelatedServicesSection>
+      )}
       
       <Footer />
     </ServicePageContainer>

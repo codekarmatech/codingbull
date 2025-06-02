@@ -49,7 +49,16 @@ class Service(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     summary = models.CharField(max_length=300)
     description = models.TextField()
+    long_description = models.TextField(blank=True, help_text="Detailed description for service page")
     icon = models.ImageField(upload_to='service_icons/', blank=True, null=True)
+    icon_emoji = models.CharField(max_length=10, blank=True, help_text="Emoji icon for the service")
+    image_url = models.URLField(blank=True, help_text="Hero image URL for service page")
+    features = models.JSONField(default=list, blank=True, help_text="Simple list of feature strings for services listing page")
+    detailed_features = models.JSONField(default=list, blank=True, help_text="Detailed features with icon, title, description for service detail page")
+    process_steps = models.JSONField(default=list, blank=True, help_text="Process steps for the service")
+    technologies = models.JSONField(default=list, blank=True, help_text="Technologies used for this service")
+    faqs = models.JSONField(default=list, blank=True, help_text="Frequently asked questions")
+    related_services = models.JSONField(default=list, blank=True, help_text="Related services slugs")
 
     def __str__(self):
         return self.name

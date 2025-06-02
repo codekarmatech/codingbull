@@ -109,9 +109,13 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    title = serializers.CharField(source='name', read_only=True)  # Frontend expects 'title'
     
     def get_image(self, obj):
-        if obj.icon:
+        # Return image_url if available, otherwise return icon URL
+        if obj.image_url:
+            return obj.image_url
+        elif obj.icon:
             request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(obj.icon.url)
@@ -120,7 +124,11 @@ class ServiceSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Service
-        fields = ['id', 'name', 'slug', 'summary', 'description', 'icon', 'image']
+        fields = [
+            'id', 'name', 'title', 'slug', 'summary', 'description', 'long_description',
+            'icon', 'icon_emoji', 'image_url', 'image', 'features', 'detailed_features',
+            'process_steps', 'technologies', 'faqs', 'related_services'
+        ]
 
 class ContactInquirySerializer(serializers.ModelSerializer):
     class Meta:
