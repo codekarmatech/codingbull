@@ -31,7 +31,9 @@ const fetchWithTimeout = async (url, options = {}) => {
   const separator = url.includes('?') ? '&' : '?';
   const urlWithCacheBuster = `${url}${separator}${cacheBuster}`;
   
-  console.log('Fetching URL:', urlWithCacheBuster); // Debug log
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Fetching URL:', urlWithCacheBuster);
+  }
   
   const controller = new AbortController();
   const { signal } = controller;
@@ -41,9 +43,13 @@ const fetchWithTimeout = async (url, options = {}) => {
   }, API_TIMEOUT);
   
   try {
-    console.log(`Making request to: ${urlWithCacheBuster}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Making request to: ${urlWithCacheBuster}`);
+    }
     const response = await fetch(urlWithCacheBuster, { ...options, signal });
-    console.log(`Response status: ${response.status} ${response.statusText}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Response status: ${response.status} ${response.statusText}`);
+    }
     clearTimeout(timeout);
     
     // First check if the response is OK

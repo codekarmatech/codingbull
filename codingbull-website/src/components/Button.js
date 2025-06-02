@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { prefersReducedMotion } from '../utils/accessibility';
@@ -310,4 +310,4 @@ const Button = ({
   );
 };
 
-export default Button;
+export default memo(Button);

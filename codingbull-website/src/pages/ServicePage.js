@@ -6,6 +6,7 @@ import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
+import environment from '../config/environment';
 
 // Service page container
 const ServicePageContainer = styled(motion.div)`
@@ -852,7 +853,7 @@ const ServicePage = () => {
     const fetchService = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://127.0.0.1:8000/api/services/${slug}/`);
+        const response = await fetch(`${environment.api.baseUrl}services/${slug}/`);
         if (!response.ok) {
           throw new Error('Service not found');
         }

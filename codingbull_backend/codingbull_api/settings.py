@@ -20,10 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v_dt+p1129jodh4eu(80mxnkr0@1s$mc7&@hxo9u629d+2bpoe'
+import os
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-v_dt+p1129jodh4eu(80mxnkr0@1s$mc7&@hxo9u629d+2bpoe')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
@@ -55,8 +56,16 @@ MIDDLEWARE = [
 ]
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # For development only, restrict in production
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # Only allow all origins in development
 CORS_ALLOW_CREDENTIALS = True
+
+# Production CORS settings
+if not DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        "https://codingbull.com",
+        "https://www.codingbull.com",
+        # Add your production domains here
+    ]
 
 # Django REST Framework settings
 REST_FRAMEWORK = {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import environment from '../config/environment';
 
 const ApiTest = () => {
   const [results, setResults] = useState({
@@ -12,7 +13,7 @@ const ApiTest = () => {
       try {
         // Test direct fetch without /v1 - this will fail as the endpoint doesn't exist
         try {
-          const response1 = await fetch('http://localhost:8000/api/v1/categories/');
+          const response1 = await fetch(`${environment.api.baseUrl}categories/`);
           const data1 = await response1.json();
           setResults(prev => ({ ...prev, directFetch: data1 }));
         } catch (error) {
@@ -21,7 +22,7 @@ const ApiTest = () => {
 
         // Test direct fetch with /v1
         try {
-          const response2 = await fetch('http://localhost:8000/api/v1/categories/');
+          const response2 = await fetch(`${environment.api.baseUrl}categories/`);
           const data2 = await response2.json();
           setResults(prev => ({ ...prev, directFetchWithV1: data2 }));
         } catch (error) {
