@@ -36,18 +36,15 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'  # Use slug for detail view lookups
     
     def get_queryset(self):
-        """
-        Optionally filter by category
-        """
-        queryset = BlogPost.objects.all().order_by('-published_date')
-        category_id = self.request.query_params.get('category_id', None)
-        category_name = self.request.query_params.get('category', None)
+        queryset = super().get_queryset().order_by('-published_date')
+        category_id = self.request.GET.get('category_id', None)
+        category_name = self.request.GET.get('category', None)
         
         if category_id and category_id.isdigit():
             queryset = queryset.filter(category_id=category_id)
         elif category_name and category_name.lower() != 'all':
             queryset = queryset.filter(category__name__iexact=category_name)
-            
+                
         return queryset
         
     @action(detail=False, methods=['get'])

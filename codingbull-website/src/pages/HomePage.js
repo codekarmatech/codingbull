@@ -20,7 +20,9 @@ const HomePage = () => {
     <>
       <SEO 
         title="Home" 
-        description="CodingBull delivers cutting-edge web and mobile solutions using React, Python, Django, and Three.js. Transform your digital presence with our expert development team."
+        description="CodingBull delivers cutting-edge website and mobile solutions/development services for businesses of all sizes.
+         We specialize in creating responsive websites, mobile apps, and web applications
+        using React, Python, Django, and Three.js. Transform your digital presence with our expert development team."
         canonical="/"
       />
       <PageContainer

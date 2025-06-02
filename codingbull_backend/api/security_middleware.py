@@ -566,18 +566,35 @@ class EnhancedSecurityMiddleware(MiddlewareMixin):
         identifier = self._get_rate_limit_identifier(request, request_info)
         is_rate_limited, rate_rule = RateLimiter.check_rate_limit(identifier, request_info)
         
-        if is_rate_limited:
-            self._log_blocked_request(request_info, f"Rate limit exceeded: {rate_rule.name}")
+        if is_rate_limited and rate_rule is not None:
+            rule_name = rate_rule.name
+            block_duration = rate_rule.block_duration
+            
+            self._log_blocked_request(request_info, f"Rate limit exceeded: {rule_name}")
             self._create_security_alert(
                 'rate_limit',
                 'warning',
                 f"Rate limit exceeded for {identifier}",
-                f"Rule: {rate_rule.name}, Path: {request_info['path']}",
+                f"Rule: {rule_name}, Path: {request_info['path']}",
                 request_info
             )
             return JsonResponse({
                 'error': 'Rate limit exceeded',
-                'retry_after': rate_rule.block_duration
+                'retry_after': block_duration
+            }, status=429)
+        elif is_rate_limited:
+            # Fallback case if rate_rule is None but is_rate_limited is True
+            self._log_blocked_request(request_info, "Rate limit exceeded: Unknown rule")
+            self._create_security_alert(
+                'rate_limit',
+                'warning',
+                f"Rate limit exceeded for {identifier}",
+                f"Path: {request_info['path']}",
+                request_info
+            )
+            return JsonResponse({
+                'error': 'Rate limit exceeded',
+                'retry_after': 300  # Default 5 minutes
             }, status=429)
         
         # Perform security analysis
