@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { pageTransition, staggerContainer, slideUp } from '../animations/variants';
+import { pageTransition } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import SEO from '../components/SEO';

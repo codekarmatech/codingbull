@@ -179,6 +179,7 @@ const InputGroup = styled.div`
   display: flex;
   
   input {
+    id: 'newsletter-input';
     flex: 1;
     padding: 0.75rem 1rem;
     border: none;
