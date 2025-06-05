@@ -11,22 +11,35 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-v_dt+p1129jodh4eu(80mxnkr0@1s$mc7&@hxo9u629d+2bpoe')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY environment variable is required")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+# Environment detection: Default to development if not explicitly set to production
+ENVIRONMENT = os.environ.get('DJANGO_ENV', 'development').lower()
+DEBUG = ENVIRONMENT == 'development' or os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+# Override DEBUG to False if explicitly running in production
+if ENVIRONMENT == 'production':
+    DEBUG = False
+
+# Get allowed hosts from environment variable
+ALLOWED_HOSTS_ENV = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,codingbullz.com,www.codingbullz.com')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
 
 
 # Application definition
@@ -56,16 +69,36 @@ MIDDLEWARE = [
 ]
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # Only allow all origins in development
 CORS_ALLOW_CREDENTIALS = True
 
-# Production CORS settings
-if not DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        "https://codingbull.com",
-        "https://www.codingbull.com",
-        # Add your production domains here
+# Environment-based CORS configuration
+if ENVIRONMENT == 'production':
+    CORS_ALLOW_ALL_ORIGINS = False
+    # Get production CORS origins from environment variable
+    CORS_ORIGINS_PROD = os.environ.get('CORS_ALLOWED_ORIGINS_PRODUCTION', 'https://codingbullz.com,https://www.codingbullz.com')
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS_PROD.split(',') if origin.strip()]
+    
+    # Additional security headers for production
+    CORS_ALLOW_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
     ]
+else:
+    # Development CORS settings - more permissive for testing
+    CORS_ALLOW_ALL_ORIGINS = True
+    # Get development CORS origins from environment variable
+    CORS_ORIGINS_DEV = os.environ.get('CORS_ALLOWED_ORIGINS_DEVELOPMENT', 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000')
+    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in CORS_ORIGINS_DEV.split(',') if origin.strip()]
+
+# CORS settings for media files
+CORS_URLS_REGEX = r'^/(api|media)/.*$'
 
 # Django REST Framework settings
 REST_FRAMEWORK = {
@@ -150,10 +183,44 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Static files configuration for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media file serving configuration
+if ENVIRONMENT == 'production':
+    # In production, media files should be served by web server (nginx/apache)
+    # But we'll add fallback serving with proper security headers
+    SECURE_MEDIA_SERVING = True
+else:
+    # In development, Django serves media files directly
+    SECURE_MEDIA_SERVING = False
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Security Settings
+if ENVIRONMENT == 'production':
+    # Production security settings
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # SSL/HTTPS settings - configurable via environment variables
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
+    CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() == 'true'
+else:
+    # Development security settings (more relaxed)
+    SECURE_BROWSER_XSS_FILTER = False
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Security Logging Configuration
 LOGGING = {

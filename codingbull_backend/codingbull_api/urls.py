@@ -55,6 +55,27 @@ urlpatterns += [
     path('technologies/', views.technologies_list, name='technologies-list-root'),
 ]
 
-# Serve media files in development
-if settings.DEBUG:
+# Serve media files based on environment
+if settings.DEBUG or settings.ENVIRONMENT == 'development':
+    # In development, serve media files directly
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+elif settings.ENVIRONMENT == 'production' and hasattr(settings, 'SECURE_MEDIA_SERVING') and settings.SECURE_MEDIA_SERVING:
+    # In production, provide fallback media serving with security headers
+    from django.views.static import serve
+    from django.urls import re_path
+    from django.views.decorators.cache import cache_control
+    from django.views.decorators.http import require_GET
+    
+    @cache_control(max_age=3600)
+    @require_GET
+    def secure_media_serve(request, path):
+        response = serve(request, path, document_root=settings.MEDIA_ROOT)
+        # Add security headers for media files
+        response['X-Content-Type-Options'] = 'nosniff'
+        response['X-Frame-Options'] = 'DENY'
+        return response
+    
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', secure_media_serve),
+    ]
