@@ -6,7 +6,6 @@ import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations
 import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
-import environment from '../config/environment';
 import ImageWithFallback from '../components/ImageWithFallback';
 import apiService from '../services/api';
 
