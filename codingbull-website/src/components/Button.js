@@ -2,10 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { prefersReducedMotion } from '../utils/accessibility';
-
-// Custom shouldForwardProp function to filter out non-DOM props
-const shouldForwardProp = prop =>
-  !['variant', 'size', 'fullWidth', 'whileHover', 'whileTap'].includes(prop);
+import { shouldForwardButtonProp } from '../utils/styledHelpers';
 
 // Button variants using theme variables
 const VARIANTS = {
@@ -52,7 +49,7 @@ const SIZES = {
 };
 
 const StyledButton = styled(motion.button).withConfig({
-  shouldForwardProp
+  shouldForwardProp: shouldForwardButtonProp
 })`
   display: inline-flex;
   align-items: center;

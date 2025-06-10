@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { slideInLeft, slideInRight } from '../animations/variants';
 import Button from './Button';
+import { shouldForwardStateProp } from '../utils/styledHelpers';
+import ImageWithFallback from './ImageWithFallback';
+import apiService from '../services/api';
 
 // Case studies section container
 const CaseStudiesContainer = styled.section`
@@ -195,15 +198,16 @@ const CaseStudyNav = styled.div`
   margin-top: 3rem;
 `;
 
-// Custom shouldForwardProp function to filter out non-DOM props
-const shouldForwardProp = prop => prop !== 'active';
+
 
 // Nav dot
-const NavDot = styled.button`
+const NavDot = styled.button.withConfig({
+  shouldForwardProp: shouldForwardStateProp
+})`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: ${props => props.$active 
+  background: ${props => props.active 
     ? props.theme.colors.electricBlue 
     : props.theme.colors.lightGrey};
   border: none;
@@ -211,82 +215,51 @@ const NavDot = styled.button`
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.$active 
+    background: ${props => props.active 
       ? props.theme.colors.electricBlue 
       : props.theme.colors.deepPurple};
   }
 `;
 
 const CaseStudies = () => {
-  // State for current case study
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Case studies data
-  const caseStudies = [
-    {
-      id: 1,
-      title: "Gujju-Masla E-commerce Platform",
-      client: "Gujju-Masla",
-      logo: "/logos/gujju-masla.png",
-      category: 'E-commerce',
-      challenge: "Gujju-Masla needed to modernize its 40-year-old brand with an online ordering system to reach new customers.",
-      solution: "Built on Django, React, Tailwind CSS, and Docker for rapid, reliable deployments.",
-      outcome: "Launched in 4 weeks; online orders rose by 30% within the first month.",
-      techUsed: 'Django, React, Tailwind CSS, Docker',
-      testimonial: {
-        quote: "Hiring CodingBull was a game-changer. The team delivered our e-commerce platform in just 4 weeks, leading to a 30% surge in online orders.",
-        author: "Deep Varma",
-        title: "Managing Director",
-        company: "Gujju-Masla",
-        image: "/logos/gujju-masla.png"
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await apiService.projects.getProjects();
+        if (response && response.results && Array.isArray(response.results)) {
+          setProjects(response.results);
+        } else {
+          throw new Error('Invalid API response format');
+        }
+      } catch (err) {
+        setError('Failed to load case studies.');
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: 2,
-      title: "Physioway Enterprise Physiotherapy System",
-      client: "Physioway",
-      logo: "/logos/physioway.png",
-      category: 'Healthcare Tech',
-      challenge: "Physioway required a secure, enterprise-grade application to manage patient assessments and treatment plans across multiple clinics.",
-      solution: "Developed with Django REST Framework, React, and integrated audit logs for HIPAA-style compliance.",
-      outcome: "Deployed in 8 weeks; clinic efficiency improved by 40%, and patient satisfaction scores rose 15%.",
-      techUsed: 'Django, React, PostgreSQL, Docker',
-      testimonial: {
-        quote: "The enterprise physiotherapy system built by CodingBull transformed our workflow. Their React/Django solution is robust, user-friendly, and fully compliant.",
-        author: "Dr. Rajavi Dixit",
-        title: "Founder & CEO",
-        company: "Physioway",
-        image: "/logos/physioway.png"
-      }
-    },
-    {
-      id: 3,
-      title: "Harsh Patel Attendance Management Dashboard",
-      client: "Harsh Patel Enterprises",
-      logo: "/logos/harsh-patel.png",
-      category: 'Enterprise Solution',
-      challenge: "Harsh Patel Enterprises needed real-time attendance tracking and analytics for their distributed teams.",
-      solution: "Built a custom dashboard using Flask, MongoDB, and Chart.js for live reporting, containerized with Docker.",
-      outcome: "Saved over 20 hours of manual reporting per month and slashed errors by 90%.",
-      techUsed: 'Flask, MongoDB, Chart.js, Docker',
-      testimonial: {
-        quote: "Our custom attendance management dashboard exceeded expectations. Real-time analytics and reporting have saved us countless hours every month.",
-        author: "Harsh Patel",
-        title: "CEO",
-        company: "Harsh Patel Enterprises",
-        image: "/logos/harsh-patel.png"
-      }
-    }
-  ];
-  
-  // Get current case study
-  const currentCaseStudy = caseStudies[currentIndex];
-  
-  // Handle navigation
+    };
+    fetchProjects();
+  }, []);
+
   const handleNavClick = (index) => {
     setCurrentIndex(index);
   };
-  
+
+  if (loading) {
+    return <CaseStudiesContainer><CaseStudiesContent>Loading case studies...</CaseStudiesContent></CaseStudiesContainer>;
+  }
+  if (error || !projects.length) {
+    return <CaseStudiesContainer><CaseStudiesContent>{error || 'No case studies found.'}</CaseStudiesContent></CaseStudiesContainer>;
+  }
+
+  const currentProject = projects[currentIndex];
+
   return (
     <CaseStudiesContainer id="our-projects">
       <CaseStudiesContent>
@@ -308,11 +281,10 @@ const CaseStudies = () => {
             Explore how the CodingBull team transformed these businesses:
           </SectionDescription>
         </SectionHeader>
-        
         <CaseStudyShowcase>
           <AnimatePresence mode="wait">
-            <CaseStudyItem 
-              key={currentCaseStudy.id}
+            <CaseStudyItem
+              key={currentProject.id}
               $reverse={currentIndex % 2 !== 0}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -325,95 +297,67 @@ const CaseStudies = () => {
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <div style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  background: `linear-gradient(45deg, #121212, #2D2D2D)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '2rem'
-                }}>
-                  <img 
-                    src={currentCaseStudy.logo} 
-                    alt={`${currentCaseStudy.client} logo`} 
-                    style={{ 
-                      maxWidth: '100%', 
-                      maxHeight: '100%', 
-                      objectFit: 'contain' 
-                    }} 
+                <div style={{ width: '100%', height: '100%', background: `linear-gradient(45deg, #121212, #2D2D2D)`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                  <ImageWithFallback
+                    src={currentProject.logo || currentProject.image}
+                    alt={`${currentProject.client || currentProject.title} logo`}
+                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                   />
                 </div>
               </CaseStudyImage>
-              
               <CaseStudyContent
                 variants={currentIndex % 2 !== 0 ? slideInLeft : slideInRight}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
               >
-                <CaseStudyCategory>{currentCaseStudy.category}</CaseStudyCategory>
-                <CaseStudyTitle>{currentCaseStudy.title}</CaseStudyTitle>
-                <CaseStudyDescription>Client: {currentCaseStudy.client}</CaseStudyDescription>
-                
+                <CaseStudyCategory>{currentProject.category}</CaseStudyCategory>
+                <CaseStudyTitle>{currentProject.title}</CaseStudyTitle>
+                <CaseStudyDescription>Client: {currentProject.client_name || currentProject.client}</CaseStudyDescription>
                 <ChallengeSection>
                   <h4>Challenge</h4>
-                  <p>{currentCaseStudy.challenge}</p>
+                  <p>{currentProject.challenge}</p>
                 </ChallengeSection>
-                
                 <ChallengeSection>
                   <h4>Solution</h4>
-                  <p>{currentCaseStudy.solution}</p>
+                  <p>{currentProject.solution}</p>
                 </ChallengeSection>
-                
                 <ChallengeSection>
                   <h4>Outcome</h4>
-                  <p>{currentCaseStudy.outcome}</p>
+                  <p>{currentProject.outcome}</p>
                 </ChallengeSection>
-                
                 <TechUsedTag>
-                  <strong>Tech Used:</strong> {currentCaseStudy.techUsed}
+                  <strong>Tech Used:</strong> {currentProject.techUsed || (Array.isArray(currentProject.technologies) ? currentProject.technologies.join(', ') : currentProject.technologies)}
                 </TechUsedTag>
-                
-                <ClientQuote>
-                  {currentCaseStudy.testimonial.quote}
-                  <div style={{ marginTop: '1rem', textAlign: 'right', fontStyle: 'normal' }}>
-                    — {currentCaseStudy.testimonial.author}, {currentCaseStudy.testimonial.title}, {currentCaseStudy.testimonial.company}
-                  </div>
-                </ClientQuote>
-                
+                {currentProject.testimonial && (
+                  <ClientQuote>
+                    {currentProject.testimonial.quote}
+                    <div style={{ marginTop: '1rem', textAlign: 'right', fontStyle: 'normal' }}>
+                      — {currentProject.testimonial.author}, {currentProject.testimonial.title}, {currentProject.testimonial.company}
+                    </div>
+                  </ClientQuote>
+                )}
                 <Button variant="primary">View Full Case Study</Button>
               </CaseStudyContent>
             </CaseStudyItem>
           </AnimatePresence>
         </CaseStudyShowcase>
-        
         <CaseStudyNav>
-          {caseStudies.map((study, index) => (
-            <NavDot 
-              key={study.id}
+          {projects.map((proj, index) => (
+            <NavDot
+              key={proj.id}
               active={index === currentIndex}
               onClick={() => handleNavClick(index)}
             />
           ))}
         </CaseStudyNav>
-        
-        <div style={{ 
-          textAlign: 'center', 
-          marginTop: '3rem',
-          padding: '2rem',
-          background: 'rgba(0, 0, 0, 0.2)',
-          borderRadius: '0.5rem'
-        }}>
-          <h3 style={{ 
-            marginBottom: '1rem',
-            fontSize: '1.5rem'
-          }}>
+        <div style={{ textAlign: 'center', marginTop: '3rem', padding: '2rem', background: 'rgba(0, 0, 0, 0.2)', borderRadius: '0.5rem' }}>
+          <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>
             Want results like these? Contact the CodingBull team
           </h3>
-          <Button 
-            variant="primary" 
-            size="lg" 
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
           >
             Discuss Your Project

@@ -112,14 +112,14 @@ class ServiceSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source='name', read_only=True)  # Frontend expects 'title'
     
     def get_image(self, obj):
-        # Return image_url if available, otherwise return icon URL
+        # Always return an absolute URL for the image
+        request = self.context.get('request')
         if obj.image_url:
             return obj.image_url
         elif obj.icon:
-            request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(obj.icon.url)
-            return obj.icon.url
+            return obj.icon.url  # This will be a relative URL if no request context
         return None
     
     class Meta:

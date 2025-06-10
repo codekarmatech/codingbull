@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
 import environment from '../config/environment';
+import ImageWithFallback from '../components/ImageWithFallback';
+import apiService from '../services/api';
 
 // Service page container
 const ServicePageContainer = styled(motion.div)`
@@ -852,26 +854,28 @@ const ServicePage = () => {
   useEffect(() => {
     const fetchService = async () => {
       try {
+        setError(null); // Reset error before new fetch
         setLoading(true);
-        const response = await fetch(`${environment.api.baseUrl}services/${slug}/`);
-        if (!response.ok) {
-          throw new Error('Service not found');
-        }
-        const serviceData = await response.json();
+        
+        // Use apiService instead of direct fetch to handle common error cases
+        const serviceData = await apiService.services.getService(slug);
+        console.log('[ServicePage] Fetched service data for slug:', slug, serviceData);
         setService(serviceData);
       } catch (err) {
-        setError(err.message);
+        console.error('[ServicePage] Error fetching service:', err.message, 'for slug:', slug);
+        setError(err.message); // Set error state
         // Fallback to mock data if API fails
-        setService(fallbackServices.find(s => s.slug === slug) || fallbackServices[0]);
+        const fallbackServiceData = fallbackServices.find(s => s.slug === slug) || fallbackServices[0];
+        console.log('[ServicePage] Falling back to service data for slug:', slug, fallbackServiceData);
+        setService(fallbackServiceData);
       } finally {
         setLoading(false);
       }
     };
-
     if (slug) {
       fetchService();
     }
-  }, [slug]);
+  }, [slug]); // fallbackServices is constant, no need to include in deps
   
   // Toggle FAQ
   const toggleFAQ = (index) => {
@@ -932,6 +936,11 @@ const ServicePage = () => {
 
   if (!service) return null;
 
+  // Log the source being passed to ImageWithFallback for the hero image
+  if (service) {
+    const imageSrcForHero = service.icon || service.image || service.image_url;
+    console.log('[ServicePage] Source for Hero ImageWithFallback:', imageSrcForHero, 'Full service object:', service);
+  }
   return (
     <ServicePageContainer
       variants={pageTransition}
@@ -977,7 +986,19 @@ const ServicePage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <img src={service.image || service.image_url} alt={service.name || service.title} />
+            {/*
+              Prioritize image display using ImageWithFallback.
+              ImageWithFallback will handle its own placeholder if src is invalid or fails to load.
+              The order of preference for src is service.icon, then service.image, then service.image_url.
+              This aligns with how images are typically shown on the main services listing.
+              The explicit emoji rendering path is removed to prioritize images from these fields.
+            */}
+            <ImageWithFallback
+              src={service?.icon || service?.image || service?.image_url}
+              alt={service?.name || service?.title || 'Service Icon'}
+              fallbackText={service?.name || service?.title || "Icon"} // Text for ImageWithFallback's own placeholder
+              showFallbackText={true} // Show text if the image fails and ImageWithFallback's placeholder is used
+            />
           </HeroImage>
         </HeroContent>
       </ServiceHero>
@@ -1249,7 +1270,12 @@ const ServicePage = () => {
                 custom={index * 0.1}
               >
                 <RelatedServiceImage>
-                  <img src={relatedService.image} alt={relatedService.title} />
+                  <ImageWithFallback 
+                    src={relatedService.icon ? relatedService.icon : relatedService.image ? relatedService.image : relatedService.image_url}
+                    alt={relatedService.title}
+                    fallbackText="Service Image"
+                    showFallbackText={false}
+                  />
                 </RelatedServiceImage>
                 <RelatedServiceContent>
                   <RelatedServiceTitle>

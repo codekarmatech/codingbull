@@ -544,7 +544,7 @@ const ServicesPage = () => {
               >
                 <ServiceImage>
                   <ImageWithFallback 
-                    src={service.image} 
+                    src={service.icon || service.image || service.image_url} 
                     alt={service.name || service.title}
                     fallbackText="Service Image"
                     showFallbackText={false}
