@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { fadeIn, slideUp, staggerContainer, hoverScale } from '../animations/variants'; // Added staggerContainer, hoverScale
-import bullLogo from '../assets/bull-logo.svg';
+import bullLogo from '../assets/codingbulllogo.png';
 import apiService from '../services/api';
 
 // Footer container

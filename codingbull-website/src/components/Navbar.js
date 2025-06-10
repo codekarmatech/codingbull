@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Button from './Button';
-import bullLogo from '../assets/bull-logo.svg';
+import bullLogo from '../assets/codingbulllogo.png';
 
 // Navbar container - Reduced size for a sleeker look
 const NavbarContainer = styled(motion.header)`
