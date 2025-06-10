@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import { pageTransition, fadeIn } from '../animations/variants';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
@@ -758,6 +758,7 @@ const NoProjectsMessage = styled.div`
 
 const ProjectsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id: projectId } = useParams();
   const [filter, setFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -875,14 +876,20 @@ const ProjectsPage = () => {
   
   // Handle project selection from URL
   useEffect(() => {
-    const projectId = searchParams.get('id');
-    if (projectId) {
-      const selectedProject = projects.find(p => p.id.toString() === projectId);
+    // Check URL parameter first, then search parameter
+    const urlProjectId = projectId;
+    const searchProjectId = searchParams.get('id');
+    const currentProjectId = urlProjectId || searchProjectId;
+    
+    if (currentProjectId && projects.length > 0) {
+      const selectedProject = projects.find(p => p.id.toString() === currentProjectId);
       if (selectedProject) {
         setSelectedProject(selectedProject);
       }
+    } else if (!currentProjectId) {
+      setSelectedProject(null);
     }
-  }, [searchParams, projects]);
+  }, [projectId, searchParams, projects]);
   
   // Filter projects based on category
   const filteredProjects = useMemo(() => {

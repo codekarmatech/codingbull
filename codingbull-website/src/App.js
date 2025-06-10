@@ -49,6 +49,7 @@ function App() {
                     <Route path="/services" element={<ServicesPage />} />
                     <Route path="/services/:slug" element={<ServicePage />} />
                     <Route path="/our-projects" element={<ProjectsPage />} />
+                    <Route path="/our-projects/:id" element={<ProjectsPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/test" element={<TestPage />} />
                     {/* Add more routes as needed */}

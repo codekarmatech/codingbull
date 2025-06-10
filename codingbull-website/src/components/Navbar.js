@@ -5,61 +5,110 @@ import { Link } from 'react-router-dom';
 import Button from './Button';
 import bullLogo from '../assets/codingbulllogo.png';
 
-// Navbar container - Reduced size for a sleeker look
+// Professional navbar container with glass morphism
 const NavbarContainer = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${props => props.theme.zIndex.fixed};
-  padding: 0.7rem 1.5rem; // Reduced padding
-  transition: all 0.3s ease;
+  z-index: ${props => props.theme.zIndex.sticky};
+  padding: ${props => props.theme.spacing[4]} ${props => props.theme.spacing[6]};
+  transition: all ${props => props.theme.animations.normal};
+  
   background: ${props => props.$scrolled 
-    ? props.theme.colors.deepGrey 
-    : 'rgba(10, 25, 41, 0.8)'}; // Darker blue-black background
-  backdrop-filter: ${props => props.$scrolled ? 'blur(10px)' : 'none'};
-  box-shadow: ${props => props.$scrolled ? '0 4px 15px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(13, 71, 161, 0.2)' : 'none'};
+    ? props.theme.colors.glassDark 
+    : 'rgba(10, 14, 26, 0.8)'};
+  backdrop-filter: ${props => props.$scrolled ? 'blur(20px) saturate(180%)' : 'blur(10px)'};
+  border-bottom: ${props => props.$scrolled 
+    ? `1px solid ${props.theme.colors.glassBorder}` 
+    : 'none'};
+  box-shadow: ${props => props.$scrolled 
+    ? props.theme.shadows.glass 
+    : 'none'};
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    padding: ${props => props.theme.spacing[3]} ${props => props.theme.spacing[4]};
+  }
 `;
 
-// Navbar content wrapper
+// Enhanced navbar content wrapper
 const NavbarContent = styled.div`
-  max-width: 1400px;
+  max-width: 1536px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 `;
 
-// Logo container
+// Professional logo container with enhanced styling
 const LogoContainer = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: ${props => props.theme.spacing[3]};
+  cursor: pointer;
+  padding: ${props => props.theme.spacing[2]};
+  border-radius: ${props => props.theme.borderRadius.lg};
+  transition: all ${props => props.theme.animations.normal};
+  
+  &:hover {
+    background: ${props => props.theme.colors.glassLight};
+    transform: translateY(-1px);
+    box-shadow: ${props => props.theme.shadows.glowSoft};
+  }
 `;
 
-// Logo text - Updated for dark blue theme
+// Enhanced logo image styling
+const LogoImage = styled.img`
+  height: 48px;
+  width: auto;
+  transition: all ${props => props.theme.animations.normal};
+  filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.3));
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    height: 40px;
+  }
+  
+  ${LogoContainer}:hover & {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(0, 102, 255, 0.5));
+  }
+`;
+
+// Professional logo text with gradient and glow
 const LogoText = styled.h1`
-  font-size: ${props => props.theme.fontSizes.lg}; // Slightly smaller
-  font-weight: 700;
+  font-size: ${props => props.theme.fontSizes['2xl']};
+  font-weight: ${props => props.theme.fontWeights.bold};
+  font-family: ${props => props.theme.fonts.display};
   margin: 0;
-  background: ${props => props.theme.colors.gradientBlue}; // Dark blue gradient
+  background: ${props => props.theme.colors.gradientPrimary};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 5px rgba(13, 71, 161, 0.5)); // Subtle glow effect
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.4));
+  letter-spacing: -0.02em;
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: ${props => props.theme.fontSizes.xl};
+  }
+  
+  ${LogoContainer}:hover & {
+    filter: drop-shadow(0 0 12px rgba(0, 102, 255, 0.6));
+  }
 `;
 
-// Navigation links container - Reduced spacing
+// Professional navigation links container
 const NavLinks = styled.nav`
   display: flex;
   align-items: center;
-  gap: 1.5rem; // Reduced gap between links
+  gap: ${props => props.theme.spacing[8]};
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     display: none;
   }
 `;
 
-// Individual nav link - using a custom component that combines motion and Link
+// Enhanced navigation link with professional styling
 const NavLink = styled(({ to, children, ...props }) => (
   <motion.div {...props}>
     <Link to={to} style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -67,62 +116,92 @@ const NavLink = styled(({ to, children, ...props }) => (
     </Link>
   </motion.div>
 ))`
-  color: ${props => props.theme.colors.textPrimary};
-  font-weight: 500;
-  font-size: ${props => props.theme.fontSizes.sm}; // Smaller font size
+  color: ${props => props.theme.colors.textSecondary};
+  font-weight: ${props => props.theme.fontWeights.medium};
+  font-size: ${props => props.theme.fontSizes.base};
   position: relative;
   cursor: pointer;
+  padding: ${props => props.theme.spacing[2]} ${props => props.theme.spacing[3]};
+  border-radius: ${props => props.theme.borderRadius.md};
+  transition: all ${props => props.theme.animations.normal};
+  
+  &:hover {
+    color: ${props => props.theme.colors.textPrimary};
+    background: ${props => props.theme.colors.glassLight};
+    transform: translateY(-1px);
+  }
   
   &:after {
     content: '';
     position: absolute;
-    bottom: -4px; // Slightly higher
-    left: 0;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 0;
-    height: 1.5px; // Thinner line
-    background: ${props => props.theme.colors.glowingBlue}; // Glowing blue
-    transition: width 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 0 rgba(33, 150, 243, 0);
+    height: 2px;
+    background: ${props => props.theme.colors.gradientPrimary};
+    border-radius: ${props => props.theme.borderRadius.full};
+    transition: all ${props => props.theme.animations.normal};
+    box-shadow: 0 0 0 rgba(0, 102, 255, 0);
   }
   
   &:hover:after, &.active:after {
-    width: 100%;
-    box-shadow: 0 0 8px rgba(33, 150, 243, 0.6); // Glow effect on hover
+    width: 80%;
+    box-shadow: ${props => props.theme.shadows.glowSoft};
   }
 `;
 
-// Mobile menu button
+// Professional mobile menu button
 const MenuButton = styled(motion.button)`
-  background: transparent;
-  border: none;
+  background: ${props => props.theme.colors.glassLight};
+  border: 1px solid ${props => props.theme.colors.glassBorder};
   color: ${props => props.theme.colors.textPrimary};
-  font-size: 1.5rem;
+  font-size: ${props => props.theme.fontSizes.xl};
   cursor: pointer;
   display: none;
-  z-index: 100;
+  z-index: ${props => props.theme.zIndex.modal};
+  padding: ${props => props.theme.spacing[2]};
+  border-radius: ${props => props.theme.borderRadius.md};
+  backdrop-filter: blur(10px);
+  transition: all ${props => props.theme.animations.normal};
+  
+  &:hover {
+    background: ${props => props.theme.colors.glassMedium};
+    transform: scale(1.05);
+    box-shadow: ${props => props.theme.shadows.glowSoft};
+  }
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
-// Mobile menu container
+// Enhanced mobile menu with glass morphism
 const MobileMenu = styled(motion.div)`
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 300px;
-  background: ${props => props.theme.colors.mediumGrey};
-  padding: 5rem 2rem 2rem;
-  z-index: 99;
+  width: 320px;
+  background: ${props => props.theme.colors.glassDark};
+  backdrop-filter: blur(20px) saturate(180%);
+  border-left: 1px solid ${props => props.theme.colors.glassBorder};
+  padding: ${props => props.theme.spacing[20]} ${props => props.theme.spacing[6]} ${props => props.theme.spacing[6]};
+  z-index: ${props => props.theme.zIndex.overlay};
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  box-shadow: ${props => props.theme.shadows.lg};
+  gap: ${props => props.theme.spacing[6]};
+  box-shadow: ${props => props.theme.shadows.glass};
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    width: 100%;
+    padding: ${props => props.theme.spacing[20]} ${props => props.theme.spacing[4]} ${props => props.theme.spacing[4]};
+  }
 `;
 
-// Mobile menu links
+// Enhanced mobile navigation links
 const MobileNavLink = styled(({ to, children, ...props }) => (
   <motion.div {...props}>
     <Link to={to} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
@@ -130,23 +209,34 @@ const MobileNavLink = styled(({ to, children, ...props }) => (
     </Link>
   </motion.div>
 ))`
-  color: ${props => props.theme.colors.textPrimary};
-  font-size: ${props => props.theme.fontSizes.xl};
-  font-weight: 600;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: ${props => props.theme.colors.textSecondary};
+  font-size: ${props => props.theme.fontSizes.lg};
+  font-weight: ${props => props.theme.fontWeights.medium};
+  padding: ${props => props.theme.spacing[4]} ${props => props.theme.spacing[3]};
+  border-radius: ${props => props.theme.borderRadius.md};
   cursor: pointer;
+  transition: all ${props => props.theme.animations.normal};
+  border: 1px solid transparent;
+  
+  &:hover {
+    color: ${props => props.theme.colors.textPrimary};
+    background: ${props => props.theme.colors.glassLight};
+    border-color: ${props => props.theme.colors.glassBorder};
+    transform: translateX(4px);
+    box-shadow: ${props => props.theme.shadows.glowSoft};
+  }
 `;
 
-// Mobile menu backdrop
+// Professional backdrop with blur effect
 const Backdrop = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 98;
+  background: ${props => props.theme.colors.backdropBlur};
+  backdrop-filter: blur(8px);
+  z-index: ${props => props.theme.zIndex.modal};
 `;
 
 // Animation variants
@@ -226,14 +316,18 @@ const Navbar = () => {
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}
     >
       <NavbarContent>
-        <LogoContainer
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <img src={bullLogo} alt="CodingBull Logo" style={{ height: '32px', marginRight: '8px' }} />
-          <LogoText>CodingBull</LogoText>
-        </LogoContainer>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <LogoContainer
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <LogoImage src={bullLogo} alt="CodingBull Logo" />
+            <LogoText>CodingBull</LogoText>
+          </LogoContainer>
+        </Link>
         
         <NavLinks>
           {navItems.map((item, i) => (

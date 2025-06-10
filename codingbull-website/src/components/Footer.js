@@ -302,8 +302,16 @@ const Footer = () => {
         >
           <FooterColumn variants={fadeIn}> {/* Columns will now use variants from staggerContainer */}
             <FooterLogo>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <img src={bullLogo} alt="CodingBull Logo" style={{ height: '40px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img 
+                  src={bullLogo} 
+                  alt="CodingBull Logo" 
+                  style={{ 
+                    height: '56px', 
+                    filter: 'drop-shadow(0 0 8px rgba(0, 102, 255, 0.3))',
+                    transition: 'all 0.3s ease'
+                  }} 
+                />
                 <h2>CodingBull</h2>
               </div>
             </FooterLogo>

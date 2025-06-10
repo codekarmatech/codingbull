@@ -4,47 +4,47 @@ import { motion } from 'framer-motion';
 import { prefersReducedMotion } from '../utils/accessibility';
 import { shouldForwardButtonProp } from '../utils/styledHelpers';
 
-// Button variants using theme variables
+// Professional button variants using theme system
 const VARIANTS = {
   primary: {
-    background: 'linear-gradient(135deg, #0D47A1 0%, #082f6b 100%)',
-    color: 'white',
+    background: props => props.theme.colors.buttonPrimary,
+    color: props => props.theme.colors.white,
     border: 'none',
-    boxShadow: '0 4px 20px rgba(13, 71, 161, 0.5)',
+    boxShadow: props => props.theme.shadows.button,
   },
   secondary: {
-    background: 'rgba(13, 71, 161, 0.1)',
-    color: '#0D47A1',
-    border: '2px solid #0D47A1',
-    boxShadow: '0 4px 15px rgba(13, 71, 161, 0.2)',
+    background: props => props.theme.colors.buttonSecondary,
+    color: props => props.theme.colors.textPrimary,
+    border: props => `2px solid ${props.theme.colors.borderGrey}`,
+    boxShadow: props => props.theme.shadows.base,
   },
   outline: {
     background: 'transparent',
     color: props => props.theme.colors.textPrimary,
-    border: props => `2px solid ${props.theme.colors.textPrimary}`,
+    border: props => `2px solid ${props.theme.colors.brandPrimary}`,
     boxShadow: props => props.theme.shadows.sm,
   },
   ghost: {
     background: 'transparent',
-    color: props => props.theme.colors.electricBlue,
+    color: props => props.theme.colors.brandPrimary,
     border: 'none',
     boxShadow: 'none',
   },
 };
 
-// Button sizes - Reduced for a more compact look
+// Professional button sizes using theme spacing
 const SIZES = {
   sm: {
-    padding: '0.3rem 0.6rem',
-    fontSize: props => props.theme.fontSizes.xs,
+    padding: props => `${props.theme.spacing[2]} ${props.theme.spacing[3]}`,
+    fontSize: props => props.theme.fontSizes.sm,
   },
   md: {
-    padding: '0.5rem 1rem',
-    fontSize: props => props.theme.fontSizes.sm,
+    padding: props => `${props.theme.spacing[3]} ${props.theme.spacing[6]}`,
+    fontSize: props => props.theme.fontSizes.base,
   },
   lg: {
-    padding: '0.7rem 1.4rem',
-    fontSize: props => props.theme.fontSizes.sm,
+    padding: props => `${props.theme.spacing[4]} ${props.theme.spacing[8]}`,
+    fontSize: props => props.theme.fontSizes.lg,
   },
 };
 
@@ -54,25 +54,45 @@ const StyledButton = styled(motion.button).withConfig({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  border-radius: ${props => props.theme.borderRadius.md};
+  gap: ${props => props.theme.spacing[2]};
+  font-weight: ${props => props.theme.fontWeights.semibold};
+  font-family: ${props => props.theme.fonts.primary};
+  letter-spacing: 0.025em;
+  border-radius: ${props => props.theme.borderRadius.lg};
   cursor: pointer;
-  transition: all ${props => props.theme.animations.mediumBounce};
+  transition: all ${props => props.theme.animations.normal};
   position: relative;
   overflow: hidden;
   z-index: 1;
+  border: none;
 
   // Apply variant styles
-  background: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].background : VARIANTS.primary.background};
-  color: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].color : VARIANTS.primary.color};
-  border: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].border : VARIANTS.primary.border};
-  box-shadow: ${props => props.variant && VARIANTS[props.variant] ? VARIANTS[props.variant].boxShadow : '0 4px 15px rgba(106, 13, 173, 0.4)'};
+  background: ${props => {
+    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    return typeof variant.background === 'function' ? variant.background(props) : variant.background;
+  }};
+  color: ${props => {
+    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    return typeof variant.color === 'function' ? variant.color(props) : variant.color;
+  }};
+  border: ${props => {
+    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    return typeof variant.border === 'function' ? variant.border(props) : variant.border;
+  }};
+  box-shadow: ${props => {
+    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    return typeof variant.boxShadow === 'function' ? variant.boxShadow(props) : variant.boxShadow;
+  }};
 
   // Apply size styles
-  padding: ${props => props.size && SIZES[props.size] ? SIZES[props.size].padding : SIZES.md.padding};
-  font-size: ${props => props.size && SIZES[props.size] ? SIZES[props.size].fontSize : SIZES.md.fontSize};
+  padding: ${props => {
+    const size = SIZES[props.size] || SIZES.md;
+    return typeof size.padding === 'function' ? size.padding(props) : size.padding;
+  }};
+  font-size: ${props => {
+    const size = SIZES[props.size] || SIZES.md;
+    return typeof size.fontSize === 'function' ? size.fontSize(props) : size.fontSize;
+  }};
 
   // Full width option
   width: ${props => props.fullWidth ? '100%' : 'auto'};
@@ -81,7 +101,7 @@ const StyledButton = styled(motion.button).withConfig({
   opacity: ${props => props.disabled ? 0.6 : 1};
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 
-  // Glow effect - Updated for dark blue theme
+  // Professional glow effect using theme
   &::before {
     content: '';
     position: absolute;
@@ -91,25 +111,25 @@ const StyledButton = styled(motion.button).withConfig({
     bottom: -2px;
     z-index: -1;
     background: ${props => props.variant === 'primary' 
-      ? 'linear-gradient(135deg, #1976D2 0%, #0D47A1 50%, #1976D2 100%)' 
+      ? props.theme.colors.gradientPrimary
       : props.variant === 'secondary' 
-        ? 'linear-gradient(135deg, #42A5F5 0%, #1565C0 50%, #42A5F5 100%)'
+        ? props.theme.colors.gradientSecondary
         : 'transparent'};
     opacity: 0;
     border-radius: inherit;
-    transition: opacity 0.3s ease-out;
+    transition: opacity ${props => props.theme.animations.normal};
     filter: blur(8px);
   }
 
-  // Hover effect (when not disabled) using theme variables
+  // Professional hover effects using theme
   &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: ${props => props.variant === 'primary' 
-      ? props.theme.shadows.buttonHoverPrimary
+      ? props.theme.shadows.buttonHover
       : props.variant === 'secondary' 
-        ? props.theme.shadows.buttonHoverSecondary
+        ? props.theme.shadows.cardHover
         : props.variant === 'outline'
-          ? '0 8px 25px rgba(255, 255, 255, 0.2)'
+          ? props.theme.shadows.glow
           : 'none'};
 
     &::before {
@@ -121,37 +141,38 @@ const StyledButton = styled(motion.button).withConfig({
     `}
 
     ${props => props.variant === 'secondary' && `
-      background: rgba(0, 112, 255, 0.2);
-      color: ${props.theme.colors.neonCyan};
-      border-color: ${props.theme.colors.neonCyan};
+      background: ${props.theme.colors.glassLight};
+      color: ${props.theme.colors.brandPrimary};
+      border-color: ${props.theme.colors.brandPrimary};
     `}
 
     ${props => props.variant === 'outline' && `
       background: ${props.theme.colors.overlayLight};
+      color: ${props.theme.colors.brandPrimary};
     `}
 
     ${props => props.variant === 'ghost' && `
-      background: rgba(0, 191, 255, 0.15);
-      text-shadow: ${props.theme.colors.glowBlue};
+      background: ${props.theme.colors.glassLight};
+      color: ${props.theme.colors.brandPrimary};
     `}
   }
 
   // Focus state using theme variables
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3), 
+    box-shadow: 0 0 0 3px rgba(79, 172, 255, 0.3), 
                 ${props => props.variant === 'primary' 
-                  ? props.theme.shadows.buttonHoverPrimary
+                  ? props.theme.shadows.buttonHover
                   : props.variant === 'secondary' 
                     ? props.theme.shadows.buttonHoverSecondary
-                    : '0 8px 25px rgba(255, 255, 255, 0.2)'};
+                    : '0 8px 25px rgba(79, 172, 255, 0.2)'};
   }
 
   // Active state using theme variables
   &:active:not(:disabled) {
     transform: translateY(1px);
     box-shadow: ${props => props.variant === 'primary' 
-      ? props.theme.shadows.buttonPrimary
+      ? props.theme.shadows.button
       : props.variant === 'secondary' 
         ? props.theme.shadows.buttonSecondary
         : props.variant === 'outline'
@@ -164,9 +185,9 @@ const StyledButton = styled(motion.button).withConfig({
     position: absolute;
     border-radius: 50%;
     background: ${props => props.variant === 'primary' 
-      ? 'rgba(155, 48, 255, 0.5)' 
+      ? 'rgba(79, 172, 255, 0.5)' 
       : props.variant === 'secondary' 
-        ? 'rgba(0, 191, 255, 0.5)'
+        ? 'rgba(79, 172, 255, 0.5)'
         : 'rgba(255, 255, 255, 0.5)'};
     transform: scale(0);
     animation: ripple 0.8s ${props => props.theme.animations.bounce};

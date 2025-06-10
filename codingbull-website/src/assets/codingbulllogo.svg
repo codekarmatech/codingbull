@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW (OEM Version) -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="297mm" height="210mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 29700 21000"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#39B1E6;stroke-width:75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:8.83367}
+    .fil1 {fill:none}
+    .fil0 {fill:#FEFEFE}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <ellipse class="fil0" transform="matrix(0.661472 0.311875 0.132869 0.756904 13208 9876.18)" rx="429.57" ry="285.94"/>
+  <ellipse class="fil0" transform="matrix(0.661472 0.311875 0.132869 0.756904 13208 9876.18)" rx="429.57" ry="285.94"/>
+  <ellipse class="fil0" transform="matrix(-0.661472 0.311875 -0.132869 0.756904 14979.9 9868.28)" rx="429.57" ry="285.94"/>
+  <ellipse class="fil1" transform="matrix(0.801698 0.386185 0.0492088 0.824346 13208.3 9872.18)" rx="358.62" ry="253.7"/>
+  <ellipse class="fil1" transform="matrix(-0.824739 0.397284 -0.0506231 0.848039 14989.9 9879.47)" rx="358.62" ry="253.7"/>
+  <g id="_2533258872512">
+   <g>
+    <g>
+     <polygon class="fil1 str0" points="15086.69,8381.88 13112.83,8379.96 12593.58,9168.18 12320.34,12456.01 14105.82,13768.66 15890.14,12464.6 15585.71,9189.82 "/>
+     <path class="fil1 str0" d="M12594.64 9481.22l741.31 241.89 225.72 414.74 0 631.97 -151.9 231.21 0 491.09 180.45 170.07 522.43 0m1471.21 -2181.28l-741.31 241.89 -225.72 414.74 0 631.97 151.9 231.21 0 491.09 -140.35 170.38 -522.43 0m-544.28 -892.37l29.1 87.75 557.47 0m468.59 -88.06l-29.1 87.75 -446.53 0"/>
+     <path class="fil1 str0" d="M12936.53 9598.86c-53.63,101.56 10.57,264.88 152.27,387.34 153.77,132.9 348.05,174.39 444.24,94.88"/>
+     <path class="fil1 str0" d="M15260.05 9598.86c53.63,101.56 -10.57,264.88 -152.27,387.34 -153.77,132.9 -348.05,174.39 -444.24,94.88"/>
+    </g>
+    <polygon class="fil1 str0" points="13621.76,11313.8 13630.59,11123.89 13864.35,11259.3 13864.35,11447.7 "/>
+    <polygon class="fil1 str0" points="14593.77,11313.8 14584.94,11123.89 14351.18,11259.3 14351.18,11447.7 "/>
+    <polyline class="fil1 str0" points="13671.92,11685.43 13671.92,11882.77 13826.28,12010.17 14397.72,12010.17 14564.45,11873.99 14564.45,11685.64 "/>
+    <path class="fil1 str0" d="M12897.77 8657.16c-1519.27,-147.08 -1078.9,-1118.61 -771.37,-1411.55"/>
+    <path class="fil1 str0" d="M12586.19 9257.23c-1303.65,-136.28 -1696.05,-1260.96 -459.8,-2011.61"/>
+    <path class="fil1 str0" d="M15275.7 8657.17c1540.85,-147.08 1103.95,-1118.61 802.42,-1411.55"/>
+    <path class="fil1 str0" d="M15618.33 9257.24c1303.65,-136.28 1696.05,-1260.96 459.8,-2011.61"/>
+   </g>
+   <polyline class="fil1 str0" points="13053.34,9042.55 13659.83,9544.01 13758.09,9964.15 "/>
+   <polyline class="fil1 str0" points="15122.87,9042.55 14516.38,9544.01 14418.12,9964.15 "/>
+   <polyline class="fil1 str0" points="13832.63,9064.53 13832.63,9418.04 13978.63,9564.04 13978.63,10823.59 "/>
+   <polyline class="fil1 str0" points="13944.44,12010.17 13944.44,12329.23 13680.16,12578.36 13680.16,12931.77 "/>
+   <polyline class="fil1 str0" points="14496.22,8385.69 14496.22,8810.64 14260.96,9040.51 14260.96,9307.29 "/>
+   <polyline class="fil1 str0" points="12511.68,10153.76 13128.71,10721.03 13128.71,11462.81 12800.89,11756.57 12809.13,11282.25 "/>
+   <line class="fil1 str0" x1="12800.89" y1="11756.57" x2="12800.89" y2= "12007.42" />
+   <polyline class="fil1 str0" points="15679.16,10195.04 15084.24,10789.97 15086.65,11790.6 14105.17,12731.64 14104.3,13733.6 "/>
+   <ellipse class="fil1 str0" cx="13834.93" cy="8939.4" rx="105.82" ry="113.66"/>
+   <ellipse class="fil1 str0" cx="14260.88" cy="9436.56" rx="105.82" ry="113.66"/>
+   <ellipse class="fil1 str0" cx="12808.41" cy="11147.61" rx="105.82" ry="113.66"/>
+   <ellipse class="fil1 str0" cx="12800.89" cy="12135.89" rx="105.82" ry="113.66"/>
+   <ellipse class="fil1 str0" cx="13683.29" cy="13064.91" rx="105.82" ry="113.66"/>
+   <polyline class="fil1 str0" points="14739.41,13305.61 14739.41,12775.77 15463.5,12171.35 15473.66,11756.57 15762.32,11439.58 "/>
+  </g>
+  <path class="fil1 str0" d="M15624.17 9603.57c468.55,-265.42 619.95,-369.36 1128.24,-98.51 -415.98,451.84 -534.96,468.83 -1112.52,267.64l-15.72 -169.13z"/>
+  <path class="fil1 str0" d="M12553.06 9603.57c-468.55,-265.42 -619.95,-369.36 -1128.24,-98.51 415.98,451.84 534.96,468.83 1112.52,267.64l15.72 -169.13z"/>
+ </g>
+</svg>
