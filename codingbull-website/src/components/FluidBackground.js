@@ -174,44 +174,44 @@ const FluidBackground = () => {
   // Animation configurations for blobs
   const blobAnimations = [
     {
-      x: [0, 20, -20, 10, 0],
-      y: [0, -30, 10, -20, 0],
-      scale: [1, 1.1, 0.9, 1.05, 1],
-      rotate: [0, 10, -10, 5, 0],
-      duration: 25
+      x: [0, 15, -15, 8, 0],
+      y: [0, -20, 8, -15, 0],
+      scale: [1, 1.05, 0.95, 1.02, 1],
+      rotate: [0, 8, -8, 4, 0],
+      duration: 15
     },
     {
-      x: [0, -30, 20, -10, 0],
-      y: [0, 20, -30, 10, 0],
-      scale: [1, 0.9, 1.1, 0.95, 1],
-      rotate: [0, -10, 15, -5, 0],
-      duration: 30
+      x: [0, -20, 15, -8, 0],
+      y: [0, 15, -20, 8, 0],
+      scale: [1, 0.95, 1.05, 0.98, 1],
+      rotate: [0, -8, 12, -4, 0],
+      duration: 18
     },
     {
-      x: [0, 15, -25, 5, 0],
-      y: [0, -15, -5, 25, 0],
-      scale: [1, 1.05, 0.95, 1.1, 1],
-      rotate: [0, 5, -15, 10, 0],
-      duration: 35
+      x: [0, 12, -18, 4, 0],
+      y: [0, -12, -4, 18, 0],
+      scale: [1, 1.03, 0.97, 1.06, 1],
+      rotate: [0, 4, -12, 8, 0],
+      duration: 20
     },
     {
-      x: [0, -10, 30, -15, 0],
-      y: [0, 25, 5, -20, 0],
-      scale: [1, 0.95, 1.15, 0.9, 1],
-      rotate: [0, -5, 10, -15, 0],
-      duration: 40
+      x: [0, -8, 22, -12, 0],
+      y: [0, 18, 4, -15, 0],
+      scale: [1, 0.97, 1.08, 0.92, 1],
+      rotate: [0, -4, 8, -12, 0],
+      duration: 22
     }
   ];
   
-  // Generate shooting stars
+  // Generate shooting stars - reduced count for performance
   const shootingStars = useMemo(() => {
-    return Array.from({ length: 15 }).map((_, i) => {
+    return Array.from({ length: 8 }).map((_, i) => {
       const startX = Math.random() * 100;
       const startY = Math.random() * 100;
       const angle = Math.random() * 45 + 15; // 15-60 degrees
-      const distance = 100 + Math.random() * 150; // Travel distance
-      const duration = 0.8 + Math.random() * 1.2; // Animation duration
-      const delay = Math.random() * 15; // Random delay
+      const distance = 80 + Math.random() * 100; // Travel distance
+      const duration = 1.0 + Math.random() * 0.8; // Animation duration
+      const delay = Math.random() * 12; // Random delay
       const size = 1 + Math.random() * 2; // Star size
       const tailLength = 30 + Math.random() * 70; // Tail length
       
@@ -303,7 +303,7 @@ const FluidBackground = () => {
           ]
         }}
         transition={{
-          duration: 15,
+          duration: 10,
           repeat: Infinity,
           repeatType: "mirror",
           ease: "easeInOut"

@@ -1275,12 +1275,12 @@ const OurProjects = () => {
               disabled={currentPage === 0}
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 8px 25px rgba(79, 172, 255, 0.4)"
+                boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
               }}
               whileTap={{ scale: 0.95 }}
               transition={{ 
                 duration: 0.15,
-                ease: [0.25, 0.46, 0.45, 0.94]
+                ease: "easeOut"
               }}
             >
               ←
@@ -1301,37 +1301,37 @@ const OurProjects = () => {
               disabled={currentPage >= totalPages - 1}
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 8px 25px rgba(79, 172, 255, 0.4)"
+                boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
               }}
               whileTap={{ scale: 0.95 }}
               transition={{ 
                 duration: 0.15,
-                ease: [0.25, 0.46, 0.45, 0.94]
+                ease: "easeOut"
               }}
             >
               →
             </NavButton>
           </HolographicNav>
 
-          {/* 3D Projects Gallery */}
+          {/* Optimized Projects Gallery */}
           <ProjectsGallery
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
             <AnimatePresence>
               {visibleProjects.map((project, index) => (
                 <ProjectCard
                   key={`${project.id}-${currentPage}`}
-                  initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
                   animate={{ 
                     opacity: 1, 
                     y: 0, 
                     scale: 1,
                     transition: { 
-                      duration: 0.4, 
-                      delay: index * 0.08,
-                      ease: [0.25, 0.46, 0.45, 0.94]
+                      duration: 0.3, 
+                      delay: index * 0.05,
+                      ease: "easeOut"
                     }
                   }}
                   exit={{ 
@@ -1341,11 +1341,11 @@ const OurProjects = () => {
                     transition: { duration: 0.2 }
                   }}
                   whileHover={{ 
-                    y: -8, 
-                    scale: 1.03,
+                    y: -6, 
+                    scale: 1.02,
                     transition: { 
                       duration: 0.2,
-                      ease: [0.25, 0.46, 0.45, 0.94]
+                      ease: "easeOut"
                     }
                   }}
                   onClick={() => handleProjectClick(project)}

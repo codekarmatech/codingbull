@@ -37,7 +37,7 @@ const HeroContainer = styled.section`
     );
     z-index: 1; /* Above FluidBackground but below content */
     pointer-events: none;
-    animation: gradientShift 15s infinite alternate ease-in-out;
+    animation: gradientShift 20s infinite alternate ease-in-out;
   }
   
   /* Additional subtle vignette for professional depth with animation */
@@ -55,12 +55,12 @@ const HeroContainer = styled.section`
     );
     z-index: 3; /* Above background elements but below content */
     pointer-events: none;
-    animation: pulseVignette 10s infinite alternate ease-in-out;
+    animation: pulseVignette 15s infinite alternate ease-in-out;
   }
   
   /* Dark color wave animations */
   @keyframes gradientShift {
-    0% {
+    0%, 100% {
       background: linear-gradient(
         135deg, 
         rgba(5, 5, 20, 0.95) 0%, 
@@ -72,44 +72,18 @@ const HeroContainer = styled.section`
       background: linear-gradient(
         135deg, 
         rgba(10, 10, 30, 0.95) 0%, 
-        rgba(5, 5, 20, 0.85) 50%,
-        rgba(15, 15, 40, 0.95) 100%
-      );
-    }
-    100% {
-      background: linear-gradient(
-        135deg, 
-        rgba(15, 15, 40, 0.95) 0%, 
-        rgba(10, 10, 30, 0.85) 50%,
-        rgba(5, 5, 20, 0.95) 100%
+        rgba(15, 15, 40, 0.85) 50%,
+        rgba(10, 10, 30, 0.95) 100%
       );
     }
   }
   
   @keyframes pulseVignette {
-    0% {
+    0%, 100% {
       opacity: 0.8;
-      background: radial-gradient(
-        circle at center,
-        transparent 30%,
-        rgba(0, 0, 15, 0.4) 100%
-      );
     }
     50% {
       opacity: 1;
-      background: radial-gradient(
-        circle at center,
-        transparent 35%,
-        rgba(0, 0, 25, 0.5) 100%
-      );
-    }
-    100% {
-      opacity: 0.9;
-      background: radial-gradient(
-        circle at center,
-        transparent 25%,
-        rgba(0, 0, 20, 0.45) 100%
-      );
     }
   }
   

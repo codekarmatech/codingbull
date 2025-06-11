@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
-import OurProjects from '../components/OurProjects';
-import TechStack from '../components/TechStack';
-import Testimonials from '../components/Testimonials';
-import Footer from '../components/Footer';
 import SEO from '../components/SEO';
+import LoadingFallback from '../components/LoadingFallback';
 import { pageTransition } from '../animations/variants';
+
+// Lazy load components that are below the fold
+const OurProjects = lazy(() => import('../components/OurProjects'));
+const TechStack = lazy(() => import('../components/TechStack'));
+const Testimonials = lazy(() => import('../components/Testimonials'));
+const Footer = lazy(() => import('../components/Footer'));
 
 // Page container
 const PageContainer = styled(motion.div)`
@@ -33,10 +36,12 @@ const HomePage = () => {
       >
         <Hero />
         <Services />
-        <TechStack />
-        <OurProjects />
-        <Testimonials />
-        <Footer />
+        <Suspense fallback={<LoadingFallback isSection={true} text="Loading content..." />}>
+          <TechStack />
+          <OurProjects />
+          <Testimonials />
+          <Footer />
+        </Suspense>
       </PageContainer>
     </>
   );
