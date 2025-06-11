@@ -10,7 +10,7 @@ import json
 from .models import (
     Category, BlogPost, Project, Service, ContactInquiry, Testimonial,
     SecurityLog, IPAddress, UserAgent, RateLimitRule, BlacklistRule, 
-    SecurityAlert, RateLimitTracker
+    SecurityAlert, RateLimitTracker, ErrorLog, PerformanceLog, UserSession
 )
 
 # ============================================================================
@@ -441,6 +441,271 @@ class RateLimitTrackerAdmin(admin.ModelAdmin):
 # ADMIN SITE CUSTOMIZATION
 # ============================================================================
 
-admin.site.site_header = "CodingBull Security Monitoring"
-admin.site.site_title = "Security Admin"
-admin.site.index_title = "Security Monitoring Dashboard"
+admin.site.site_header = "CodingBull Admin Dashboard"
+admin.site.site_title = "CodingBull Admin"
+admin.site.index_title = "CodingBull Management Dashboard"
+
+
+# ============================================================================
+# ERROR TRACKING ADMIN
+# ============================================================================
+
+@admin.register(ErrorLog)
+class ErrorLogAdmin(admin.ModelAdmin):
+    list_display = [
+        'timestamp', 'error_type', 'severity', 'message_preview', 
+        'url_preview', 'user_id', 'browser_info_preview', 'is_resolved'
+    ]
+    list_filter = [
+        'error_type', 'severity', 'is_resolved', 'timestamp',
+        ('timestamp', admin.DateFieldListFilter)
+    ]
+    search_fields = ['message', 'url', 'user_id', 'session_id']
+    readonly_fields = [
+        'timestamp', 'first_seen', 'last_seen', 'formatted_stack_trace',
+        'formatted_breadcrumbs', 'formatted_browser_info', 'formatted_extra_data'
+    ]
+    fieldsets = (
+        ('Error Information', {
+            'fields': ('timestamp', 'error_type', 'severity', 'message', 'count')
+        }),
+        ('Technical Details', {
+            'fields': ('formatted_stack_trace', 'component_stack'),
+            'classes': ('collapse',)
+        }),
+        ('Context', {
+            'fields': ('url', 'user_agent', 'formatted_browser_info'),
+            'classes': ('collapse',)
+        }),
+        ('User Information', {
+            'fields': ('user_id', 'session_id'),
+        }),
+        ('Performance Data', {
+            'fields': ('page_load_time', 'memory_usage'),
+            'classes': ('collapse',)
+        }),
+        ('User Journey', {
+            'fields': ('formatted_breadcrumbs',),
+            'classes': ('collapse',)
+        }),
+        ('Additional Data', {
+            'fields': ('formatted_extra_data',),
+            'classes': ('collapse',)
+        }),
+        ('Tracking', {
+            'fields': ('first_seen', 'last_seen', 'is_resolved', 'resolved_at', 'resolved_by'),
+        }),
+    )
+    ordering = ['-timestamp']
+    date_hierarchy = 'timestamp'
+    actions = ['mark_as_resolved', 'mark_as_unresolved']
+
+    @admin.display(description='Message')
+    def message_preview(self, obj):
+        return obj.message[:100] + '...' if len(obj.message) > 100 else obj.message
+
+    @admin.display(description='URL')
+    def url_preview(self, obj):
+        if obj.url:
+            return format_html('<a href="{}" target="_blank">{}</a>', 
+                             obj.url, obj.url[:50] + '...' if len(obj.url) > 50 else obj.url)
+        return '-'
+
+    @admin.display(description='Browser/OS')
+    def browser_info_preview(self, obj):
+        if obj.browser_info:
+            browser = obj.browser_info.get('browser', 'Unknown')
+            os = obj.browser_info.get('os', 'Unknown')
+            device = obj.browser_info.get('device', 'Unknown')
+            return f"{browser} on {os} ({device})"
+        return '-'
+
+
+    @admin.display(description='Stack Trace')
+    def formatted_stack_trace(self, obj):
+        if obj.stack_trace:
+            return format_html('<pre style="white-space: pre-wrap; max-height: 300px; overflow-y: auto;">{}</pre>', 
+                             obj.stack_trace)
+        return 'No stack trace available'
+
+
+    @admin.display(description='User Journey (Last 10 actions)')
+    def formatted_breadcrumbs(self, obj):
+        if obj.breadcrumbs:
+            html = '<div style="max-height: 300px; overflow-y: auto;">'
+            for i, breadcrumb in enumerate(obj.breadcrumbs[-10:]):  # Show last 10
+                timestamp = breadcrumb.get('timestamp', 'Unknown time')
+                action = breadcrumb.get('message', 'Unknown action')
+                breadcrumb_type = breadcrumb.get('type', 'unknown')
+                
+                # Escape HTML in the dynamic content to prevent XSS
+                from django.utils.html import escape
+                timestamp = escape(str(timestamp))
+                action = escape(str(action))
+                breadcrumb_type = escape(str(breadcrumb_type))
+                
+                html += f'<div style="margin-bottom: 8px; padding: 8px; background: #f8f9fa; border-left: 3px solid #007cba;">'
+                html += f'<strong>{timestamp}</strong><br>'
+                html += f'<span style="color: #666;">[{breadcrumb_type}]</span> {action}'
+                if breadcrumb.get('data'):
+                    import json
+                    try:
+                        # If data is a dict, format it nicely
+                        if isinstance(breadcrumb["data"], dict):
+                            data = json.dumps(breadcrumb["data"], indent=2)
+                        else:
+                            data = str(breadcrumb["data"])
+                        data = escape(data)
+                        html += f'<br><small style="color: #999; white-space: pre-wrap;">{data}</small>'
+                    except Exception:
+                        # Fallback for any formatting issues
+                        data = escape(str(breadcrumb["data"]))
+                        html += f'<br><small style="color: #999;">{data}</small>'
+                html += '</div>'
+            html += '</div>'
+            return mark_safe(html)
+        return 'No breadcrumbs available'
+
+    @admin.display(description='Browser Information')
+    def formatted_browser_info(self, obj):
+        if obj.browser_info:
+            return format_html('<pre>{}</pre>', json.dumps(obj.browser_info, indent=2))
+        return 'No browser info available'
+
+    @admin.display(description='Additional Data')
+    def formatted_extra_data(self, obj):
+        if obj.extra_data:
+            return format_html('<pre>{}</pre>', json.dumps(obj.extra_data, indent=2))
+        return 'No additional data'
+
+    @admin.action(description='Mark selected errors as resolved')
+    def mark_as_resolved(self, request, queryset):
+        updated = queryset.update(
+            is_resolved=True, 
+            resolved_at=timezone.now(),
+            resolved_by=request.user.username
+        )
+        self.message_user(request, f'{updated} errors marked as resolved.')
+
+    @admin.action(description='Mark selected errors as unresolved')
+    def mark_as_unresolved(self, request, queryset):
+        updated = queryset.update(
+            is_resolved=False, 
+            resolved_at=None,
+            resolved_by=None
+        )
+        self.message_user(request, f'{updated} errors marked as unresolved.')
+
+
+@admin.register(PerformanceLog)
+class PerformanceLogAdmin(admin.ModelAdmin):
+    list_display = [
+        'timestamp', 'metric_type', 'duration_ms', 'url_preview', 
+        'user_id', 'session_id'
+    ]
+    list_filter = [
+        'metric_type', 'timestamp',
+        ('timestamp', admin.DateFieldListFilter)
+    ]
+    search_fields = ['url', 'user_id', 'session_id']
+    readonly_fields = ['timestamp', 'formatted_metrics']
+    fieldsets = (
+        ('Performance Metric', {
+            'fields': ('timestamp', 'metric_type', 'duration', 'url')
+        }),
+        ('User Context', {
+            'fields': ('user_id', 'session_id', 'user_agent'),
+            'classes': ('collapse',)
+        }),
+        ('Additional Metrics', {
+            'fields': ('formatted_metrics',),
+            'classes': ('collapse',)
+        }),
+    )
+    ordering = ['-timestamp']
+    date_hierarchy = 'timestamp'
+
+    @admin.display(description='Duration')
+    def duration_ms(self, obj):
+        return f"{obj.duration} ms"
+
+    @admin.display(description='URL')
+    def url_preview(self, obj):
+        if obj.url:
+            return format_html('<a href="{}" target="_blank">{}</a>', 
+                             obj.url, obj.url[:50] + '...' if len(obj.url) > 50 else obj.url)
+        return '-'
+
+    @admin.display(description='Additional Metrics')
+    def formatted_metrics(self, obj):
+        if obj.metrics:
+            return format_html('<pre>{}</pre>', json.dumps(obj.metrics, indent=2))
+        return 'No additional metrics'
+
+
+@admin.register(UserSession)
+class UserSessionAdmin(admin.ModelAdmin):
+    list_display = [
+        'session_id_preview', 'user_id', 'start_time', 'duration_minutes',
+        'page_views', 'errors_encountered', 'browser_preview', 'country'
+    ]
+    list_filter = [
+        'start_time', 'country',
+        ('start_time', admin.DateFieldListFilter)
+    ]
+    search_fields = ['session_id', 'user_id', 'ip_address', 'country', 'city']
+    readonly_fields = [
+        'start_time', 'last_activity', 'duration_display', 
+        'formatted_browser_info'
+    ]
+    fieldsets = (
+        ('Session Information', {
+            'fields': ('session_id', 'user_id', 'start_time', 'last_activity', 'duration_display')
+        }),
+        ('Activity', {
+            'fields': ('page_views', 'errors_encountered'),
+        }),
+        ('Technical Details', {
+            'fields': ('user_agent', 'formatted_browser_info'),
+            'classes': ('collapse',)
+        }),
+        ('Location', {
+            'fields': ('ip_address', 'country', 'city'),
+            'classes': ('collapse',)
+        }),
+    )
+    ordering = ['-start_time']
+    date_hierarchy = 'start_time'
+
+    @admin.display(description='Session ID')
+    def session_id_preview(self, obj):
+        return obj.session_id[:20] + '...' if len(obj.session_id) > 20 else obj.session_id
+
+    @admin.display(description='Duration')
+    def duration_minutes(self, obj):
+        return f"{obj.duration // 60} min" if obj.duration else "0 min"
+
+    @admin.display(description='Session Duration')
+    def duration_display(self, obj):
+        if obj.duration:
+            hours = obj.duration // 3600
+            minutes = (obj.duration % 3600) // 60
+            seconds = obj.duration % 60
+            return f"{hours}h {minutes}m {seconds}s"
+        return "0s"
+
+    @admin.display(description='Browser/OS')
+    def browser_preview(self, obj):
+        if obj.browser_info:
+            browser = obj.browser_info.get('browser', 'Unknown')
+            os = obj.browser_info.get('os', 'Unknown')
+            return f"{browser} / {os}"
+        return '-'
+
+    @admin.display(description='Browser Information')
+    def formatted_browser_info(self, obj):
+        if obj.browser_info:
+            return format_html('<pre>{}</pre>', json.dumps(obj.browser_info, indent=2))
+        return 'No browser info available'
+
+

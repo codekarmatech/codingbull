@@ -165,3 +165,108 @@ def technologies_list(request):
         'results': technologies,
         'count': len(technologies)
     })
+
+
+# Error Tracking Views
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from .models import ErrorLog, PerformanceLog, UserSession
+import json
+from django.utils import timezone
+from django.http import JsonResponse
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def track_error(request):
+    """Track frontend errors"""
+    try:
+        data = request.data
+        
+        # Create or update error log
+        error_log = ErrorLog.objects.create(
+            error_type=data.get('type', 'javascript'),
+            severity=data.get('severity', 'medium'),
+            message=data.get('message', ''),
+            stack_trace=data.get('stack', ''),
+            component_stack=data.get('component_stack', ''),
+            url=data.get('url', ''),
+            user_agent=data.get('userAgent', ''),
+            browser_info=data.get('browserInfo', {}),
+            user_id=data.get('userId'),
+            session_id=data.get('sessionId'),
+            page_load_time=data.get('pageLoadTime'),
+            memory_usage=data.get('memoryUsage'),
+            breadcrumbs=data.get('breadcrumbs', []),
+            extra_data=data.get('extra_data', {})
+        )
+        
+        return JsonResponse({'status': 'success', 'id': error_log.pk})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def track_performance(request):
+    """Track performance metrics"""
+    try:
+        data = request.data
+        
+        performance_log = PerformanceLog.objects.create(
+            metric_type=data.get('type', 'page_load'),
+            duration=data.get('duration', 0),
+            url=data.get('url', ''),
+            user_agent=data.get('userAgent', ''),
+            user_id=data.get('userId'),
+            session_id=data.get('sessionId'),
+            metrics=data.get('metrics', {})
+        )
+        
+        return JsonResponse({'status': 'success', 'id': performance_log.pk})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def track_session(request):
+    """Track user sessions"""
+    try:
+        data = request.data
+        
+        session, created = UserSession.objects.get_or_create(
+            session_id=data.get('sessionId'),
+            defaults={
+                'user_id': data.get('userId'),
+                'user_agent': data.get('userAgent', ''),
+                'browser_info': data.get('browserInfo', {}),
+                'ip_address': request.META.get('REMOTE_ADDR'),
+            }
+        )
+        
+        if not created:
+            # Update existing session
+            session.last_activity = timezone.now()
+            session.page_views += 1
+            session.save()
+        
+        return JsonResponse({'status': 'success', 'session_id': session.session_id})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def update_session(request):
+    """Update session activity"""
+    try:
+        data = request.data
+        session_id = data.get('sessionId')
+        
+        try:
+            session = UserSession.objects.get(session_id=session_id)
+            session.last_activity = timezone.now()
+            session.save()
+            return JsonResponse({'status': 'success'})
+        except UserSession.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Session not found'}, status=404)
+            
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

@@ -117,13 +117,14 @@ ROOT_URLCONF = 'codingbull_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'api.admin_context.admin_dashboard_context',
             ],
         },
     },
@@ -265,4 +266,16 @@ LOGGING = {
             'level': 'INFO',
         },
     },
+}
+
+# ============================================================================
+# SECURITY CONFIGURATION
+# ============================================================================
+
+# Security middleware settings
+SECURITY_MIDDLEWARE_SETTINGS = {
+    'DISABLE_RATE_LIMITING_FOR_LOCALHOST': True,  # Disable rate limiting for localhost/development
+    'LOCALHOST_IPS': ['127.0.0.1', '::1', 'localhost'],  # IPs considered as localhost
+    'LOCAL_NETWORK_RANGES': ['192.168.', '10.', '172.'],  # Local network prefixes
+    'RESPECT_DEBUG_MODE': True,  # Disable rate limiting when DEBUG=True
 }

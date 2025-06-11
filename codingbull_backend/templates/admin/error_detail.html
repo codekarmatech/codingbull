@@ -1,0 +1,321 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Error Detail - {{ error.error_type }}{% endblock %}
+
+{% block extrahead %}
+<style>
+    .error-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .detail-section {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #495057;
+        border-bottom: 2px solid #007cba;
+        padding-bottom: 5px;
+    }
+    
+    .error-header {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .error-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .meta-label {
+        font-weight: bold;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .meta-value {
+        font-size: 1rem;
+    }
+    
+    .severity-badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+    
+    .severity-critical {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .severity-high {
+        background: #fd7e14;
+        color: white;
+    }
+    
+    .severity-medium {
+        background: #ffc107;
+        color: black;
+    }
+    
+    .severity-low {
+        background: #28a745;
+        color: white;
+    }
+    
+    .code-block {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    .breadcrumb-item {
+        background: #f8f9fa;
+        border-left: 3px solid #007cba;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 0 4px 4px 0;
+    }
+    
+    .breadcrumb-timestamp {
+        font-weight: bold;
+        color: #007cba;
+        font-size: 0.9rem;
+    }
+    
+    .breadcrumb-type {
+        color: #6c757d;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+    
+    .breadcrumb-message {
+        margin-top: 5px;
+    }
+    
+    .similar-error {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .similar-error-time {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .action-buttons {
+        margin-top: 20px;
+    }
+    
+    .btn {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-detail-container">
+    <div class="error-header">
+        <div class="error-title">
+            🚨 {{ error.error_type|title }} Error
+        </div>
+        <div class="error-message">
+            {{ error.message }}
+        </div>
+        
+        <div class="error-meta">
+            <div class="meta-item">
+                <div class="meta-label">Severity</div>
+                <div class="meta-value">
+                    <span class="severity-badge severity-{{ error.severity }}">
+                        {{ error.severity|title }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Timestamp</div>
+                <div class="meta-value">{{ error.timestamp|date:"M d, Y H:i:s" }}</div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">URL</div>
+                <div class="meta-value">
+                    {% if error.url %}
+                        <a href="{{ error.url }}" target="_blank">{{ error.url }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">User ID</div>
+                <div class="meta-value">{{ error.user_id|default:"-" }}</div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Session ID</div>
+                <div class="meta-value">{{ error.session_id|default:"-" }}</div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Status</div>
+                <div class="meta-value">
+                    {% if error.is_resolved %}
+                        <span class="badge badge-success">Resolved</span>
+                        {% if error.resolved_at %}
+                            <br><small>{{ error.resolved_at|date:"M d, Y H:i" }}</small>
+                        {% endif %}
+                    {% else %}
+                        <span class="badge badge-warning">Unresolved</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{% url 'admin:api_errorlog_change' error.id %}" class="btn btn-primary">Edit in Admin</a>
+            <a href="{% url 'admin:api_errorlog_changelist' %}" class="btn btn-secondary">Back to Error List</a>
+            <a href="{% url 'error-tracking-dashboard' %}" class="btn btn-info">Dashboard</a>
+        </div>
+    </div>
+
+    {% if error.stack_trace %}
+    <div class="detail-section">
+        <div class="section-title">📋 Stack Trace</div>
+        <div class="code-block">{{ error.stack_trace }}</div>
+    </div>
+    {% endif %}
+
+    {% if error.component_stack %}
+    <div class="detail-section">
+        <div class="section-title">🧩 Component Stack</div>
+        <div class="code-block">{{ error.component_stack }}</div>
+    </div>
+    {% endif %}
+
+    {% if error.breadcrumbs %}
+    <div class="detail-section">
+        <div class="section-title">🍞 User Journey (Breadcrumbs)</div>
+        {% for breadcrumb in error.breadcrumbs %}
+        <div class="breadcrumb-item">
+            <div class="breadcrumb-timestamp">{{ breadcrumb.timestamp }}</div>
+            <div class="breadcrumb-type">[{{ breadcrumb.type }}]</div>
+            <div class="breadcrumb-message">{{ breadcrumb.message }}</div>
+            {% if breadcrumb.data %}
+            <div style="margin-top: 5px; font-size: 0.8rem; color: #6c757d;">
+                {{ breadcrumb.data }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if error.browser_info %}
+    <div class="detail-section">
+        <div class="section-title">💻 Browser Information</div>
+        <div class="code-block">{{ error.browser_info|pprint }}</div>
+    </div>
+    {% endif %}
+
+    {% if error.extra_data %}
+    <div class="detail-section">
+        <div class="section-title">📊 Additional Data</div>
+        <div class="code-block">{{ error.extra_data|pprint }}</div>
+    </div>
+    {% endif %}
+
+    {% if user_session %}
+    <div class="detail-section">
+        <div class="section-title">👤 User Session</div>
+        <div class="error-meta">
+            <div class="meta-item">
+                <div class="meta-label">Session Start</div>
+                <div class="meta-value">{{ user_session.start_time|date:"M d, Y H:i:s" }}</div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Duration</div>
+                <div class="meta-value">
+                    {% if user_session.duration %}
+                        {{ user_session.duration|floatformat:0 }} seconds
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Errors Encountered</div>
+                <div class="meta-value">{{ user_session.errors_encountered }}</div>
+            </div>
+            
+            <div class="meta-item">
+                <div class="meta-label">Pages Visited</div>
+                <div class="meta-value">{{ user_session.pages_visited }}</div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <a href="{% url 'admin:api_usersession_change' user_session.id %}" class="btn btn-sm btn-info">View Full Session</a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if similar_errors %}
+    <div class="detail-section">
+        <div class="section-title">🔍 Similar Errors</div>
+        {% for similar_error in similar_errors %}
+        <div class="similar-error">
+            <div class="similar-error-time">{{ similar_error.timestamp|date:"M d, Y H:i:s" }}</div>
+            <div>{{ similar_error.message|truncatechars:100 }}</div>
+            <div style="margin-top: 5px;">
+                <a href="{% url 'error-detail' similar_error.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

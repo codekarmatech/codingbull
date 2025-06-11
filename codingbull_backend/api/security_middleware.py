@@ -562,9 +562,17 @@ class EnhancedSecurityMiddleware(MiddlewareMixin):
             self._log_blocked_request(request_info, "Blacklist match")
             return HttpResponseForbidden("Access denied")
         
-        # Check rate limiting
+        # Skip rate limiting for localhost/development requests
+        is_rate_limited = False
+        rate_rule = None
         identifier = self._get_rate_limit_identifier(request, request_info)
-        is_rate_limited, rate_rule = RateLimiter.check_rate_limit(identifier, request_info)
+        
+        if self._is_localhost_request(request_info):
+            # Log that rate limiting is being skipped for localhost
+            logger.debug(f"Rate limiting skipped for localhost request from {request_info['remote_addr']}")
+        else:
+            # Check rate limiting
+            is_rate_limited, rate_rule = RateLimiter.check_rate_limit(identifier, request_info)
         
         if is_rate_limited and rate_rule is not None:
             rule_name = rate_rule.name
@@ -666,6 +674,33 @@ class EnhancedSecurityMiddleware(MiddlewareMixin):
         else:
             ip = request.META.get('REMOTE_ADDR', '127.0.0.1')
         return ip
+    
+    def _is_localhost_request(self, request_info: Dict[str, Any]) -> bool:
+        """Check if request is from localhost/development environment"""
+        # Get security settings
+        security_settings = getattr(settings, 'SECURITY_MIDDLEWARE_SETTINGS', {})
+        
+        # Check if localhost rate limiting is disabled
+        if not security_settings.get('DISABLE_RATE_LIMITING_FOR_LOCALHOST', True):
+            return False
+        
+        remote_addr = request_info['remote_addr']
+        
+        # Get localhost IPs from settings
+        localhost_ips = security_settings.get('LOCALHOST_IPS', ['127.0.0.1', '::1', 'localhost'])
+        if remote_addr in localhost_ips:
+            return True
+            
+        # Get local network ranges from settings
+        local_ranges = security_settings.get('LOCAL_NETWORK_RANGES', ['192.168.', '10.', '172.'])
+        if any(remote_addr.startswith(prefix) for prefix in local_ranges):
+            return True
+            
+        # Check if running in DEBUG mode (if enabled in settings)
+        if security_settings.get('RESPECT_DEBUG_MODE', True) and getattr(settings, 'DEBUG', False):
+            return True
+            
+        return False
     
     def _get_rate_limit_identifier(self, request, request_info: Dict[str, Any]) -> str:
         """Get identifier for rate limiting (IP or user)"""

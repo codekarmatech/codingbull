@@ -1,0 +1,1041 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+    /* 🚀 2025 REVOLUTIONARY ADMIN DASHBOARD - NEURAL MORPHISM */
+    :root {
+        /* 2025 Color Palette - Dark Neural Theme */
+        --bg-primary: #0a0a0f;
+        --bg-secondary: #1a1a2e;
+        --bg-tertiary: #16213e;
+        --accent-primary: #00d4ff;
+        --accent-secondary: #ff006e;
+        --accent-success: #00ff88;
+        --accent-warning: #ffaa00;
+        --accent-danger: #ff3366;
+        
+        /* Neural Gradients */
+        --neural-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #00d4ff 100%);
+        --cyber-gradient: linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+        --matrix-gradient: linear-gradient(135deg, #00ff88 0%, #00d4ff 50%, #667eea 100%);
+        --neon-gradient: linear-gradient(135deg, #ffaa00 0%, #ff006e 50%, #8338ec 100%);
+        
+        /* Advanced Glassmorphism 2.0 */
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --glass-hover: rgba(255, 255, 255, 0.08);
+        
+        /* Neural Shadows & Effects */
+        --neural-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
+        --cyber-shadow: 0 20px 40px rgba(255, 0, 110, 0.15);
+        --neon-glow: 0 0 20px currentColor;
+        --neural-glow: 0 0 30px var(--accent-primary);
+        
+        /* Typography - System Fonts for 2025 Performance */
+        --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+        
+        /* Spacing & Sizing */
+        --border-radius: 24px;
+        --border-radius-lg: 32px;
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 3rem;
+        
+        /* Advanced Transitions */
+        --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* 🌌 2025 Neural Dashboard Container */
+    .dashboard-container {
+        margin: 0;
+        font-family: var(--font-primary);
+        background: var(--bg-primary);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        color: white;
+    }
+
+    /* 🌟 Advanced Neural Background */
+    .dashboard-container::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+        animation: neuralPulse 8s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .dashboard-container::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='neural' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='10' cy='10' r='1' fill='%2300d4ff' fill-opacity='0.1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23neural)'/%3E%3C/svg%3E");
+        animation: neuralGrid 20s linear infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @keyframes neuralPulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    @keyframes neuralGrid {
+        0% { transform: translateX(0) translateY(0); }
+        100% { transform: translateX(20px) translateY(20px); }
+    }
+
+    .dashboard-content {
+        position: relative;
+        z-index: 1;
+        padding: var(--spacing-lg);
+        backdrop-filter: blur(20px);
+    }
+    
+    /* 🚀 2025 Neural Morphism Sections */
+    .dashboard-section {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+        margin-bottom: var(--spacing-xl);
+        overflow: hidden;
+        transition: var(--transition-smooth);
+        position: relative;
+    }
+
+    .dashboard-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--neural-gradient);
+        transform: scaleX(0);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dashboard-section::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(from 0deg, transparent, var(--accent-primary)20, transparent);
+        opacity: 0;
+        animation: neuralSpin 10s linear infinite;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+    }
+
+    .dashboard-section:hover::before {
+        transform: scaleX(1);
+    }
+
+    .dashboard-section:hover::after {
+        opacity: 0.1;
+    }
+
+    .dashboard-section:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: var(--neural-shadow);
+        border-color: var(--accent-primary);
+    }
+
+    @keyframes neuralSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* 🎯 2025 Neural Section Headers */
+    .section-header {
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        color: white;
+        padding: var(--spacing-md) var(--spacing-lg);
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: var(--font-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .section-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+        transition: left 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .section-header:hover::before {
+        left: 100%;
+    }
+
+    .section-header i {
+        font-size: 1.5rem;
+        animation: neuralPulse 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px currentColor);
+    }
+
+    @keyframes neuralPulse {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg); 
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        50% { 
+            transform: scale(1.15) rotate(5deg); 
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+    }
+
+    .section-header.stats { 
+        background: linear-gradient(135deg, var(--accent-primary)20, var(--accent-success)20);
+        color: var(--accent-primary);
+    }
+    .section-header.actions { 
+        background: linear-gradient(135deg, var(--accent-secondary)20, var(--accent-warning)20);
+        color: var(--accent-secondary);
+    }
+    
+    /* 🎯 2025 Neural Grid System */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+    }
+    
+    /* 🚀 2025 Neural Morphism Cards */
+    .dashboard-card {
+        display: block;
+        padding: var(--spacing-lg);
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        color: white;
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transform-style: preserve-3d;
+    }
+    
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--neural-gradient);
+        transform: scaleX(0);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .dashboard-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, var(--accent-primary)20 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 50%;
+        opacity: 0;
+    }
+    
+    .dashboard-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .dashboard-card:hover::after {
+        width: 400px;
+        height: 400px;
+        opacity: 1;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-16px) scale(1.03) rotateX(5deg);
+        box-shadow: var(--neural-shadow);
+        border-color: var(--accent-primary);
+        background: var(--glass-hover);
+    }
+    
+    /* 💫 2025 Neural Card Content */
+    .card-icon {
+        font-size: 3rem;
+        margin-bottom: var(--spacing-sm);
+        color: var(--accent-primary);
+        display: block;
+        transition: var(--transition-bounce);
+        position: relative;
+        z-index: 2;
+        filter: drop-shadow(0 0 15px currentColor);
+    }
+    
+    .dashboard-card:hover .card-icon {
+        transform: scale(1.3) rotate(10deg) translateZ(20px);
+        color: var(--accent-success);
+        filter: drop-shadow(0 0 25px currentColor);
+        animation: iconFloat 2s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+        0%, 100% { transform: scale(1.3) rotate(10deg) translateY(0) translateZ(20px); }
+        50% { transform: scale(1.3) rotate(10deg) translateY(-5px) translateZ(20px); }
+    }
+    
+    .card-title {
+        margin: 0 0 var(--spacing-xs) 0;
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 700;
+        font-family: var(--font-primary);
+        position: relative;
+        z-index: 2;
+        transition: var(--transition-smooth);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    
+    .dashboard-card:hover .card-title {
+        transform: translateX(8px) translateZ(10px);
+        color: var(--accent-primary);
+        text-shadow: 0 0 20px currentColor;
+    }
+    
+    .card-description {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
+        transition: var(--transition-smooth);
+        font-family: var(--font-primary);
+    }
+    
+    .dashboard-card:hover .card-description {
+        color: rgba(255, 255, 255, 0.95);
+        transform: translateX(4px);
+    }
+    
+    .card-stats {
+        margin-top: var(--spacing-sm);
+        padding-top: var(--spacing-sm);
+        border-top: 1px solid var(--glass-border);
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 2;
+        font-family: var(--font-mono);
+    }
+    
+    .card-stats a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        transition: var(--transition-fast);
+        font-weight: 500;
+    }
+    
+    .card-stats a:hover {
+        color: var(--accent-primary);
+        text-shadow: var(--neon-glow);
+        transform: translateX(3px);
+    }
+    
+    /* 📊 2025 Neural Statistics Grid */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        border-radius: var(--border-radius);
+        margin: var(--spacing-md);
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: var(--spacing-md);
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--border-radius);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transform-style: preserve-3d;
+    }
+    
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--matrix-gradient);
+        transform: scaleX(0);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stat-item::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: conic-gradient(from 0deg, transparent, var(--accent-success)10, transparent);
+        opacity: 0;
+        animation: statSpin 8s linear infinite;
+        transition: opacity 0.6s ease;
+    }
+    
+    .stat-item:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-item:hover::after {
+        opacity: 0.1;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-12px) scale(1.08) rotateX(10deg);
+        background: var(--glass-hover);
+        box-shadow: var(--neural-shadow);
+        border-color: var(--accent-success);
+    }
+
+    @keyframes statSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .stat-number {
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: var(--accent-primary);
+        display: block;
+        transition: var(--transition-bounce);
+        text-shadow: var(--neural-glow);
+        font-family: var(--font-mono);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .stat-item:hover .stat-number {
+        transform: scale(1.2) translateZ(10px);
+        color: var(--accent-success);
+        text-shadow: 0 0 40px currentColor;
+        animation: numberPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes numberPulse {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.3); }
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: var(--spacing-xs);
+        font-weight: 600;
+        font-family: var(--font-primary);
+        transition: var(--transition-smooth);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .stat-item:hover .stat-label {
+        color: white;
+        transform: translateY(-2px);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    }
+    
+    /* 🚀 2025 Revolutionary Welcome Banner */
+    .welcome-banner {
+        background: var(--glass-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        color: white;
+        padding: var(--spacing-xl) var(--spacing-lg);
+        border-radius: var(--border-radius-lg);
+        margin-bottom: var(--spacing-xl);
+        text-align: center;
+        border: 1px solid var(--glass-border);
+        position: relative;
+        overflow: hidden;
+        transform-style: preserve-3d;
+    }
+    
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: conic-gradient(from 0deg, 
+            transparent, 
+            var(--accent-primary)10, 
+            transparent, 
+            var(--accent-secondary)10, 
+            transparent,
+            var(--accent-success)10,
+            transparent);
+        animation: neuralRotate 15s linear infinite;
+        pointer-events: none;
+        opacity: 0.3;
+    }
+
+    .welcome-banner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, 
+            var(--accent-primary)05 0%, 
+            transparent 50%);
+        animation: neuralPulse 4s ease-in-out infinite;
+        pointer-events: none;
+    }
+    
+    @keyframes neuralRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .welcome-title {
+        font-size: 3.5rem;
+        margin: 0 0 var(--spacing-sm) 0;
+        font-weight: 900;
+        font-family: var(--font-primary);
+        position: relative;
+        z-index: 2;
+        background: var(--neural-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 50px var(--accent-primary);
+        animation: titleGlow 4s ease-in-out infinite alternate;
+    }
+    
+    @keyframes titleGlow {
+        from { 
+            filter: brightness(1) drop-shadow(0 0 20px var(--accent-primary));
+        }
+        to { 
+            filter: brightness(1.3) drop-shadow(0 0 40px var(--accent-primary));
+        }
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin: 0 0 var(--spacing-lg) 0;
+        position: relative;
+        z-index: 2;
+        font-weight: 500;
+        font-family: var(--font-primary);
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .welcome-action {
+        background: var(--glass-bg);
+        color: var(--accent-primary);
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        font-family: var(--font-primary);
+        display: inline-block;
+        transition: var(--transition-bounce);
+        position: relative;
+        z-index: 2;
+        border: 2px solid var(--accent-primary);
+        backdrop-filter: blur(10px);
+        text-shadow: var(--neon-glow);
+        box-shadow: 0 0 30px var(--accent-primary)30;
+    }
+    
+    .welcome-action:hover {
+        background: var(--accent-primary);
+        color: var(--bg-primary);
+        transform: translateY(-8px) scale(1.1) rotateX(10deg);
+        text-decoration: none;
+        box-shadow: var(--neural-shadow);
+        text-shadow: none;
+        animation: actionPulse 0.6s ease-in-out;
+    }
+
+    @keyframes actionPulse {
+        0%, 100% { transform: translateY(-8px) scale(1.1) rotateX(10deg); }
+        50% { transform: translateY(-8px) scale(1.15) rotateX(10deg); }
+    }
+    
+    /* 📱 2025 Advanced Responsive Design */
+    @media (max-width: 1200px) {
+        .dashboard-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .quick-stats {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+        
+        .welcome-title {
+            font-size: 3rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .dashboard-content {
+            padding: var(--spacing-sm);
+        }
+        
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+            padding: var(--spacing-sm);
+        }
+        
+        .quick-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+        }
+        
+        .welcome-banner {
+            padding: var(--spacing-lg) var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2.2rem;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .quick-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+        }
+        
+        .dashboard-card {
+            padding: var(--spacing-sm);
+        }
+    }
+    
+    /* 🎯 2025 Neural Loading Animations */
+    @keyframes neuralFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(40px) rotateX(20deg);
+            filter: blur(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+            filter: blur(0px);
+        }
+    }
+    
+    .dashboard-section {
+        animation: neuralFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .dashboard-section:nth-child(1) { animation-delay: 0.1s; }
+    .dashboard-section:nth-child(2) { animation-delay: 0.2s; }
+    .dashboard-section:nth-child(3) { animation-delay: 0.3s; }
+    .dashboard-section:nth-child(4) { animation-delay: 0.4s; }
+
+    /* 🌟 Performance Optimizations */
+    * {
+        box-sizing: border-box;
+    }
+
+    .dashboard-card,
+    .stat-item,
+    .dashboard-section {
+        will-change: transform;
+    }
+
+    /* 🎨 Accessibility & Focus States */
+    .dashboard-card:focus,
+    .stat-item:focus,
+    .welcome-action:focus {
+        outline: 2px solid var(--accent-primary);
+        outline-offset: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+<div class="dashboard-container">
+<div class="dashboard-content">
+    <!-- 🎉 Epic Welcome Banner -->
+    <div class="welcome-banner">
+        <h1 class="welcome-title">
+            <i class="fas fa-rocket"></i> CodingBull Admin Dashboard
+        </h1>
+        <p class="welcome-subtitle">
+            Comprehensive management system for content, security, and analytics
+        </p>
+        <a href="{% url 'admin-dashboard-overview' %}" class="welcome-action">
+            <i class="fas fa-chart-line"></i> View Detailed Analytics
+        </a>
+    </div>
+
+    <!-- 📊 Quick Stats Overview -->
+    <div class="dashboard-section">
+        <h2 class="section-header stats">
+            <i class="fas fa-chart-pie"></i> Quick Overview
+        </h2>
+        <div class="quick-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ blog_count|default:"0" }}</span>
+                <div class="stat-label">Blog Posts</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ project_count|default:"0" }}</span>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ service_count|default:"0" }}</span>
+                <div class="stat-label">Services</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ inquiry_count|default:"0" }}</span>
+                <div class="stat-label">New Inquiries</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ error_count|default:"0" }}</span>
+                <div class="stat-label">Active Errors</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ security_count|default:"0" }}</span>
+                <div class="stat-label">Security Events</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🚀 Django Admin Models -->
+    <div class="dashboard-section">
+        <h2 class="section-header">
+            <i class="fas fa-cogs"></i> Administration
+        </h2>
+        <div class="dashboard-grid">
+            {% for app in app_list %}
+                {% for model in app.models %}
+                    <a href="{{ model.admin_url }}" class="dashboard-card">
+                        <i class="fas fa-{{ model.object_name|lower|default:'database' }} card-icon"></i>
+                        <h3 class="card-title">{{ model.name }}</h3>
+                        <p class="card-description">{{ app.name }}</p>
+                        {% if model.add_url %}
+                            <div class="card-stats">
+                                <a href="{{ model.add_url }}" style="color: #667eea; text-decoration: none;">
+                                    <i class="fas fa-plus"></i> Add {{ model.object_name }}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ⚡ Quick Actions & Analytics -->
+    <div class="dashboard-section">
+        <h2 class="section-header actions">
+            <i class="fas fa-bolt"></i> Quick Actions & Analytics
+        </h2>
+        <div class="dashboard-grid">
+            <a href="{% url 'error-tracking-dashboard' %}" class="dashboard-card">
+                <i class="fas fa-bug card-icon"></i>
+                <h3 class="card-title">Error Dashboard</h3>
+                <p class="card-description">Monitor and analyze system errors</p>
+            </a>
+            
+            <a href="{% url 'performance-dashboard' %}" class="dashboard-card">
+                <i class="fas fa-rocket card-icon"></i>
+                <h3 class="card-title">Performance Monitor</h3>
+                <p class="card-description">System performance optimization</p>
+            </a>
+            
+            <a href="{% url 'admin-dashboard-overview' %}" class="dashboard-card">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3 class="card-title">Detailed Analytics</h3>
+                <p class="card-description">Comprehensive reports and insights</p>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script>
+// 🚀 2025 REVOLUTIONARY DASHBOARD INTERACTIONS
+document.addEventListener('DOMContentLoaded', function() {
+    // 🎯 Neural Number Animation with Easing
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach((stat, index) => {
+        const finalValue = parseInt(stat.textContent) || 0;
+        let currentValue = 0;
+        const duration = 2000; // 2 seconds
+        const startTime = performance.now() + (index * 200); // Stagger animations
+        
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+        
+        function animateNumber(timestamp) {
+            if (timestamp < startTime) {
+                requestAnimationFrame(animateNumber);
+                return;
+            }
+            
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeOutCubic(progress);
+            
+            currentValue = Math.floor(finalValue * easedProgress);
+            stat.textContent = currentValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateNumber);
+            } else {
+                stat.textContent = finalValue;
+            }
+        }
+        
+        requestAnimationFrame(animateNumber);
+    });
+    
+    // 🌟 Advanced Neural Ripple Effect
+    const interactiveElements = document.querySelectorAll('.dashboard-card, .stat-item, .welcome-action');
+    interactiveElements.forEach(element => {
+        element.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height) * 2;
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(0, 212, 255, 0.4) 0%, transparent 70%);
+                transform: scale(0);
+                animation: neuralRipple 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+                z-index: 1000;
+            `;
+            
+            this.style.position = 'relative';
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 800);
+        });
+    });
+    
+    // 🎨 3D Parallax Mouse Tracking
+    const cards = document.querySelectorAll('.dashboard-card, .stat-item');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            this.style.transform = `
+                perspective(1000px) 
+                rotateX(${rotateX}deg) 
+                rotateY(${rotateY}deg) 
+                translateZ(10px)
+            `;
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        });
+    });
+    
+    // 🌊 Neural Wave Background Effect
+    const container = document.querySelector('.dashboard-container');
+    if (container) {
+        let mouseX = 0, mouseY = 0;
+        
+        container.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX / window.innerWidth;
+            mouseY = e.clientY / window.innerHeight;
+            
+            container.style.setProperty('--mouse-x', mouseX);
+            container.style.setProperty('--mouse-y', mouseY);
+        });
+    }
+    
+    // 🎵 Sound Effects (Optional - Commented out for now)
+    /*
+    function playClickSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    }
+    */
+    
+    // 🚀 Performance Monitoring
+    if ('performance' in window) {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('🚀 Dashboard Load Time:', Math.round(perfData.loadEventEnd - perfData.fetchStart), 'ms');
+            }, 0);
+        });
+    }
+});
+
+// 🎨 Dynamic CSS Injection for Neural Effects
+const neuralStyles = document.createElement('style');
+neuralStyles.textContent = `
+    @keyframes neuralRipple {
+        to {
+            transform: scale(1);
+            opacity: 0;
+        }
+    }
+    
+    .dashboard-container {
+        --mouse-x: 0.5;
+        --mouse-y: 0.5;
+    }
+    
+    .dashboard-container::before {
+        background: 
+            radial-gradient(circle at calc(var(--mouse-x) * 100%) calc(var(--mouse-y) * 100%), 
+                rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+    }
+`;
+document.head.appendChild(neuralStyles);
+</script>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% translate 'Recent actions' %}</h2>
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% translate 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                <span class="visually-hidden">{% if entry.is_addition %}{% translate 'Added:' %}{% elif entry.is_change %}{% translate 'Changed:' %}{% elif entry.is_deletion %}{% translate 'Deleted:' %}{% endif %}</span>
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

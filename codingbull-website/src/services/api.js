@@ -19,6 +19,22 @@ const API_TIMEOUT = parseInt(process.env.REACT_APP_API_TIMEOUT || '10000', 10);
 // Flag to enable/disable fallback to mock data
 const ENABLE_MOCK_FALLBACK = process.env.REACT_APP_ENABLE_MOCK_FALLBACK !== 'false';
 
+// Debug mode flag
+const DEBUG_MODE = process.env.NODE_ENV === 'development';
+
+// Debug logging function
+const debugLog = (message, data = null) => {
+  if (DEBUG_MODE) {
+    console.log(`[API Service] ${message}`, data || '');
+  }
+};
+
+const debugError = (message, error = null) => {
+  if (DEBUG_MODE) {
+    console.error(`[API Service] ${message}`, error || '');
+  }
+};
+
 /**
  * Custom fetch with timeout and error handling
  * @param {string} url - The URL to fetch
@@ -31,9 +47,7 @@ const fetchWithTimeout = async (url, options = {}) => {
   const separator = url.includes('?') ? '&' : '?';
   const urlWithCacheBuster = `${url}${separator}${cacheBuster}`;
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Fetching URL:', urlWithCacheBuster);
-  }
+  debugLog('Fetching URL:', urlWithCacheBuster);
   
   const controller = new AbortController();
   const { signal } = controller;
@@ -43,18 +57,14 @@ const fetchWithTimeout = async (url, options = {}) => {
   }, API_TIMEOUT);
   
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Making request to: ${urlWithCacheBuster}`);
-    }
+    debugLog(`Making request to: ${urlWithCacheBuster}`);
     const response = await fetch(urlWithCacheBuster, { ...options, signal });
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Response status: ${response.status} ${response.statusText}`);
-    }
+    debugLog(`Response status: ${response.status} ${response.statusText}`);
     clearTimeout(timeout);
     
     // First check if the response is OK
     if (!response.ok) {
-      console.error(`HTTP error ${response.status}: ${response.statusText}`);
+      debugError(`HTTP error ${response.status}: ${response.statusText}`);
       
       // Try to get error details
       try {

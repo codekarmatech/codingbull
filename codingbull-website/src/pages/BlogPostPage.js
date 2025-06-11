@@ -565,6 +565,7 @@ const BlogPostPage = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [relatedPosts, setRelatedPosts] = useState([]);
+  const [recentPosts, setRecentPosts] = useState([]);
   const [contentKey, setContentKey] = useState(0); // Key for AnimatePresence
   
   // Fetch post data from API
@@ -597,10 +598,25 @@ const BlogPostPage = () => {
         setRelatedPosts([]);
           }
         }
+        
+        // Fetch recent posts for sidebar
+        try {
+          const recentResponse = await apiService.blog.getPosts(1, { ordering: '-published_date' });
+          // Filter out the current post and limit to 3 recent posts
+          const recent = (recentResponse.results || [])
+            .filter(p => p.id !== postData.id)
+            .slice(0, 3);
+          setRecentPosts(recent);
+        } catch (error) {
+          console.error('Error fetching recent posts:', error);
+          // Fallback to mock data if API fails
+          setRecentPosts(mockBlogPosts.filter(p => p.slug !== slug).slice(0, 3));
+        }
       } catch (error) {
         console.error('Error fetching post:', error);
         setPost(null);
         setRelatedPosts([]);
+        setRecentPosts([]);
       } finally {
         setLoading(false);
       }
@@ -771,22 +787,28 @@ const BlogPostPage = () => {
                   >
                     <h3>Recent Posts</h3>
                     <RecentPosts>
-                      {mockBlogPosts.slice(0, 3).map(recentPost => (
-                        <RecentPost key={recentPost.id} to={`/blog/${recentPost.slug}`}>
-                          <div className="image">
-                            <ImageWithFallback 
-                              src={recentPost.image_url || recentPost.image} 
-                              alt={recentPost.title}
-                              fallbackText="Blog"
-                              showFallbackText={false}
-                            />
-                          </div>
-                          <div className="content">
-                            <h4>{recentPost.title}</h4>
-                            <div className="date">{formatDate(recentPost.published_date || recentPost.date)}</div>
-                          </div>
-                        </RecentPost>
-                      ))}
+                      {recentPosts.length > 0 ? (
+                        recentPosts.map(recentPost => (
+                          <RecentPost key={recentPost.id} to={`/blog/${recentPost.slug}`}>
+                            <div className="image">
+                              <ImageWithFallback 
+                                src={recentPost.image_url || recentPost.image} 
+                                alt={recentPost.title}
+                                fallbackText="Blog"
+                                showFallbackText={false}
+                              />
+                            </div>
+                            <div className="content">
+                              <h4>{recentPost.title}</h4>
+                              <div className="date">{formatDate(recentPost.published_date || recentPost.date)}</div>
+                            </div>
+                          </RecentPost>
+                        ))
+                      ) : (
+                        <div style={{ color: '#E0E0E0', textAlign: 'center', padding: '1rem' }}>
+                          Loading recent posts...
+                        </div>
+                      )}
                     </RecentPosts>
                   </SidebarSection>
                   

@@ -2,6 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Button from './Button';
+import errorTracker from '../services/errorTracking';
+
+// Conditional Sentry import - only if available
+let Sentry = null;
+try {
+  Sentry = require('@sentry/react');
+} catch (error) {
+  // Sentry not available, will use fallback error reporting
+  console.warn('Sentry not available, using custom error tracking');
+}
 
 // Error boundary container
 const ErrorContainer = styled(motion.div)`
@@ -94,9 +104,33 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     // Log error details
+    let eventId = null;
+    
+    // Use Sentry if available
+    if (Sentry) {
+      eventId = Sentry.captureException(error, { 
+        extra: errorInfo,
+        contexts: { react: errorInfo }
+      });
+    }
+    
+    // Always use our custom error tracker
+    errorTracker.captureError({
+      type: 'render',
+      message: error.message,
+      stack: error.stack,
+      component_stack: errorInfo.componentStack,
+      severity: 'critical',
+      extra_data: {
+        errorBoundary: true,
+        props: this.props
+      }
+    });
+    
     this.setState({
       error,
       errorInfo,
+      eventId
     });
 
     // Log to console in development
@@ -104,8 +138,7 @@ class ErrorBoundary extends React.Component {
       console.error('Error Boundary caught an error:', error, errorInfo);
     }
 
-    // In production, you would send this to an error reporting service
-    // Example: Sentry.captureException(error, { contexts: { react: errorInfo } });
+    // Fallback error logging
     this.logErrorToService(error, errorInfo);
   }
 
@@ -160,7 +193,7 @@ Please describe what you were doing when this error occurred:
 
   render() {
     if (this.state.hasError) {
-      const { error, errorInfo } = this.state;
+      const { error, errorInfo, eventId } = this.state;
       const isDevelopment = process.env.NODE_ENV === 'development';
 
       return (
@@ -175,6 +208,13 @@ Please describe what you were doing when this error occurred:
             We're sorry, but something unexpected happened. Our team has been notified and is working to fix this issue.
           </ErrorMessage>
 
+          {/* Show Sentry event ID if available */}
+          {eventId && (
+            <ErrorMessage style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+              Error ID: {eventId}
+            </ErrorMessage>
+          )}
+
           <ActionButtons>
             <Button variant="primary" onClick={this.handleReload}>
               Reload Page
@@ -182,9 +222,19 @@ Please describe what you were doing when this error occurred:
             <Button variant="secondary" onClick={this.handleGoHome}>
               Go Home
             </Button>
-            <Button variant="outline" onClick={this.handleReportError}>
-              Report Issue
-            </Button>
+            {/* Show Sentry feedback dialog if available, otherwise use email */}
+            {Sentry && eventId ? (
+              <Button 
+                variant="outline" 
+                onClick={() => Sentry.showReportDialog({ eventId })}
+              >
+                Report Feedback
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={this.handleReportError}>
+                Report Issue
+              </Button>
+            )}
           </ActionButtons>
 
           {isDevelopment && error && (

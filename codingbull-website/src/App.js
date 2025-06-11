@@ -8,6 +8,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingFallback from './components/LoadingFallback'; // Import the new component
+// Removed ErrorDashboard - will be admin-only
 
 // Custom shouldForwardProp function to filter out motion props and custom props
 const shouldForwardProp = (prop) => {

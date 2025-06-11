@@ -551,3 +551,134 @@ class RateLimitTracker(models.Model):
             self.save(update_fields=['is_blocked', 'blocked_until'])
             return False
         return True
+
+
+# Custom Error Tracking Models
+class ErrorLog(models.Model):
+    """Frontend error tracking model"""
+    
+    ERROR_TYPES = [
+        ('javascript', 'JavaScript Error'),
+        ('api', 'API Error'),
+        ('network', 'Network Error'),
+        ('render', 'Render Error'),
+        ('performance', 'Performance Issue'),
+    ]
+    
+    SEVERITY_LEVELS = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('critical', 'Critical'),
+    ]
+    
+    # Basic info
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    error_type = models.CharField(max_length=20, choices=ERROR_TYPES, db_index=True)
+    severity = models.CharField(max_length=10, choices=SEVERITY_LEVELS, default='medium', db_index=True)
+    
+    # Error details
+    message = models.TextField()
+    stack_trace = models.TextField(blank=True, null=True)
+    component_stack = models.TextField(blank=True, null=True)
+    
+    # Context
+    url = models.URLField(max_length=500)
+    user_agent = models.TextField()
+    browser_info = models.JSONField(default=dict, blank=True)  # Browser, OS, device info
+    
+    # User context
+    user_id = models.CharField(max_length=100, blank=True, null=True)  # Anonymous ID
+    session_id = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Performance data
+    page_load_time = models.PositiveIntegerField(null=True, blank=True)  # milliseconds
+    memory_usage = models.PositiveIntegerField(null=True, blank=True)  # MB
+    
+    # Breadcrumbs (user actions leading to error)
+    breadcrumbs = models.JSONField(default=list, blank=True)
+    
+    # Additional context
+    extra_data = models.JSONField(default=dict, blank=True)
+    
+    # Tracking
+    count = models.PositiveIntegerField(default=1)  # How many times this error occurred
+    first_seen = models.DateTimeField(auto_now_add=True)
+    last_seen = models.DateTimeField(auto_now=True)
+    
+    # Status
+    is_resolved = models.BooleanField(default=False)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    resolved_by = models.CharField(max_length=100, blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['error_type', 'severity']),
+            models.Index(fields=['url', 'timestamp']),
+            models.Index(fields=['is_resolved', 'severity']),
+        ]
+    
+    def __str__(self):
+        return f"{self.error_type}: {self.message[:50]}..."
+
+
+class PerformanceLog(models.Model):
+    """Performance monitoring model"""
+    
+    METRIC_TYPES = [
+        ('page_load', 'Page Load'),
+        ('api_call', 'API Call'),
+        ('component_render', 'Component Render'),
+        ('user_interaction', 'User Interaction'),
+    ]
+    
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    metric_type = models.CharField(max_length=20, choices=METRIC_TYPES, db_index=True)
+    
+    # Performance metrics
+    duration = models.PositiveIntegerField()  # milliseconds
+    url = models.URLField(max_length=500)
+    
+    # Context
+    user_agent = models.TextField()
+    user_id = models.CharField(max_length=100, blank=True, null=True)
+    session_id = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Additional metrics
+    metrics = models.JSONField(default=dict, blank=True)  # Custom metrics
+    
+    class Meta:
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['metric_type', 'timestamp']),
+            models.Index(fields=['url', 'timestamp']),
+        ]
+
+
+class UserSession(models.Model):
+    """Track user sessions for impact analysis"""
+    
+    session_id = models.CharField(max_length=100, unique=True, db_index=True)
+    user_id = models.CharField(max_length=100, blank=True, null=True)
+    
+    # Session info
+    start_time = models.DateTimeField(auto_now_add=True)
+    last_activity = models.DateTimeField(auto_now=True)
+    duration = models.PositiveIntegerField(default=0)  # seconds
+    
+    # Browser/Device info
+    user_agent = models.TextField()
+    browser_info = models.JSONField(default=dict, blank=True)
+    
+    # Activity tracking
+    page_views = models.PositiveIntegerField(default=0)
+    errors_encountered = models.PositiveIntegerField(default=0)
+    
+    # Geographic info (optional)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    
+    class Meta:
+        ordering = ['-start_time']
