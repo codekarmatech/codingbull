@@ -1,0 +1,60 @@
+{
+  "name": "codingbull-website",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@sentry/react": "^9.23.0",
+    "@sentry/tracing": "^7.120.3",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
+    "framer-motion": "^12.15.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^7.6.1",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.18",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start:dev": "node scripts/switch-env.js development && react-scripts start",
+    "start:prod": "node scripts/switch-env.js production && react-scripts start",
+    "build": "react-scripts build",
+    "build:dev": "node scripts/switch-env.js development && react-scripts build",
+    "build:prod": "node scripts/switch-env.js production && GENERATE_SOURCEMAP=false react-scripts build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "test": "react-scripts test",
+    "test:env": "node scripts/switch-env.js test && react-scripts test",
+    "eject": "react-scripts eject",
+    "env:switch": "node scripts/switch-env.js",
+    "env:status": "node scripts/switch-env.js status",
+    "env:dev": "node scripts/switch-env.js development",
+    "env:prod": "node scripts/switch-env.js production"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/user-event": "^14.6.1",
+    "http-proxy-middleware": "^3.0.5",
+    "jest-environment-jsdom": "^30.0.0-beta.3",
+    "source-map-explorer": "^2.5.3"
+  }
+}

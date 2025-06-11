@@ -58,6 +58,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'api.security_middleware.EnhancedSecurityMiddleware',  # Enhanced security middleware first
+    'api.security_headers_middleware.SecurityHeadersMiddleware',  # Security headers
+    'api.security_headers_middleware.APISecurityHeadersMiddleware',  # API-specific headers
+    'api.security_headers_middleware.MediaSecurityMiddleware',  # Media file security
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -99,6 +102,32 @@ else:
 
 # CORS settings for media files
 CORS_URLS_REGEX = r'^/(api|media)/.*$'
+
+# Additional CORS settings for media files
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'cache-control',
+    'if-modified-since',
+    'if-none-match',
+]
+
+# Allow common HTTP methods for media files
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # Django REST Framework settings
 REST_FRAMEWORK = {

@@ -1,11 +1,26 @@
 /**
  * Environment Configuration
- * Centralized configuration management with validation and type safety
+ * Centralized configuration management with automatic environment detection
+ * Supports development, production, and staging environments
  */
 
-// Environment validation schema
+// Environment detection and validation
+const detectEnvironment = () => {
+  // Priority: REACT_APP_ENV > NODE_ENV > default to development
+  const reactAppEnv = process.env.REACT_APP_ENV?.toLowerCase();
+  const nodeEnv = process.env.NODE_ENV?.toLowerCase();
+
+  if (reactAppEnv) return reactAppEnv;
+  if (nodeEnv === 'production') return 'production';
+  if (nodeEnv === 'test') return 'test';
+  return 'development';
+};
+
+// Get current environment
+const currentEnvironment = detectEnvironment();
+
+// Environment validation schema (only critical ones required)
 const requiredEnvVars = [
-  'REACT_APP_ENV',
   'REACT_APP_API_BASE_URL',
   'REACT_APP_SUPPORT_EMAIL',
   'REACT_APP_CONTACT_EMAIL'
@@ -14,11 +29,14 @@ const requiredEnvVars = [
 // Validate required environment variables
 const validateEnvironment = () => {
   const missing = requiredEnvVars.filter(envVar => !process.env[envVar]);
-  
+
   if (missing.length > 0) {
-    console.error('Missing required environment variables:', missing);
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+    console.warn('Missing environment variables:', missing);
+    console.warn('Using default values. For production, ensure all variables are set.');
+
+    // Only throw error in production for critical missing vars
+    if (currentEnvironment === 'production' && missing.includes('REACT_APP_API_BASE_URL')) {
+      throw new Error(`Critical environment variable missing in production: REACT_APP_API_BASE_URL`);
     }
   }
 };
@@ -45,19 +63,53 @@ const parseArray = (value, defaultValue = []) => {
 // Validate environment on module load
 validateEnvironment();
 
-// Configuration object
+// Environment-specific defaults
+const environmentDefaults = {
+  development: {
+    apiBaseUrl: 'http://localhost:8000/api/v1',
+    apiTimeout: 15000,
+    enableDebug: true,
+    enableMockFallback: true,
+    enableAnalytics: false,
+    generateSourceMap: true,
+    cacheTimeout: 0,
+  },
+  production: {
+    apiBaseUrl: 'https://api.codingbullz.com/api/v1',
+    apiTimeout: 10000,
+    enableDebug: false,
+    enableMockFallback: false,
+    enableAnalytics: true,
+    generateSourceMap: false,
+    cacheTimeout: 3600,
+  },
+  test: {
+    apiBaseUrl: 'http://localhost:8000/api/v1',
+    apiTimeout: 5000,
+    enableDebug: false,
+    enableMockFallback: true,
+    enableAnalytics: false,
+    generateSourceMap: false,
+    cacheTimeout: 0,
+  }
+};
+
+// Get defaults for current environment
+const envDefaults = environmentDefaults[currentEnvironment] || environmentDefaults.development;
+
+// Configuration object with intelligent defaults
 const config = {
   // Environment
-  env: process.env.REACT_APP_ENV || 'development',
+  env: currentEnvironment,
   nodeEnv: process.env.NODE_ENV || 'development',
-  isDevelopment: process.env.NODE_ENV === 'development',
-  isProduction: process.env.NODE_ENV === 'production',
-  isTest: process.env.NODE_ENV === 'test',
+  isDevelopment: currentEnvironment === 'development',
+  isProduction: currentEnvironment === 'production',
+  isTest: currentEnvironment === 'test',
 
-  // API Configuration
+  // API Configuration with environment-aware defaults
   api: {
-    baseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/v1/',
-    timeout: parseNumber(process.env.REACT_APP_API_TIMEOUT, 10000),
+    baseUrl: (process.env.REACT_APP_API_BASE_URL || envDefaults.apiBaseUrl).replace(/\/$/, ''),
+    timeout: parseNumber(process.env.REACT_APP_API_TIMEOUT, envDefaults.apiTimeout),
   },
 
   // Security Configuration
@@ -73,14 +125,15 @@ const config = {
     hotjarId: process.env.REACT_APP_HOTJAR_ID || '',
   },
 
-  // Feature Flags
+  // Feature Flags with environment-aware defaults
   features: {
-    enableAnalytics: parseBoolean(process.env.REACT_APP_ENABLE_ANALYTICS),
-    enableErrorReporting: parseBoolean(process.env.REACT_APP_ENABLE_ERROR_REPORTING),
-    enablePerformanceMonitoring: parseBoolean(process.env.REACT_APP_ENABLE_PERFORMANCE_MONITORING),
-    enableDebugMode: parseBoolean(process.env.REACT_APP_ENABLE_DEBUG_MODE, true),
-    enableReduxDevtools: parseBoolean(process.env.REACT_APP_ENABLE_REDUX_DEVTOOLS, true),
-    mockApi: parseBoolean(process.env.REACT_APP_MOCK_API),
+    enableAnalytics: parseBoolean(process.env.REACT_APP_ENABLE_ANALYTICS, envDefaults.enableAnalytics),
+    enableErrorReporting: parseBoolean(process.env.REACT_APP_ENABLE_ERROR_REPORTING, true),
+    enablePerformanceMonitoring: parseBoolean(process.env.REACT_APP_ENABLE_PERFORMANCE_MONITORING, true),
+    enableDebugMode: parseBoolean(process.env.REACT_APP_ENABLE_DEBUG_MODE, envDefaults.enableDebug),
+    enableReduxDevtools: parseBoolean(process.env.REACT_APP_ENABLE_REDUX_DEVTOOLS, currentEnvironment === 'development'),
+    mockApi: parseBoolean(process.env.REACT_APP_MOCK_API, false),
+    enableMockFallback: parseBoolean(process.env.REACT_APP_ENABLE_MOCK_FALLBACK, envDefaults.enableMockFallback),
   },
 
   // Contact Information
@@ -96,32 +149,57 @@ const config = {
     twitter: process.env.REACT_APP_TWITTER_URL || '',
   },
 
-  // Build Information
+  // Build Information with environment awareness
   build: {
-    version: process.env.REACT_APP_BUILD_VERSION || '1.0.0',
+    version: process.env.REACT_APP_BUILD_VERSION || (currentEnvironment === 'production' ? '1.0.0' : '1.0.0-dev'),
     date: process.env.REACT_APP_BUILD_DATE || new Date().toISOString(),
-    generateSourceMap: parseBoolean(process.env.GENERATE_SOURCEMAP, true),
+    generateSourceMap: parseBoolean(process.env.GENERATE_SOURCEMAP, envDefaults.generateSourceMap),
+    environment: currentEnvironment,
   },
 
-  // Performance Configuration
+  // Performance Configuration with environment-aware defaults
   performance: {
     lazyLoadingThreshold: parseNumber(process.env.REACT_APP_LAZY_LOADING_THRESHOLD, 0.1),
-    imageOptimization: parseBoolean(process.env.REACT_APP_IMAGE_OPTIMIZATION, true),
-    cacheDuration: parseNumber(process.env.REACT_APP_CACHE_DURATION, 3600),
+    imageOptimization: parseBoolean(process.env.REACT_APP_IMAGE_OPTIMIZATION, currentEnvironment === 'production'),
+    cacheDuration: parseNumber(process.env.REACT_APP_CACHE_DURATION, envDefaults.cacheTimeout),
   },
 };
 
 // Freeze the configuration object to prevent modifications
 Object.freeze(config);
 
-// Log configuration in development
-if (config.isDevelopment && config.features.enableDebugMode) {
-  console.log('🔧 Application Configuration:', {
-    env: config.env,
-    api: config.api,
-    features: config.features,
-    build: config.build,
+// Enhanced logging with environment detection
+if (config.features.enableDebugMode) {
+  console.log(`🔧 CodingBull Configuration [${config.env.toUpperCase()}]:`, {
+    environment: config.env,
+    api: {
+      baseUrl: config.api.baseUrl,
+      timeout: config.api.timeout,
+    },
+    features: {
+      analytics: config.features.enableAnalytics,
+      debug: config.features.enableDebugMode,
+      mockFallback: config.features.enableMockFallback,
+    },
+    build: {
+      version: config.build.version,
+      environment: config.build.environment,
+      sourceMaps: config.build.generateSourceMap,
+    },
   });
+
+  // Environment-specific warnings
+  if (config.env === 'development') {
+    console.log('🚀 Running in DEVELOPMENT mode');
+    if (config.api.baseUrl.includes('localhost')) {
+      console.log('📡 Using local API server');
+    }
+  } else if (config.env === 'production') {
+    console.log('🏭 Running in PRODUCTION mode');
+    if (config.features.enableDebugMode) {
+      console.warn('⚠️ Debug mode is enabled in production!');
+    }
+  }
 }
 
 export default config;

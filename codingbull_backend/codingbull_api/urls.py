@@ -18,18 +18,23 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import RedirectView
+
 from rest_framework import routers
 from api import views, admin_views
 
+# Function to register common routes to avoid duplication
+def register_common_routes(router):
+    """Register common API routes to a router"""
+    router.register(r'categories', views.CategoryViewSet)
+    router.register(r'blogs', views.BlogPostViewSet)
+    router.register(r'projects', views.ProjectViewSet)
+    router.register(r'services', views.ServiceViewSet, basename='service')
+    router.register(r'contact', views.ContactInquiryViewSet, basename='contact')
+    router.register(r'testimonials', views.TestimonialViewSet)
+
 # Create the main router for API v1
 router = routers.DefaultRouter()
-router.register(r'categories', views.CategoryViewSet)
-router.register(r'blogs', views.BlogPostViewSet)
-router.register(r'projects', views.ProjectViewSet)
-router.register(r'services', views.ServiceViewSet, basename='service')
-router.register(r'contact', views.ContactInquiryViewSet, basename='contact')
-router.register(r'testimonials', views.TestimonialViewSet)
+register_common_routes(router)
 
 # Main URL patterns
 urlpatterns = [
@@ -51,12 +56,7 @@ urlpatterns = [
 
 # Create a separate router for backward compatibility
 legacy_router = routers.DefaultRouter()
-legacy_router.register(r'categories', views.CategoryViewSet)
-legacy_router.register(r'blogs', views.BlogPostViewSet)
-legacy_router.register(r'projects', views.ProjectViewSet)
-legacy_router.register(r'services', views.ServiceViewSet, basename='service')
-legacy_router.register(r'contact', views.ContactInquiryViewSet, basename='contact')
-legacy_router.register(r'testimonials', views.TestimonialViewSet)
+register_common_routes(legacy_router)
 
 # Add legacy URL patterns for backward compatibility
 urlpatterns += [
@@ -74,8 +74,41 @@ urlpatterns += [
 
 # Serve media files based on environment
 if settings.DEBUG or settings.ENVIRONMENT == 'development':
-    # In development, serve media files directly
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # In development, serve media files directly with CORS support
+    from django.views.static import serve
+    from django.http import HttpResponse
+    from django.views.decorators.csrf import csrf_exempt
+
+    @csrf_exempt
+    def cors_media_serve(request, path):
+        """Serve media files with minimal CORS headers for Chrome compatibility"""
+        if request.method == 'OPTIONS':
+            # Handle preflight requests with minimal headers
+            response = HttpResponse()
+            origin = request.META.get('HTTP_ORIGIN', '')
+            if 'localhost' in origin or '127.0.0.1' in origin:
+                response['Access-Control-Allow-Origin'] = origin
+                response['Access-Control-Allow-Methods'] = 'GET, HEAD, OPTIONS'
+                response['Access-Control-Allow-Headers'] = '*'
+                response['Access-Control-Allow-Credentials'] = 'true'
+                response['Access-Control-Max-Age'] = '86400'
+            return response
+        else:
+            # Serve the actual file with minimal processing
+            file_response = serve(request, path, document_root=settings.MEDIA_ROOT)
+
+            # Add minimal CORS headers directly to file response
+            origin = request.META.get('HTTP_ORIGIN', '')
+            if 'localhost' in origin or '127.0.0.1' in origin:
+                file_response['Access-Control-Allow-Origin'] = origin
+                file_response['Access-Control-Allow-Credentials'] = 'true'
+
+            return file_response
+
+    # Add CORS-enabled media serving
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', cors_media_serve),
+    ]
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 elif settings.ENVIRONMENT == 'production' and hasattr(settings, 'SECURE_MEDIA_SERVING') and settings.SECURE_MEDIA_SERVING:
     # In production, provide fallback media serving with security headers
