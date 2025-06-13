@@ -14,6 +14,13 @@ const GlobalStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+
+    /* Enable 3D transforms globally */
+    perspective: 2000px;
+    transform-style: preserve-3d;
   }
 
   body {
@@ -24,13 +31,47 @@ const GlobalStyles = createGlobalStyle`
     font-weight: ${props => props.theme.fontWeights.normal};
     overflow-x: hidden;
     min-height: 100vh;
-    
+    font-display: swap;
+
     /* Enhanced background with subtle gradient */
-    background: linear-gradient(135deg, 
-      ${props => props.theme.colors.deepBlue} 0%, 
-      ${props => props.theme.colors.darkGrey} 50%, 
+    background: linear-gradient(135deg,
+      ${props => props.theme.colors.deepBlue} 0%,
+      ${props => props.theme.colors.darkGrey} 50%,
       ${props => props.theme.colors.deepBlue} 100%);
     background-attachment: fixed;
+
+    /* Font loading states - improved to prevent FOIT */
+    &.fonts-loading {
+      /* Use system fonts while loading to prevent invisible text */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+    }
+
+    &.fonts-loaded {
+      /* Apply custom fonts once loaded */
+      font-family: ${props => props.theme.fonts.primary};
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: ${props => props.theme.fonts.display};
+      }
+    }
+
+    &.fonts-fallback {
+      /* Fallback to system fonts if loading fails */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+    }
+
+    &.fonts-fallback {
+      visibility: visible;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
   }
 
   /* Professional scrollbar styling */

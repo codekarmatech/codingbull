@@ -1,33 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import bullLogo from '../assets/codingbulllogo.png';
 
-// Professional navbar container with glass morphism
+// Professional navbar container with glass morphism - Smaller height
 const NavbarContainer = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: ${props => props.theme.zIndex.sticky};
-  padding: ${props => props.theme.spacing[4]} ${props => props.theme.spacing[6]};
+  padding: ${props => props.theme.spacing[1]} ${props => props.theme.spacing[6]}; /* Reduced from spacing[2] to spacing[1] */
   transition: all ${props => props.theme.animations.normal};
-  
-  background: ${props => props.$scrolled 
-    ? props.theme.colors.glassDark 
+  height: 70px; /* Fixed smaller height */
+
+  background: ${props => props.$scrolled
+    ? props.theme.colors.glassDark
     : 'rgba(10, 14, 26, 0.8)'};
   backdrop-filter: ${props => props.$scrolled ? 'blur(20px) saturate(180%)' : 'blur(10px)'};
-  border-bottom: ${props => props.$scrolled 
-    ? `1px solid ${props.theme.colors.glassBorder}` 
+  border-bottom: ${props => props.$scrolled
+    ? `1px solid ${props.theme.colors.glassBorder}`
     : 'none'};
-  box-shadow: ${props => props.$scrolled 
-    ? props.theme.shadows.glass 
+  box-shadow: ${props => props.$scrolled
+    ? props.theme.shadows.glass
     : 'none'};
-  
+
   @media (max-width: ${props => props.theme.breakpoints.md}) {
-    padding: ${props => props.theme.spacing[3]} ${props => props.theme.spacing[4]};
+    padding: ${props => props.theme.spacing[1]} ${props => props.theme.spacing[4]}; /* Reduced padding */
+    height: 60px; /* Smaller height on mobile */
   }
 `;
 
@@ -39,9 +41,10 @@ const NavbarContent = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  height: 100%; /* Ensure full height usage */
 `;
 
-// Professional logo container with enhanced styling
+// Professional logo container with enhanced styling (simplified)
 const LogoContainer = styled(motion.div)`
   display: flex;
   align-items: center;
@@ -50,7 +53,10 @@ const LogoContainer = styled(motion.div)`
   padding: ${props => props.theme.spacing[2]};
   border-radius: ${props => props.theme.borderRadius.lg};
   transition: all ${props => props.theme.animations.normal};
-  
+  position: relative;
+  perspective: 1000px; /* Enable 3D perspective for logo image */
+  transform-style: preserve-3d;
+
   &:hover {
     background: ${props => props.theme.colors.glassLight};
     transform: translateY(-1px);
@@ -58,24 +64,56 @@ const LogoContainer = styled(motion.div)`
   }
 `;
 
-// Enhanced logo image styling
+// Enhanced logo image with 3D effects and larger size
 const LogoImage = styled.img`
-  height: 48px;
+  height: 60px; /* Increased from 48px */
   width: auto;
   transition: all ${props => props.theme.animations.normal};
-  filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.3));
-  
+  position: relative;
+  z-index: 2;
+
+  /* 3D effect with multiple shadows and transforms */
+  filter:
+    drop-shadow(0 0 12px rgba(43, 155, 244, 0.4))
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 0 20px rgba(43, 155, 244, 0.2));
+
+  transform:
+    translateZ(20px) /* Push logo forward in 3D space */
+    rotateX(2deg); /* Slight tilt for depth */
+
   @media (max-width: ${props => props.theme.breakpoints.md}) {
-    height: 40px;
+    height: 50px; /* Increased from 40px */
   }
-  
+
   ${LogoContainer}:hover & {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 12px rgba(0, 102, 255, 0.5));
+    transform:
+      translateZ(30px) /* Push further forward on hover */
+      rotateX(-2deg)
+      rotateY(3deg)
+      scale(1.1); /* Increased scale effect */
+
+    filter:
+      drop-shadow(0 0 20px rgba(43, 155, 244, 0.6))
+      drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4))
+      drop-shadow(0 0 30px rgba(43, 155, 244, 0.3))
+      drop-shadow(0 0 40px rgba(94, 186, 255, 0.2)); /* Additional glow layers */
+  }
+
+  /* Subtle floating animation */
+  animation: logoFloat 4s ease-in-out infinite;
+
+  @keyframes logoFloat {
+    0%, 100% {
+      transform: translateZ(20px) rotateX(2deg) translateY(0px);
+    }
+    50% {
+      transform: translateZ(25px) rotateX(1deg) translateY(-2px);
+    }
   }
 `;
 
-// Professional logo text with gradient and glow
+// Professional logo text with gradient and glow (reverted to original)
 const LogoText = styled.h1`
   font-size: ${props => props.theme.fontSizes['2xl']};
   font-weight: ${props => props.theme.fontWeights.bold};
@@ -87,11 +125,11 @@ const LogoText = styled.h1`
   background-clip: text;
   filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.4));
   letter-spacing: -0.02em;
-  
+
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     font-size: ${props => props.theme.fontSizes.xl};
   }
-  
+
   ${LogoContainer}:hover & {
     filter: drop-shadow(0 0 12px rgba(0, 102, 255, 0.6));
   }
@@ -273,7 +311,6 @@ const Navbar = () => {
     { name: 'Our Projects', path: '/our-projects' },
     { name: 'About', path: '/about' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Contact', path: '/contact' },
   ];
   
   // Handle scroll event to change navbar appearance

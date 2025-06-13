@@ -1,21 +1,21 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 import { prefersReducedMotion } from '../utils/accessibility';
-import { shouldForwardButtonProp } from '../utils/styledHelpers';
 
 // Professional button variants using theme system
 const VARIANTS = {
   primary: {
     background: props => props.theme.colors.buttonPrimary,
-    color: props => '#FFFFFF', // Pure white for maximum contrast
+    color: '#FFFFFF', // Pure white for maximum contrast
     border: 'none',
     boxShadow: props => props.theme.shadows.button,
     fontWeight: props => props.theme.fontWeights.bold, // Bolder text for better visibility
   },
   secondary: {
     background: props => props.theme.colors.buttonSecondary,
-    color: props => '#F9FAFB', // Light color for better contrast
+    color: '#F9FAFB', // Light color for better contrast
     border: props => `2px solid ${props.theme.colors.borderGrey}`,
     boxShadow: props => props.theme.shadows.base,
     fontWeight: props => props.theme.fontWeights.semibold, // Semibold for better visibility
@@ -53,14 +53,19 @@ const SIZES = {
 };
 
 const StyledButton = styled(motion.button).withConfig({
-  shouldForwardProp: shouldForwardButtonProp
+  shouldForwardProp: (prop) => {
+    // Filter out Framer Motion props that shouldn't be passed to DOM
+    const motionProps = ['whileHover', 'whileTap', 'initial', 'animate', 'exit', 'variants', 'transition', 'whileInView', 'viewport'];
+    // Filter out props starting with $ (styled-components convention)
+    return !motionProps.includes(prop) && !prop.startsWith('$');
+  },
 })`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: ${props => props.theme.spacing[2]};
   font-weight: ${props => {
-    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    const variant = VARIANTS[props.$variant] || VARIANTS.primary;
     return typeof variant.fontWeight === 'function' ? variant.fontWeight(props) : props.theme.fontWeights.semibold;
   }};
   font-family: ${props => props.theme.fonts.primary};
@@ -76,34 +81,34 @@ const StyledButton = styled(motion.button).withConfig({
 
   // Apply variant styles
   background: ${props => {
-    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    const variant = VARIANTS[props.$variant] || VARIANTS.primary;
     return typeof variant.background === 'function' ? variant.background(props) : variant.background;
   }};
   color: ${props => {
-    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    const variant = VARIANTS[props.$variant] || VARIANTS.primary;
     return typeof variant.color === 'function' ? variant.color(props) : variant.color;
   }};
   border: ${props => {
-    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    const variant = VARIANTS[props.$variant] || VARIANTS.primary;
     return typeof variant.border === 'function' ? variant.border(props) : variant.border;
   }};
   box-shadow: ${props => {
-    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    const variant = VARIANTS[props.$variant] || VARIANTS.primary;
     return typeof variant.boxShadow === 'function' ? variant.boxShadow(props) : variant.boxShadow;
   }};
 
   // Apply size styles
   padding: ${props => {
-    const size = SIZES[props.size] || SIZES.md;
+    const size = SIZES[props.$size] || SIZES.md;
     return typeof size.padding === 'function' ? size.padding(props) : size.padding;
   }};
   font-size: ${props => {
-    const size = SIZES[props.size] || SIZES.md;
+    const size = SIZES[props.$size] || SIZES.md;
     return typeof size.fontSize === 'function' ? size.fontSize(props) : size.fontSize;
   }};
 
   // Full width option
-  width: ${props => props.fullWidth ? '100%' : 'auto'};
+  width: ${props => props.$fullWidth ? '100%' : 'auto'};
 
   // Disabled state
   opacity: ${props => props.disabled ? 0.6 : 1};
@@ -118,9 +123,9 @@ const StyledButton = styled(motion.button).withConfig({
     right: -2px;
     bottom: -2px;
     z-index: -1;
-    background: ${props => props.variant === 'primary' 
+    background: ${props => props.$variant === 'primary'
       ? props.theme.colors.gradientPrimary
-      : props.variant === 'secondary' 
+      : props.$variant === 'secondary'
         ? props.theme.colors.gradientSecondary
         : 'transparent'};
     opacity: 0;
@@ -132,11 +137,11 @@ const StyledButton = styled(motion.button).withConfig({
   // Professional hover effects using theme
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: ${props => props.variant === 'primary' 
+    box-shadow: ${props => props.$variant === 'primary'
       ? props.theme.shadows.buttonHover
-      : props.variant === 'secondary' 
+      : props.$variant === 'secondary'
         ? props.theme.shadows.cardHover
-        : props.variant === 'outline'
+        : props.$variant === 'outline'
           ? props.theme.shadows.glow
           : 'none'};
 
@@ -144,23 +149,23 @@ const StyledButton = styled(motion.button).withConfig({
       opacity: 0.7;
     }
 
-    ${props => props.variant === 'primary' && `
+    ${props => props.$variant === 'primary' && `
       background: ${props.theme.colors.buttonHoverPrimary};
       color: #FFFFFF; /* Maintain white text on hover for readability */
     `}
 
-    ${props => props.variant === 'secondary' && `
+    ${props => props.$variant === 'secondary' && `
       background: ${props.theme.colors.glassLight};
       color: #FFFFFF; /* White text for better contrast */
       border-color: ${props.theme.colors.brandPrimary};
     `}
 
-    ${props => props.variant === 'outline' && `
+    ${props => props.$variant === 'outline' && `
       background: ${props.theme.colors.overlayLight};
       color: ${props.theme.colors.brandLight}; /* Lighter brand color for better visibility */
     `}
 
-    ${props => props.variant === 'ghost' && `
+    ${props => props.$variant === 'ghost' && `
       background: ${props.theme.colors.glassLight};
       color: ${props.theme.colors.brandLight}; /* Lighter brand color for better visibility */
     `}
@@ -169,10 +174,10 @@ const StyledButton = styled(motion.button).withConfig({
   // Focus state using theme variables
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(43, 155, 244, 0.4), 
-                ${props => props.variant === 'primary' 
+    box-shadow: 0 0 0 3px rgba(43, 155, 244, 0.4),
+                ${props => props.$variant === 'primary'
                   ? props.theme.shadows.buttonHover
-                  : props.variant === 'secondary' 
+                  : props.$variant === 'secondary'
                     ? props.theme.shadows.buttonHoverSecondary
                     : '0 8px 25px rgba(43, 155, 244, 0.3)'};
   }
@@ -180,11 +185,11 @@ const StyledButton = styled(motion.button).withConfig({
   // Active state using theme variables
   &:active:not(:disabled) {
     transform: translateY(1px);
-    box-shadow: ${props => props.variant === 'primary' 
+    box-shadow: ${props => props.$variant === 'primary'
       ? props.theme.shadows.button
-      : props.variant === 'secondary' 
+      : props.$variant === 'secondary'
         ? props.theme.shadows.buttonSecondary
-        : props.variant === 'outline'
+        : props.$variant === 'outline'
           ? props.theme.shadows.sm
           : 'none'};
   }
@@ -193,9 +198,9 @@ const StyledButton = styled(motion.button).withConfig({
   .ripple {
     position: absolute;
     border-radius: 50%;
-    background: ${props => props.variant === 'primary' 
-      ? 'rgba(43, 155, 244, 0.6)' 
-      : props.variant === 'secondary' 
+    background: ${props => props.$variant === 'primary'
+      ? 'rgba(43, 155, 244, 0.6)'
+      : props.$variant === 'secondary'
         ? 'rgba(43, 155, 244, 0.6)'
         : 'rgba(255, 255, 255, 0.6)'};
     transform: scale(0);
@@ -320,9 +325,9 @@ const Button = ({
 
   return (
     <StyledButton
-      variant={variant}
-      size={size}
-      fullWidth={fullWidth}
+      $variant={variant}
+      $size={size}
+      $fullWidth={fullWidth}
       disabled={disabled || loading}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -347,6 +352,28 @@ const Button = ({
       )}
     </StyledButton>
   );
+};
+
+// PropTypes for type checking
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'ghost']),
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
+  loading: PropTypes.bool,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
+  className: PropTypes.string,
+  'aria-label': PropTypes.string,
+};
+
+// Default props
+Button.defaultProps = {
+  variant: 'primary',
+  size: 'md',
+  loading: false,
+  disabled: false,
+  type: 'button',
 };
 
 export default memo(Button);

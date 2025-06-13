@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, StyleSheetManager } from 'styled-components';
 import { AnimatePresence } from 'framer-motion';
@@ -7,9 +7,10 @@ import theme from './styles/theme';
 import GlobalStyles from './styles/GlobalStyles';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
-import LoadingFallback from './components/LoadingFallback'; // Import the new component
-import ScrollToTop from './components/ScrollToTop'; // Import ScrollToTop component
-// Removed ErrorDashboard - will be admin-only
+import LoadingFallback from './components/LoadingFallback';
+import ScrollToTop from './components/ScrollToTop';
+import { initializeSecurity } from './utils/securityEnhancements';
+import { initializePerformanceOptimizations } from './utils/performanceOptimizations';
 
 // Custom shouldForwardProp function to filter out motion props and custom props
 const shouldForwardProp = (prop) => {
@@ -33,6 +34,12 @@ const TestPage = lazy(() => import('./pages/TestPage'));
 // Removed old LoadingFallback component definition
 
 function App() {
+  // Initialize security and performance optimizations
+  useEffect(() => {
+    initializeSecurity();
+    initializePerformanceOptimizations();
+  }, []);
+
   return (
     <HelmetProvider>
       <StyleSheetManager shouldForwardProp={shouldForwardProp}>
@@ -40,7 +47,7 @@ function App() {
           <GlobalStyles />
           <ErrorBoundary>
             <Router>
-              <ScrollToTop /> {/* Add ScrollToTop component here */}
+              <ScrollToTop />
               <Navbar />
               <AnimatePresence mode="wait">
                 <Suspense fallback={<LoadingFallback />}>
@@ -55,7 +62,6 @@ function App() {
                     <Route path="/our-projects/:id" element={<ProjectsPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/test" element={<TestPage />} />
-                    {/* Add more routes as needed */}
                   </Routes>
                 </Suspense>
               </AnimatePresence>

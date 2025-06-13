@@ -58,23 +58,23 @@ const HeroContainer = styled.section`
     animation: pulseVignette 15s infinite alternate ease-in-out;
   }
   
-  /* Dark color wave animations */
-  @keyframes gradientShift {
+  /* Modern morphing shapes animation - 2025 trending */
+  @keyframes morphingShapes {
     0%, 100% {
-      background: linear-gradient(
-        135deg, 
-        rgba(5, 5, 20, 0.95) 0%, 
-        rgba(10, 10, 30, 0.85) 50%,
-        rgba(5, 5, 20, 0.95) 100%
-      );
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      transform: rotate(0deg) scale(1);
+    }
+    25% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+      transform: rotate(90deg) scale(1.05);
     }
     50% {
-      background: linear-gradient(
-        135deg, 
-        rgba(10, 10, 30, 0.95) 0%, 
-        rgba(15, 15, 40, 0.85) 50%,
-        rgba(10, 10, 30, 0.95) 100%
-      );
+      border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+      transform: rotate(180deg) scale(0.95);
+    }
+    75% {
+      border-radius: 60% 40% 60% 30% / 70% 30% 60% 40%;
+      transform: rotate(270deg) scale(1.02);
     }
   }
   
@@ -193,29 +193,16 @@ const Headline = styled(motion.h1)`
   font-weight: 800; /* Bolder weight for more impact */
   letter-spacing: -0.5px; /* Tighter letter spacing for luxury feel */
   
-  /* Animated glow effect */
-  &::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: ${props => props.theme.colors.gradientPrimary};
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: blur(10px); /* Increased blur for more dramatic effect */
-    opacity: 0.4; /* Slightly increased opacity */
-    animation: glowPulse 3s infinite alternate ease-in-out;
-  }
+  /* Clean styling without interfering glow effects */
   
-  @keyframes glowPulse {
-    0% {
-      filter: blur(8px);
-      opacity: 0.3;
+  @keyframes depthFloat {
+    0%, 100% {
+      transform: translateZ(0px) rotateX(0deg);
+      filter: blur(8px) brightness(1);
     }
-    100% {
-      filter: blur(12px);
-      opacity: 0.5;
+    50% {
+      transform: translateZ(10px) rotateX(2deg);
+      filter: blur(6px) brightness(1.2);
     }
   }
   
@@ -297,26 +284,27 @@ const ButtonGroup = styled(motion.div)`
   &::after {
     content: '';
     position: absolute;
-    bottom: -15px;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: linear-gradient(to bottom, rgba(33, 150, 243, 0.2), transparent); /* Blue glow */
-    filter: blur(10px);
-    border-radius: 50%;
-    opacity: 0.6;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 20px;
+    background: rgba(43, 155, 244, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(43, 155, 244, 0.2);
     pointer-events: none;
-    animation: glowFloat 3s infinite alternate ease-in-out;
+    animation: glassFloat 4s infinite ease-in-out;
   }
-  
-  @keyframes glowFloat {
-    0% {
-      opacity: 0.4;
-      filter: blur(8px);
+
+  @keyframes glassFloat {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0px) scale(1);
+      opacity: 0.6;
     }
-    100% {
-      opacity: 0.7;
-      filter: blur(12px);
+    50% {
+      transform: translateX(-50%) translateY(-3px) scale(1.05);
+      opacity: 0.8;
     }
   }
   
@@ -396,18 +384,35 @@ const Hero = () => {
         pointerEvents: 'none'
       }}>
         {/* Gradient overlays with subtle motion */}
-        <motion.div 
+        {/* Modern morphing background shape */}
+        <motion.div
           style={{
             position: 'absolute',
-            top: '0%',
-            left: '0%',
-            width: '100%',
-            height: '100%',
-            background: 'radial-gradient(circle at 30% 30%, rgba(10, 36, 99, 0.1) 0%, transparent 70%)',
-            zIndex: 2
+            top: '20%',
+            right: '10%',
+            width: '300px',
+            height: '300px',
+            background: 'rgba(43, 155, 244, 0.05)',
+            backdropFilter: 'blur(40px)',
+            border: '1px solid rgba(43, 155, 244, 0.1)',
+            zIndex: 1
           }}
-          animate={{ x: backgroundX, y: backgroundY }}
-          transition={{ type: 'spring', stiffness: 10, damping: 20 }}
+          animate={{
+            borderRadius: [
+              '60% 40% 30% 70% / 60% 30% 70% 40%',
+              '30% 60% 70% 40% / 50% 60% 30% 60%',
+              '50% 60% 30% 60% / 30% 60% 70% 40%',
+              '60% 40% 60% 30% / 70% 30% 60% 40%',
+              '60% 40% 30% 70% / 60% 30% 70% 40%'
+            ],
+            rotate: [0, 90, 180, 270, 360],
+            scale: [1, 1.1, 0.9, 1.05, 1]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
         />
         
         <motion.div 
@@ -424,30 +429,36 @@ const Hero = () => {
           transition={{ type: 'spring', stiffness: 8, damping: 25, delay: 0.1 }}
         />
         
-        {/* Dark color wave animations - multiple subtle waves */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: '10%',
-            left: '-10%',
-            width: '120%',
-            height: '200px',
-            background: 'linear-gradient(90deg, rgba(5, 5, 20, 0.05), rgba(10, 10, 30, 0.08))',
-            borderRadius: '50%',
-            filter: 'blur(60px)',
-            opacity: 0.2,
-            zIndex: 2
-          }}
-          animate={{
-            y: ['0%', '5%', '0%'],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'easeInOut'
-          }}
-        />
+        {/* Modern floating particles - 2025 trending */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            style={{
+              position: 'absolute',
+              width: `${20 + i * 10}px`,
+              height: `${20 + i * 10}px`,
+              background: 'rgba(43, 155, 244, 0.1)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(43, 155, 244, 0.2)',
+              borderRadius: '50%',
+              top: `${10 + i * 15}%`,
+              left: `${5 + i * 15}%`,
+              zIndex: 1
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.7, 0.3],
+            }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: i * 0.5
+            }}
+          />
+        ))}
         
         <motion.div
           style={{
@@ -602,8 +613,7 @@ const Hero = () => {
       >
         <HeroTextContent>
           <Headline
-            data-text="CodingBull Technovations"
-            style={{ 
+            style={{
               marginBottom: "2rem", // Optimized spacing
               lineHeight: 1.3, // Improved line height for better readability
               padding: "0.5rem 0" // Added vertical padding
@@ -616,22 +626,85 @@ const Hero = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 style={{
-                  background: "linear-gradient(90deg, #0D47A1 0%, #1565C0 100%)", // Dark blue gradient
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  display: "inline-block",
-                  textShadow: "0 5px 20px rgba(13, 71, 161, 0.5)", // Darker blue shadow
-                  filter: "drop-shadow(0 0 8px rgba(21, 101, 192, 0.4))", // Additional glow
-                  fontSize: "clamp(2.5rem, 5vw, 3.8rem)", // Optimized font size
-                  fontWeight: "900", // Extra bold
-                  letterSpacing: "-0.5px", // Tighter letter spacing for luxury feel
-                  wordBreak: "keep-all", // Prevents breaking words in awkward places
-                  hyphens: "auto", // Allows hyphenation for better text wrapping
-                  paddingRight: "0.5rem", // Ensures space at the end of lines
-                  fontFamily: "'Montserrat', sans-serif" // More elegant font
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "0.5rem"
                 }}
               >
-                CodingBull Technovations PVT. LTD.
+                {/* Main Company Name - Clean and Readable */}
+                <motion.div
+                  style={{
+                    background: "linear-gradient(135deg, #2B9BF4 0%, #0D7DD6 50%, #1565C0 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    display: "inline-block",
+                    fontSize: "clamp(2.8rem, 5.5vw, 4.2rem)",
+                    fontWeight: "900",
+                    letterSpacing: "-1px",
+                    lineHeight: 0.9,
+                    fontFamily: "'Inter', sans-serif",
+                    position: "relative",
+                    zIndex: 10, // Ensure text is above background elements
+                  }}
+                  whileHover={{
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  CodingBull
+                </motion.div>
+
+                {/* Company Type & Legal */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap"
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
+                      fontWeight: "600",
+                      color: "rgba(255, 255, 255, 0.95)", // Increased opacity for better readability
+                      letterSpacing: "0.5px",
+                      fontFamily: "'Inter', sans-serif",
+                      position: "relative",
+                      zIndex: 10, // Ensure text is above background elements
+                    }}
+                  >
+                    Technovations
+                  </span>
+                  <motion.span
+                    style={{
+                      fontSize: "clamp(0.8rem, 1.5vw, 1rem)",
+                      fontWeight: "500",
+                      color: "rgba(43, 155, 244, 0.9)", // Increased opacity for better readability
+                      background: "rgba(43, 155, 244, 0.12)", // Slightly more opaque background
+                      padding: "0.3rem 0.8rem",
+                      borderRadius: "20px",
+                      border: "1px solid rgba(43, 155, 244, 0.4)", // More visible border
+                      backdropFilter: "blur(10px)",
+                      letterSpacing: "0.3px",
+                      fontFamily: "'Inter', sans-serif",
+                      position: "relative",
+                      zIndex: 10, // Ensure text is above background elements
+                    }}
+                    whileHover={{
+                      background: "rgba(43, 155, 244, 0.18)",
+                      color: "rgba(43, 155, 244, 1)", // Full opacity on hover
+                      scale: 1.05,
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    PVT. LTD.
+                  </motion.span>
+                </motion.div>
               </motion.div>
             </div>
             
@@ -682,11 +755,15 @@ const Hero = () => {
                       WebkitTextFillColor: letter === " " ? "transparent" : "transparent",
                     }}
                     whileHover={{
-                      y: -3,
-                      scale: 1.1,
-                      color: "#64B5F6", // Lighter blue
-                      textShadow: "0 0 15px rgba(33, 150, 243, 0.5)",
-                      transition: { duration: 0.2 }
+                      y: -5,
+                      scale: 1.15,
+                      rotateY: 10,
+                      textShadow: letter === " " ? "none" : "0 0 20px rgba(43, 155, 244, 0.6)", // Use textShadow instead of filter
+                      transition: {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20
+                      }
                     }}
                   >
                     {letter === " " ? "\u00A0" : letter}
@@ -874,14 +951,12 @@ const Hero = () => {
                     padding: '5px'
                   }}
                   animate={{
-                    background: [
-                      'radial-gradient(circle at center, rgba(21, 101, 192, 0.7), rgba(13, 71, 161, 0.9))',
-                      'radial-gradient(circle at center, rgba(25, 118, 210, 0.7), rgba(10, 50, 120, 0.9))',
-                      'radial-gradient(circle at center, rgba(21, 101, 192, 0.7), rgba(13, 71, 161, 0.9))'
-                    ]
+                    scale: [1, 1.02, 1],
+                    rotateY: [0, 5, 0],
                   }}
                   transition={{
-                    background: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                    scale: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                    rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" }
                   }}
                 >
                   <motion.span

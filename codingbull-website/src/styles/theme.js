@@ -1,42 +1,46 @@
+// Import enhanced color and typography systems
+import colorSystem from './colors';
+import typographySystem from './typography';
+
 // Professional dark theme configuration with enhanced UX/UI elements
 const theme = {
   colors: {
-    // Primary colors - Brand colors based on logo CMYK (C:69 M:10 Y:00 K:00)
-    brandPrimary: '#2B9BF4',     // Main brand color from logo - adjusted for better contrast
-    brandSecondary: '#0D7DD6',   // Darker variant of brand color - deeper for better visibility
-    brandLight: '#5EBAFF',       // Lighter variant of brand color - brighter for highlights
-    brandDark: '#0A5CA0',        // Darker variant for contrast - deeper for text contrast
-    electricBlue: '#2B9BF4',     // Using brand color for electric blue
-    deepBlue: '#0A0E1A',         // Ultra-deep blue-black for main backgrounds
-    midBlue: '#1E3A8A',          // Rich mid-tone blue for secondary elements
-    lightBlue: '#5EBAFF',        // Brand light for highlights and accents
-    glowingBlue: '#2B9BF4',      // Brand primary for interactive elements
-    accentBlue: '#0D7DD6',       // Brand secondary for CTAs
-    deepPurple: '#6366F1',       // Deep purple for legacy compatibility
-    
-    // Enhanced grey scale for better contrast
-    darkGrey: '#030712',         // Almost pure black with subtle blue undertone
-    mediumGrey: '#111827',       // Dark grey for cards and containers
-    lightGrey: '#6B7280',        // Neutral grey for secondary text
-    deepGrey: '#0F172A',         // Deep slate for subtle backgrounds
-    surfaceGrey: '#1F2937',      // Surface grey for elevated elements
-    borderGrey: '#374151',       // Border grey for subtle divisions
-    
-    // Professional text hierarchy
-    textPrimary: '#F9FAFB',      // Pure white for primary text
-    textSecondary: '#D1D5DB',    // Light grey for secondary text
-    textTertiary: '#9CA3AF',     // Medium grey for tertiary text
-    textMuted: '#6B7280',        // Muted grey for less important text
-    
-    // Status colors with better accessibility
-    success: '#10B981',          // Modern green for success states
-    successLight: '#34D399',     // Light green for success highlights
-    error: '#EF4444',            // Modern red for error states
-    errorLight: '#F87171',       // Light red for error highlights
-    warning: '#F59E0B',          // Amber for warning states
-    warningLight: '#FBBF24',     // Light amber for warning highlights
-    info: '#3B82F6',             // Blue for informational states
-    infoLight: '#60A5FA',        // Light blue for info highlights
+    // Brand colors using the new color system
+    brandPrimary: colorSystem.brand.primary[500],     // Main brand color
+    brandSecondary: colorSystem.brand.primary[600],   // Darker variant
+    brandLight: colorSystem.brand.primary[400],       // Lighter variant
+    brandDark: colorSystem.brand.primary[700],        // Darker variant for contrast
+    electricBlue: colorSystem.brand.primary[500],     // Using brand color for electric blue
+    deepBlue: colorSystem.neutral[900],               // Ultra-deep blue-black for main backgrounds
+    midBlue: colorSystem.brand.secondary[800],        // Rich mid-tone blue for secondary elements
+    lightBlue: colorSystem.brand.primary[400],        // Brand light for highlights and accents
+    glowingBlue: colorSystem.brand.primary[500],      // Brand primary for interactive elements
+    accentBlue: colorSystem.brand.primary[600],       // Brand secondary for CTAs
+    deepPurple: colorSystem.brand.secondary[600],     // Deep purple for legacy compatibility
+
+    // Enhanced grey scale using the new neutral system
+    darkGrey: colorSystem.neutral[950],               // Almost pure black with subtle blue undertone
+    mediumGrey: colorSystem.neutral[800],             // Dark grey for cards and containers
+    lightGrey: colorSystem.neutral[500],              // Neutral grey for secondary text
+    deepGrey: colorSystem.neutral[900],               // Deep slate for subtle backgrounds
+    surfaceGrey: colorSystem.neutral[700],            // Surface grey for elevated elements
+    borderGrey: colorSystem.neutral[600],             // Border grey for subtle divisions
+
+    // Professional text hierarchy using the new color system
+    textPrimary: colorSystem.text.primary,        // Pure white for primary text
+    textSecondary: colorSystem.text.secondary,    // Light grey for secondary text
+    textTertiary: colorSystem.text.tertiary,      // Medium grey for tertiary text
+    textMuted: colorSystem.text.muted,            // Muted grey for less important text
+
+    // Status colors using the new semantic color system
+    success: colorSystem.semantic.success[500],      // Modern green for success states
+    successLight: colorSystem.semantic.success[400], // Light green for success highlights
+    error: colorSystem.semantic.error[500],          // Modern red for error states
+    errorLight: colorSystem.semantic.error[400],     // Light red for error highlights
+    warning: colorSystem.semantic.warning[500],      // Amber for warning states
+    warningLight: colorSystem.semantic.warning[400], // Light amber for warning highlights
+    info: colorSystem.semantic.info[500],            // Blue for informational states
+    infoLight: colorSystem.semantic.info[400],       // Light blue for info highlights
     
     // Enhanced syntax highlighting
     syntaxKeyword: '#8B5CF6',    // Purple for keywords
@@ -85,43 +89,23 @@ const theme = {
     glassBorder: 'rgba(156, 163, 175, 0.2)',
   },
   
-  // Professional typography system
+  // Professional typography system using the new typography system
   fonts: {
-    primary: "'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif",
-    secondary: "'Roboto', 'Helvetica Neue', Arial, sans-serif",
-    code: "'JetBrains Mono', 'Fira Code', 'Monaco', monospace",
-    display: "'Poppins', 'Inter', sans-serif",
+    primary: typographySystem.fontStacks.primary.family,
+    secondary: typographySystem.fontStacks.secondary.family,
+    code: typographySystem.fontStacks.code.family,
+    display: typographySystem.fontStacks.display.family,
   },
-  
-  // Enhanced font size scale for better hierarchy
-  fontSizes: {
-    xs: '0.75rem',     // 12px
-    sm: '0.875rem',    // 14px
-    base: '1rem',      // 16px - base size
-    md: '1.125rem',    // 18px
-    lg: '1.25rem',     // 20px
-    xl: '1.5rem',      // 24px
-    '2xl': '1.875rem', // 30px
-    '3xl': '2.25rem',  // 36px
-    '4xl': '3rem',     // 48px
-    '5xl': '3.75rem',  // 60px
-    '6xl': '4.5rem',   // 72px
-    '7xl': '6rem',     // 96px
-  },
-  
-  // Font weights for better typography control
-  fontWeights: {
-    thin: 100,
-    light: 300,
-    normal: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
-    extrabold: 800,
-    black: 900,
-  },
-  
-  // Line heights for better readability
+
+  // Enhanced font size scale using the new typography system
+  fontSizes: Object.fromEntries(
+    Object.entries(typographySystem.fontSizes).map(([key, value]) => [key, value.size])
+  ),
+
+  // Font weights using the new typography system
+  fontWeights: typographySystem.fontWeights,
+
+  // Line heights using the new typography system
   lineHeights: {
     none: 1,
     tight: 1.25,
@@ -130,6 +114,9 @@ const theme = {
     relaxed: 1.625,
     loose: 2,
   },
+
+  // Typography styles for components
+  typography: typographySystem.typographyStyles,
   
   // Professional spacing scale for spacious design
   spacing: {
