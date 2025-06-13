@@ -341,10 +341,11 @@ const Footer = () => {
           <FooterColumn variants={slideUp}>
             <FooterHeading>Contact Us</FooterHeading>
             <ContactInfo variants={staggerContainer} initial="hidden" animate="visible"> {/* Stagger ContactItems */}
-              <MotionContactItem variants={fadeIn}><span className="icon">📍</span><span>Registered in India</span></MotionContactItem>
+              <MotionContactItem variants={fadeIn}><span className="icon">📍</span><span>Registered in Ahmedabad, Gujarat,India</span></MotionContactItem>
               <MotionContactItem variants={fadeIn}><span className="icon">✉️</span><span>contact@codingbull.com</span></MotionContactItem>
               <MotionContactItem variants={fadeIn}><span className="icon">⏰</span><span>Our team responds to all inquiries within 24 hours</span></MotionContactItem>
               <MotionContactItem variants={fadeIn}><span className="icon">🌐</span><span>MCA Registration: 2025</span></MotionContactItem>
+              <MotionContactItem variants={fadeIn}><span className="icon">💼</span><span>GSTIN: 24AAMCC7617E1ZP</span></MotionContactItem>
             </ContactInfo>
           </FooterColumn>
           
@@ -389,7 +390,7 @@ const Footer = () => {
         
         <FooterBottom> {/* This can also be animated */}
           <Copyright>
-            © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | CIN: XXXX | GSTIN: YYYY | Remote-enabled team | Serving clients worldwide
+            © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | GSTIN: 24AAMCC7617E1ZP | Remote-enabled team | Serving clients worldwide
           </Copyright>
           <FooterBottomLinks variants={staggerContainer} initial="hidden" animate="visible"> {/* Stagger links */}
             <motion.a variants={fadeIn} href="/privacy-policy">Privacy Policy</motion.a>

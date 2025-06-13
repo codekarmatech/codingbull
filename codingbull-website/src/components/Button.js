@@ -8,27 +8,31 @@ import { shouldForwardButtonProp } from '../utils/styledHelpers';
 const VARIANTS = {
   primary: {
     background: props => props.theme.colors.buttonPrimary,
-    color: props => props.theme.colors.white,
+    color: props => '#FFFFFF', // Pure white for maximum contrast
     border: 'none',
     boxShadow: props => props.theme.shadows.button,
+    fontWeight: props => props.theme.fontWeights.bold, // Bolder text for better visibility
   },
   secondary: {
     background: props => props.theme.colors.buttonSecondary,
-    color: props => props.theme.colors.textPrimary,
+    color: props => '#F9FAFB', // Light color for better contrast
     border: props => `2px solid ${props.theme.colors.borderGrey}`,
     boxShadow: props => props.theme.shadows.base,
+    fontWeight: props => props.theme.fontWeights.semibold, // Semibold for better visibility
   },
   outline: {
     background: 'transparent',
-    color: props => props.theme.colors.textPrimary,
+    color: props => props.theme.colors.brandPrimary, // Using brand color for better visibility
     border: props => `2px solid ${props.theme.colors.brandPrimary}`,
     boxShadow: props => props.theme.shadows.sm,
+    fontWeight: props => props.theme.fontWeights.semibold, // Semibold for better visibility
   },
   ghost: {
     background: 'transparent',
     color: props => props.theme.colors.brandPrimary,
     border: 'none',
     boxShadow: 'none',
+    fontWeight: props => props.theme.fontWeights.medium, // Medium for better visibility
   },
 };
 
@@ -55,7 +59,10 @@ const StyledButton = styled(motion.button).withConfig({
   align-items: center;
   justify-content: center;
   gap: ${props => props.theme.spacing[2]};
-  font-weight: ${props => props.theme.fontWeights.semibold};
+  font-weight: ${props => {
+    const variant = VARIANTS[props.variant] || VARIANTS.primary;
+    return typeof variant.fontWeight === 'function' ? variant.fontWeight(props) : props.theme.fontWeights.semibold;
+  }};
   font-family: ${props => props.theme.fonts.primary};
   letter-spacing: 0.025em;
   border-radius: ${props => props.theme.borderRadius.lg};
@@ -65,6 +72,7 @@ const StyledButton = styled(motion.button).withConfig({
   overflow: hidden;
   z-index: 1;
   border: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Add subtle text shadow for better readability */
 
   // Apply variant styles
   background: ${props => {
@@ -138,34 +146,35 @@ const StyledButton = styled(motion.button).withConfig({
 
     ${props => props.variant === 'primary' && `
       background: ${props.theme.colors.buttonHoverPrimary};
+      color: #FFFFFF; /* Maintain white text on hover for readability */
     `}
 
     ${props => props.variant === 'secondary' && `
       background: ${props.theme.colors.glassLight};
-      color: ${props.theme.colors.brandPrimary};
+      color: #FFFFFF; /* White text for better contrast */
       border-color: ${props.theme.colors.brandPrimary};
     `}
 
     ${props => props.variant === 'outline' && `
       background: ${props.theme.colors.overlayLight};
-      color: ${props.theme.colors.brandPrimary};
+      color: ${props.theme.colors.brandLight}; /* Lighter brand color for better visibility */
     `}
 
     ${props => props.variant === 'ghost' && `
       background: ${props.theme.colors.glassLight};
-      color: ${props.theme.colors.brandPrimary};
+      color: ${props.theme.colors.brandLight}; /* Lighter brand color for better visibility */
     `}
   }
 
   // Focus state using theme variables
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 172, 255, 0.3), 
+    box-shadow: 0 0 0 3px rgba(43, 155, 244, 0.4), 
                 ${props => props.variant === 'primary' 
                   ? props.theme.shadows.buttonHover
                   : props.variant === 'secondary' 
                     ? props.theme.shadows.buttonHoverSecondary
-                    : '0 8px 25px rgba(79, 172, 255, 0.2)'};
+                    : '0 8px 25px rgba(43, 155, 244, 0.3)'};
   }
 
   // Active state using theme variables
@@ -185,10 +194,10 @@ const StyledButton = styled(motion.button).withConfig({
     position: absolute;
     border-radius: 50%;
     background: ${props => props.variant === 'primary' 
-      ? 'rgba(79, 172, 255, 0.5)' 
+      ? 'rgba(43, 155, 244, 0.6)' 
       : props.variant === 'secondary' 
-        ? 'rgba(79, 172, 255, 0.5)'
-        : 'rgba(255, 255, 255, 0.5)'};
+        ? 'rgba(43, 155, 244, 0.6)'
+        : 'rgba(255, 255, 255, 0.6)'};
     transform: scale(0);
     animation: ripple 0.8s ${props => props.theme.animations.bounce};
     pointer-events: none;
@@ -250,6 +259,18 @@ const Button = ({
     }
 
     createRipple(event);
+    
+    // If this is a navigation button (determined by presence of 'to' prop in parent Link component)
+    // we'll let the ScrollToTop component handle the scrolling
+    // Otherwise, for non-navigation buttons that should still scroll to top, do it here
+    if (!props.to && props.scrollToTop) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+    
     onClick?.(event);
   };
 

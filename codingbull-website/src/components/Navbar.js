@@ -344,7 +344,14 @@ const Navbar = () => {
               {item.name}
             </NavLink>
           ))}
-          <Link to="/contact" style={{ textDecoration: 'none' }}>
+          <Link to="/contact" style={{ textDecoration: 'none' }} onClick={() => {
+            // Scroll to top when Contact Us button is clicked
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth'
+            });
+          }}>
             <Button variant="primary" size="md">Contact Us</Button>
           </Link>
         </NavLinks>
@@ -377,7 +384,15 @@ const Navbar = () => {
                   <MobileNavLink
                     key={item.name}
                     to={item.path}
-                    onClick={closeMobileMenu}
+                    onClick={() => {
+                      closeMobileMenu();
+                      // Scroll to top when mobile menu link is clicked
+                      window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: 'smooth'
+                      });
+                    }}
                     custom={i}
                     initial="hidden"
                     animate="visible"
@@ -387,7 +402,15 @@ const Navbar = () => {
                     {item.name}
                   </MobileNavLink>
                 ))}
-                <Link to="/contact" style={{ textDecoration: 'none', width: '100%' }} onClick={closeMobileMenu}>
+                <Link to="/contact" style={{ textDecoration: 'none', width: '100%' }} onClick={() => {
+                  closeMobileMenu();
+                  // Scroll to top when Contact Us button is clicked
+                  window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                  });
+                }}>
                   <Button 
                     variant="primary" 
                     size="lg" 

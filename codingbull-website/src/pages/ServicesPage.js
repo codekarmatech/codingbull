@@ -651,14 +651,6 @@ const ServicesPage = () => {
             >
               Contact Us
             </Button>
-            <Button 
-              as="a" 
-              href="#" 
-              variant="secondary" 
-              size="lg"
-            >
-              Download Brochure
-            </Button>
           </CTAButtons>
         </CTAContent>
       </CTASection>

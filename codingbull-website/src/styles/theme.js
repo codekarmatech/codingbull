@@ -2,16 +2,16 @@
 const theme = {
   colors: {
     // Primary colors - Brand colors based on logo CMYK (C:69 M:10 Y:00 K:00)
-    brandPrimary: '#4FACFF',     // Main brand color from logo
-    brandSecondary: '#2E8BFF',   // Darker variant of brand color
-    brandLight: '#7BC4FF',       // Lighter variant of brand color
-    brandDark: '#1A6FCC',        // Darker variant for contrast
-    electricBlue: '#4FACFF',     // Using brand color for electric blue
+    brandPrimary: '#2B9BF4',     // Main brand color from logo - adjusted for better contrast
+    brandSecondary: '#0D7DD6',   // Darker variant of brand color - deeper for better visibility
+    brandLight: '#5EBAFF',       // Lighter variant of brand color - brighter for highlights
+    brandDark: '#0A5CA0',        // Darker variant for contrast - deeper for text contrast
+    electricBlue: '#2B9BF4',     // Using brand color for electric blue
     deepBlue: '#0A0E1A',         // Ultra-deep blue-black for main backgrounds
     midBlue: '#1E3A8A',          // Rich mid-tone blue for secondary elements
-    lightBlue: '#7BC4FF',        // Brand light for highlights and accents
-    glowingBlue: '#4FACFF',      // Brand primary for interactive elements
-    accentBlue: '#2E8BFF',       // Brand secondary for CTAs
+    lightBlue: '#5EBAFF',        // Brand light for highlights and accents
+    glowingBlue: '#2B9BF4',      // Brand primary for interactive elements
+    accentBlue: '#0D7DD6',       // Brand secondary for CTAs
     deepPurple: '#6366F1',       // Deep purple for legacy compatibility
     
     // Enhanced grey scale for better contrast
@@ -49,27 +49,27 @@ const theme = {
     syntaxNumber: '#F97316',     // Orange for numbers
     
     // Professional gradients - Updated with brand colors
-    gradientPrimary: 'linear-gradient(135deg, #4FACFF 0%, #2E8BFF 100%)',
-    gradientSecondary: 'linear-gradient(135deg, #2E8BFF 0%, #1A6FCC 100%)',
-    gradientAccent: 'linear-gradient(135deg, #7BC4FF 0%, #4FACFF 100%)',
+    gradientPrimary: 'linear-gradient(135deg, #2B9BF4 0%, #0D7DD6 100%)',
+    gradientSecondary: 'linear-gradient(135deg, #0D7DD6 0%, #0A5CA0 100%)',
+    gradientAccent: 'linear-gradient(135deg, #5EBAFF 0%, #2B9BF4 100%)',
     gradientSurface: 'linear-gradient(135deg, #111827 0%, #1F2937 100%)',
     gradientHero: 'linear-gradient(135deg, #0A0E1A 0%, #1E3A8A 50%, #0A0E1A 100%)',
     
     // Interactive button gradients - Updated to match brand colors
-    buttonPrimary: 'linear-gradient(135deg, #4FACFF 0%, #2E8BFF 100%)',
+    buttonPrimary: 'linear-gradient(135deg, #2B9BF4 0%, #0D7DD6 100%)',
     buttonSecondary: 'linear-gradient(135deg, #374151 0%, #4B5563 100%)',
     buttonSuccess: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
     buttonDanger: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-    buttonHoverPrimary: 'linear-gradient(135deg, #7BC4FF 0%, #4FACFF 100%)',
+    buttonHoverPrimary: 'linear-gradient(135deg, #5EBAFF 0%, #2B9BF4 100%)',
     buttonHoverSecondary: 'linear-gradient(135deg, #4B5563 0%, #6B7280 100%)',
     
     // Professional glow effects - Updated to match brand colors
-    glowPrimary: '0 0 20px rgba(79, 172, 255, 0.4)',
-    glowSecondary: '0 0 15px rgba(46, 139, 255, 0.3)',
-    glowAccent: '0 0 25px rgba(123, 196, 255, 0.5)',
+    glowPrimary: '0 0 20px rgba(43, 155, 244, 0.4)',
+    glowSecondary: '0 0 15px rgba(13, 125, 214, 0.3)',
+    glowAccent: '0 0 25px rgba(94, 186, 255, 0.5)',
     glowSuccess: '0 0 15px rgba(16, 185, 129, 0.4)',
     glowError: '0 0 15px rgba(239, 68, 68, 0.4)',
-    glowSubtle: '0 0 10px rgba(79, 172, 255, 0.2)',
+    glowSubtle: '0 0 10px rgba(43, 155, 244, 0.2)',
     
     // Overlay and backdrop colors
     overlayDark: 'rgba(3, 7, 18, 0.8)',

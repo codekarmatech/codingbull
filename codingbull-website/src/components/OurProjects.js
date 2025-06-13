@@ -273,35 +273,7 @@ const NavButton = styled(motion.button)`
   }
 `;
 
-// Simplified project counter
-const ProjectCounter = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  gap: ${props => props.theme.spacing[4]};
-  padding: ${props => props.theme.spacing[3]} ${props => props.theme.spacing[6]};
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(79, 172, 255, 0.2);
-  border-radius: ${props => props.theme.borderRadius.full};
-  backdrop-filter: blur(10px);
-  position: relative;
-`;
-
-const DigitalDisplay = styled.span`
-  font-family: ${props => props.theme.fonts.code};
-  font-size: ${props => props.theme.fontSizes.sm};
-  font-weight: ${props => props.theme.fontWeights.bold};
-  color: ${props => props.theme.colors.brandPrimary};
-  letter-spacing: 0.05em;
-`;
-
-const StatusIndicator = styled.div`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: ${props => props.theme.colors.brandPrimary};
-  box-shadow: 0 0 10px rgba(79, 172, 255, 0.6);
-  animation: ${energyPulse} 2s ease-in-out infinite;
-`;
+// Removed unused styled components that were causing ESLint warnings
 
 // Optimized projects gallery
 const ProjectsGallery = styled(motion.div)`
@@ -1268,50 +1240,42 @@ const OurProjects = () => {
         </SectionHeader>
 
         <ProjectsShowcase>
-          {/* Holographic Navigation */}
-          <HolographicNav>
-            <NavButton
-              onClick={goToPrevious}
-              disabled={currentPage === 0}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ 
-                duration: 0.15,
-                ease: "easeOut"
-              }}
-            >
-              ←
-            </NavButton>
-            
-            <ProjectCounter>
-              <StatusIndicator />
-              <DigitalDisplay>
-                PAGE {currentPage + 1} OF {totalPages}
-              </DigitalDisplay>
-              <DigitalDisplay style={{ fontSize: '0.8em', opacity: 0.7 }}>
-                [{visibleProjects.length} PROJECTS]
-              </DigitalDisplay>
-            </ProjectCounter>
-            
-            <NavButton
-              onClick={goToNext}
-              disabled={currentPage >= totalPages - 1}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ 
-                duration: 0.15,
-                ease: "easeOut"
-              }}
-            >
-              →
-            </NavButton>
-          </HolographicNav>
+          {/* Holographic Navigation - only shown when there are more than 3 projects */}
+          {projects.length > 3 && (
+            <HolographicNav>
+              <NavButton
+                onClick={goToPrevious}
+                disabled={currentPage === 0}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  duration: 0.15,
+                  ease: "easeOut"
+                }}
+              >
+                ←
+              </NavButton>
+              
+              <NavButton
+                onClick={goToNext}
+                disabled={currentPage >= totalPages - 1}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 5px 15px rgba(79, 172, 255, 0.3)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ 
+                  duration: 0.15,
+                  ease: "easeOut"
+                }}
+              >
+                →
+              </NavButton>
+            </HolographicNav>
+          )}
 
           {/* Optimized Projects Gallery */}
           <ProjectsGallery
@@ -1438,25 +1402,27 @@ const OurProjects = () => {
         </AnimatePresence>
       </ProjectsGallery>
 
-      {/* Quantum Navigation Indicators */}
-      <QuantumIndicators>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <QuantumDot
-            key={index}
-            $active={currentPage === index}
-            onClick={() => goToPage(index)}
-            whileHover={{ 
-              scale: 1.2,
-              boxShadow: "0 0 20px rgba(79, 172, 255, 0.6)"
-            }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ 
-              duration: 0.15,
-              ease: [0.25, 0.46, 0.45, 0.94]
-            }}
-          />
-        ))}
-      </QuantumIndicators>
+      {/* Quantum Navigation Indicators - only shown when there are more than 3 projects */}
+      {projects.length > 3 && (
+        <QuantumIndicators>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <QuantumDot
+              key={index}
+              $active={currentPage === index}
+              onClick={() => goToPage(index)}
+              whileHover={{ 
+                scale: 1.2,
+                boxShadow: "0 0 20px rgba(79, 172, 255, 0.6)"
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ 
+                duration: 0.15,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+            />
+          ))}
+        </QuantumIndicators>
+      )}
     </ProjectsShowcase>
 
         {/* CTA Section */}

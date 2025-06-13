@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useAnimation, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { pageTransition, fadeIn, slideUp, staggerContainer } from '../animations/variants';
 import Footer from '../components/Footer';
@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import Testimonials from '../components/Testimonials';
 import SEO from '../components/SEO';
 import ImageWithFallback from '../components/ImageWithFallback';
+import bullLogo from '../assets/codingbulllogo.png';
 
 // About page container
 const AboutPageContainer = styled(motion.div)`
@@ -90,9 +91,12 @@ const HeroDescription = styled(motion.p)`
   line-height: 1.7;
 `;
 
-// Hero image
+// Hero image - Logo with cinematic effect
 const HeroImage = styled(motion.div)`
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     order: 1;
@@ -101,34 +105,110 @@ const HeroImage = styled(motion.div)`
   }
   
   img {
-    width: 100%;
-    border-radius: ${props => props.theme.borderRadius.lg};
-    box-shadow: ${props => props.theme.shadows.lg};
+    width: 80%;
+    max-width: 400px;
+    filter: drop-shadow(0 0 25px rgba(43, 155, 244, 0.6));
+    z-index: 2;
+    transition: all 0.5s ease-in-out;
   }
   
   &::before {
     content: '';
     position: absolute;
-    top: -20px;
-    left: -20px;
-    width: 100%;
-    height: 100%;
-    border: 2px solid ${props => props.theme.colors.electricBlue};
-    border-radius: ${props => props.theme.borderRadius.lg};
-    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(43, 155, 244, 0.2) 0%, rgba(13, 125, 214, 0.1) 50%, rgba(10, 14, 26, 0) 70%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulse 4s infinite alternate ease-in-out;
   }
   
   &::after {
     content: '';
     position: absolute;
-    bottom: -20px;
-    right: -20px;
-    width: 70%;
-    height: 70%;
-    background: ${props => props.theme.colors.deepPurple};
-    border-radius: ${props => props.theme.borderRadius.lg};
-    z-index: -2;
-    opacity: 0.5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+    width: 400px;
+    height: 400px;
+    border: 2px solid rgba(43, 155, 244, 0.2);
+    border-radius: 50%;
+    z-index: 0;
+    animation: rotate 20s infinite linear;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 0.5;
+      width: 300px;
+      height: 300px;
+    }
+    100% {
+      opacity: 0.8;
+      width: 350px;
+      height: 350px;
+    }
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  
+  .logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(43, 155, 244, 0.4) 0%, rgba(13, 125, 214, 0.1) 40%, rgba(10, 14, 26, 0) 70%);
+    filter: blur(20px);
+    z-index: 0;
+    opacity: 0.8;
+    border-radius: 50%;
+  }
+  
+  .logo-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 350px;
+    border: 1px solid rgba(94, 186, 255, 0.3);
+    border-radius: 50%;
+    z-index: 0;
+    animation: spin 15s infinite linear;
+  }
+  
+  .logo-ring-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    border: 1px solid rgba(43, 155, 244, 0.2);
+    border-radius: 50%;
+    z-index: 0;
+    animation: spin 25s infinite linear reverse;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
   }
 `;
 
@@ -392,7 +472,20 @@ const TimelineDescription = styled.p`
 // Team section
 const TeamSection = styled.section`
   padding: 6rem 2rem;
-  background: ${props => props.theme.colors.mediumGrey};
+  background: ${props => props.theme.colors.darkGrey};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(43, 155, 244, 0.05) 0%, rgba(10, 14, 26, 0) 70%);
+    pointer-events: none;
+  }
 `;
 
 // Team content
@@ -401,30 +494,74 @@ const TeamContent = styled.div`
   margin: 0 auto;
 `;
 
-// Team grid
-const TeamGrid = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-`;
+// Intentionally removed unused team components that were replaced by the founder section
 
-// Team card
-const TeamCard = styled(motion.div)`
-  background: ${props => props.theme.colors.darkGrey};
-  border-radius: ${props => props.theme.borderRadius.lg};
-  overflow: hidden;
-  box-shadow: ${props => props.theme.shadows.md};
-  transition: transform 0.3s ease;
+// Founder section - new layout
+const FounderSection = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-top: 3rem;
   
-  &:hover {
-    transform: translateY(-10px);
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 `;
 
-// Team image
-const TeamImage = styled.div`
-  height: 300px;
+// Founder image container
+const FounderImageContainer = styled(motion.div)`
+  position: relative;
+  border-radius: ${props => props.theme.borderRadius.lg};
   overflow: hidden;
+  aspect-ratio: 1 / 1.2;
+  box-shadow: ${props => props.theme.shadows.lg};
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10, 14, 26, 0) 0%, rgba(10, 14, 26, 0.8) 100%);
+    z-index: 1;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid ${props => props.theme.colors.electricBlue};
+    border-radius: ${props => props.theme.borderRadius.lg};
+    opacity: 0;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+    z-index: 0;
+  }
+  
+  &:hover::after {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  
+  &:hover::before {
+    opacity: 0.3;
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+`;
+
+// Founder image
+const FounderImage = styled.div`
+  width: 100%;
+  height: 100%;
   
   img {
     width: 100%;
@@ -433,59 +570,149 @@ const TeamImage = styled.div`
     transition: transform 0.5s ease;
   }
   
-  ${TeamCard}:hover & img {
+  ${FounderImageContainer}:hover & img {
     transform: scale(1.05);
   }
 `;
 
-// Team info
-const TeamInfo = styled.div`
-  padding: 1.5rem;
-  text-align: center;
+// Founder info
+const FounderInfo = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    text-align: center;
+  }
 `;
 
-// Team name
-const TeamName = styled.h3`
-  font-size: ${props => props.theme.fontSizes.xl};
+// Founder name
+const FounderName = styled(motion.h3)`
+  font-size: ${props => props.theme.fontSizes['3xl']};
   margin-bottom: 0.5rem;
+  background: ${props => props.theme.colors.gradientPrimary};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: ${props => props.theme.fontSizes['2xl']};
+  }
 `;
 
-// Team position
-const TeamPosition = styled.p`
+// Founder position
+const FounderPosition = styled(motion.p)`
   color: ${props => props.theme.colors.electricBlue};
-  font-weight: 500;
-  margin-bottom: 1rem;
-`;
-
-// Team bio
-const TeamBio = styled.p`
-  color: ${props => props.theme.colors.textSecondary};
+  font-weight: 600;
   margin-bottom: 1.5rem;
-  font-size: ${props => props.theme.fontSizes.md};
+  font-size: ${props => props.theme.fontSizes.lg};
+  letter-spacing: 0.5px;
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: ${props => props.theme.fontSizes.md};
+  }
 `;
 
-// Team social
-const TeamSocial = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+// Founder bio
+const FounderBio = styled(motion.p)`
+  color: ${props => props.theme.colors.textSecondary};
+  line-height: 1.8;
+  font-size: ${props => props.theme.fontSizes.lg};
+  margin-bottom: 2rem;
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: ${props => props.theme.fontSizes.md};
+  }
 `;
 
-// Social link
-const SocialLink = styled(motion.a)`
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: ${props => props.theme.colors.mediumGrey};
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// Founder quote
+const FounderQuote = styled(motion.blockquote)`
+  position: relative;
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  background: ${props => props.theme.colors.glassLight};
+  border-radius: ${props => props.theme.borderRadius.lg};
+  border-left: 4px solid ${props => props.theme.colors.electricBlue};
+  font-style: italic;
   color: ${props => props.theme.colors.textPrimary};
+  
+  &::before {
+    content: '"';
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    font-size: 4rem;
+    line-height: 1;
+    color: ${props => props.theme.colors.electricBlue};
+    opacity: 0.3;
+  }
+`;
+
+// Founder skills
+const FounderSkills = styled(motion.div)`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    justify-content: center;
+  }
+`;
+
+// Skill tag
+const SkillTag = styled(motion.span)`
+  padding: 0.5rem 1rem;
+  background: ${props => props.theme.colors.glassLight};
+  border-radius: ${props => props.theme.borderRadius.full};
+  color: ${props => props.theme.colors.textPrimary};
+  font-size: ${props => props.theme.fontSizes.sm};
+  font-weight: ${props => props.theme.fontWeights.medium};
   transition: all 0.3s ease;
   
   &:hover {
     background: ${props => props.theme.colors.electricBlue};
+    color: ${props => props.theme.colors.white};
     transform: translateY(-3px);
+    box-shadow: ${props => props.theme.shadows.glow};
+  }
+`;
+
+// Founder social links
+const FounderSocial = styled(motion.div)`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    justify-content: center;
+  }
+`;
+
+// Social link
+const SocialLink = styled(motion.a)`
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: ${props => props.theme.colors.glassLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${props => props.theme.colors.textPrimary};
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(43, 155, 244, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    background: ${props => props.theme.colors.electricBlue};
+    color: ${props => props.theme.colors.white};
+    border-color: transparent;
+    box-shadow: 0 0 15px rgba(43, 155, 244, 0.5);
+    transform: translateY(-3px);
+  }
+  
+  span {
+    font-size: ${props => props.theme.fontSizes.md};
+    font-weight: ${props => props.theme.fontWeights.bold};
   }
 `;
 
@@ -634,6 +861,28 @@ const CTAButtons = styled(motion.div)`
 `;
 
 const AboutPage = () => {
+  // Reference for the logo section to trigger animations on scroll
+  const logoRef = useRef(null);
+  const isInView = useInView(logoRef, { once: false, amount: 0.3 });
+  const logoAnimControls = useAnimation();
+  
+  // Animate logo when it comes into view
+  useEffect(() => {
+    if (isInView) {
+      logoAnimControls.start({
+        scale: [1, 1.05, 1],
+        filter: ["drop-shadow(0 0 15px rgba(43, 155, 244, 0.4))", "drop-shadow(0 0 30px rgba(43, 155, 244, 0.7))", "drop-shadow(0 0 15px rgba(43, 155, 244, 0.4))"],
+        transition: {
+          duration: 2,
+          ease: "easeInOut",
+          times: [0, 0.5, 1],
+          repeat: Infinity,
+          repeatType: "reverse"
+        }
+      });
+    }
+  }, [isInView, logoAnimControls]);
+
   // Company stats
   const stats = [
     { value: '1', label: 'Year Experience' },
@@ -666,15 +915,15 @@ const AboutPage = () => {
     }
   ];
   
-  // Team members
-  const team = [
-    {
-      name: 'Pranshu Dixit',
-      position: 'Founder & CEO',
-      bio: 'With a passion for technology and innovation, Pranshu founded CodingBull in 2025 to build a team of experts delivering cutting-edge digital solutions that help businesses thrive.',
-      image: null
-    }
-  ];
+  // Founder information
+  const founder = {
+    name: 'Pranshu Dixit',
+    position: 'Founder & CEO',
+    bio: "With over a decade of experience in software development and digital innovation, Pranshu founded CodingBull in 2025 with a vision to bridge the gap between technology and business success. His background in full-stack development, combined with expertise in modern frameworks and cloud architecture, has helped numerous businesses transform their digital presence. Pranshu leads our team with a focus on quality, innovation, and client satisfaction, ensuring every project exceeds expectations.",
+    quote: "By 2025, digital transformation won't be just an option—it will be the foundation of business survival and growth. At CodingBull, we're committed to being at the forefront of this evolution, creating solutions that not only solve today's challenges but anticipate tomorrow's opportunities.",
+    image: null,
+    skills: ['Full-Stack Development', 'React & Next.js', 'Node.js', 'Cloud Architecture', 'UI/UX Design', 'Digital Strategy', 'AI Integration', 'Performance Optimization']
+  };
   
   // Company values
   const values = [
@@ -766,15 +1015,64 @@ const AboutPage = () => {
           </HeroText>
           
           <HeroImage
+            ref={logoRef}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            whileHover={{ 
+              scale: 1.05,
+              transition: { duration: 0.5 }
+            }}
           >
-            <ImageWithFallback 
-              src={null} 
-              alt="CodingBull Team"
-              fallbackText="Team Photo"
-              showFallbackText={true}
+            <motion.div 
+              className="logo-glow"
+              animate={{
+                opacity: [0.6, 0.9, 0.6],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 4,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            ></motion.div>
+            <motion.div 
+              className="logo-ring"
+              animate={{
+                opacity: [0.3, 0.7, 0.3],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 5,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            ></motion.div>
+            <motion.div 
+              className="logo-ring-2"
+              animate={{
+                opacity: [0.2, 0.5, 0.2],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 6,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            ></motion.div>
+            <motion.img 
+              src={bullLogo} 
+              alt="CodingBull Logo"
+              initial={{ y: 0 }}
+              animate={logoAnimControls}
+              whileHover={{ 
+                scale: 1.1,
+                filter: "drop-shadow(0 0 30px rgba(43, 155, 244, 0.8))",
+                transition: { duration: 0.3 }
+              }}
             />
           </HeroImage>
         </HeroContent>
@@ -860,67 +1158,126 @@ const AboutPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              CodingBull is led by its founder who brings technical expertise, creative vision, and a commitment to excellence to every project we undertake.
+              CodingBull is led by a visionary founder who combines deep technical expertise with strategic business acumen. Our leadership brings together cutting-edge development skills, innovative design thinking, and a relentless commitment to delivering exceptional value to our clients.
             </SectionDescription>
           </SectionHeader>
           
-          <TeamGrid
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {team.map((member, index) => (
-              <TeamCard
-                key={index}
-                variants={slideUp}
-                custom={index * 0.1}
+          <FounderSection>
+            <FounderImageContainer
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <FounderImage>
+                <ImageWithFallback 
+                  src={founder.image} 
+                  alt={founder.name}
+                  fallbackText="Pranshu Dixit"
+                  showFallbackText={true}
+                />
+              </FounderImage>
+            </FounderImageContainer>
+            
+            <FounderInfo
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <FounderName
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <TeamImage>
-                  <ImageWithFallback 
-                    src={member.image} 
-                    alt={member.name}
-                    fallbackText="Team Member"
-                    showFallbackText={false}
-                  />
-                </TeamImage>
-                <TeamInfo>
-                  <TeamName>{member.name}</TeamName>
-                  <TeamPosition>{member.position}</TeamPosition>
-                  <TeamBio>{member.bio}</TeamBio>
-                  <TeamSocial>
-                    <SocialLink 
-                      href="#" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <span>LI</span>
-                    </SocialLink>
-                    <SocialLink 
-                      href="#" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <span>TW</span>
-                    </SocialLink>
-                    <SocialLink 
-                      href="#" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <span>EM</span>
-                    </SocialLink>
-                  </TeamSocial>
-                </TeamInfo>
-              </TeamCard>
-            ))}
-          </TeamGrid>
+                {founder.name}
+              </FounderName>
+              
+              <FounderPosition
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {founder.position}
+              </FounderPosition>
+              
+              <FounderBio
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                {founder.bio}
+              </FounderBio>
+              
+              <FounderQuote
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                {founder.quote}
+              </FounderQuote>
+              
+              <FounderSkills
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                {founder.skills.map((skill, index) => (
+                  <SkillTag 
+                    key={index}
+                    whileHover={{ y: -5, scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.1 * index + 0.5 }}
+                  >
+                    {skill}
+                  </SkillTag>
+                ))}
+              </FounderSkills>
+              
+              <FounderSocial
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <SocialLink 
+                  href="https://www.linkedin.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <span>LI</span>
+                </SocialLink>
+                <SocialLink 
+                  href="https://twitter.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <span>TW</span>
+                </SocialLink>
+                <SocialLink 
+                  href="mailto:contact@codingbull.com" 
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <span>EM</span>
+                </SocialLink>
+              </FounderSocial>
+            </FounderInfo>
+          </FounderSection>
         </TeamContent>
       </TeamSection>
       

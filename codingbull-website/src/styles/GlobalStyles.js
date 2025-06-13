@@ -203,12 +203,12 @@ const GlobalStyles = createGlobalStyle`
 
   /* Professional selection styling */
   ::selection {
-    background: rgba(79, 172, 255, 0.2);
+    background: rgba(43, 155, 244, 0.3);
     color: ${props => props.theme.colors.textPrimary};
   }
 
   ::-moz-selection {
-    background: rgba(79, 172, 255, 0.2);
+    background: rgba(43, 155, 244, 0.3);
     color: ${props => props.theme.colors.textPrimary};
   }
 
@@ -219,9 +219,10 @@ const GlobalStyles = createGlobalStyle`
   }
 
   *:focus-visible {
-    outline: 2px solid ${props => props.theme.colors.brandPrimary};
+    outline: 3px solid ${props => props.theme.colors.brandPrimary};
     outline-offset: 2px;
     border-radius: ${props => props.theme.borderRadius.sm};
+    box-shadow: 0 0 0 2px rgba(43, 155, 244, 0.3);
   }
 
   /* Smooth animations for reduced motion users */

@@ -8,6 +8,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import Navbar from './components/Navbar';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingFallback from './components/LoadingFallback'; // Import the new component
+import ScrollToTop from './components/ScrollToTop'; // Import ScrollToTop component
 // Removed ErrorDashboard - will be admin-only
 
 // Custom shouldForwardProp function to filter out motion props and custom props
@@ -39,6 +40,7 @@ function App() {
           <GlobalStyles />
           <ErrorBoundary>
             <Router>
+              <ScrollToTop /> {/* Add ScrollToTop component here */}
               <Navbar />
               <AnimatePresence mode="wait">
                 <Suspense fallback={<LoadingFallback />}>

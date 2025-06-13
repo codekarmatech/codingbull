@@ -631,7 +631,7 @@ const Hero = () => {
                   fontFamily: "'Montserrat', sans-serif" // More elegant font
                 }}
               >
-                CodingBull Technovations
+                CodingBull Technovations PVT. LTD.
               </motion.div>
             </div>
             
@@ -778,13 +778,13 @@ const Hero = () => {
           <TrustedBy
             variants={slideUp}
           >
-            <motion.p 
+            <motion.p
               style={{ color: '#E0E0E0', fontSize: '0.9rem', letterSpacing: '0.5px' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.8 }}
             >
-              Registered Technology Company • MCA India
+              Registered Technology Company • MCA India • GSTIN: 24AAMCC7617E1ZP
             </motion.p>
           </TrustedBy>
         </HeroTextContent>
