@@ -1,23 +1,84 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const HeroBackground = () => {
+  const shouldReduceMotion = useReducedMotion();
+
+  // Enterprise-level animation optimization
+  const optimizedAnimations = useMemo(() => {
+    if (shouldReduceMotion) {
+      return {
+        wave1: { y: '0%', scaleX: 1 },
+        wave2: { y: '0%', scaleX: 1 },
+        border1: { backgroundPosition: '0% 0%' },
+        border2: { backgroundPosition: '0% 0%' }
+      };
+    }
+
+    return {
+      wave1: {
+        y: ['0%', '4%', '0%'],
+        scaleX: [1, 1.05, 1]
+      },
+      wave2: {
+        y: ['0%', '-4%', '0%'],
+        scaleX: [1, 0.95, 1]
+      },
+      border1: {
+        backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
+      },
+      border2: {
+        backgroundPosition: ['100% 0%', '0% 0%', '100% 0%']
+      }
+    };
+  }, [shouldReduceMotion]);
+
+  const optimizedTransitions = useMemo(() => ({
+    wave1: {
+      duration: shouldReduceMotion ? 0 : 25,
+      repeat: shouldReduceMotion ? 0 : Infinity,
+      repeatType: 'reverse',
+      ease: 'linear' // Linear for better performance
+    },
+    wave2: {
+      duration: shouldReduceMotion ? 0 : 30,
+      delay: shouldReduceMotion ? 0 : 5,
+      repeat: shouldReduceMotion ? 0 : Infinity,
+      repeatType: 'reverse',
+      ease: 'linear' // Linear for better performance
+    },
+    border1: {
+      backgroundPosition: {
+        duration: shouldReduceMotion ? 0 : 15,
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        repeatType: 'reverse'
+      }
+    },
+    border2: {
+      backgroundPosition: {
+        duration: shouldReduceMotion ? 0 : 15,
+        delay: shouldReduceMotion ? 0 : 2,
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        repeatType: 'reverse'
+      }
+    }
+  }), [shouldReduceMotion]);
+
   return (
-    <div className="gradient-background" style={{ 
-      position: 'absolute', 
-      top: 0, 
-      left: 0, 
-      width: '100%', 
-      height: '100%', 
+    <div className="gradient-background" style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
       overflow: 'hidden',
       zIndex: 2,
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      // Enterprise performance optimizations
+      contain: 'layout style paint',
+      willChange: 'transform'
     }}>
-      {/* Gradient overlays with subtle motion */}
-
-      {/* Removed redundant particles - now handled by optimized HeroVisual particle system */}
-      
-      {/* Simplified wave effects - reduced from 4 to 2 for better performance */}
+      {/* Optimized wave effects */}
       <motion.div
         style={{
           position: 'absolute',
@@ -29,18 +90,14 @@ const HeroBackground = () => {
           borderRadius: '50%',
           filter: 'blur(60px)',
           opacity: 0.15,
-          zIndex: 2
+          zIndex: 2,
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
         }}
-        animate={{
-          y: ['0%', '4%', '0%'],
-          scaleX: [1, 1.05, 1]
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'easeInOut'
-        }}
+        animate={optimizedAnimations.wave1}
+        transition={optimizedTransitions.wave1}
       />
 
       <motion.div
@@ -54,22 +111,17 @@ const HeroBackground = () => {
           borderRadius: '50%',
           filter: 'blur(70px)',
           opacity: 0.12,
-          zIndex: 2
+          zIndex: 2,
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
         }}
-        animate={{
-          y: ['0%', '-4%', '0%'],
-          scaleX: [1, 0.95, 1]
-        }}
-        transition={{
-          duration: 30,
-          delay: 5,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'easeInOut'
-        }}
+        animate={optimizedAnimations.wave2}
+        transition={optimizedTransitions.wave2}
       />
-      
-      {/* Animated border glows */}
+
+      {/* Optimized Animated border glows */}
       <motion.div
         style={{
           position: 'absolute',
@@ -78,17 +130,15 @@ const HeroBackground = () => {
           width: '100%',
           height: '2px',
           background: 'linear-gradient(90deg, transparent, rgba(21, 101, 192, 0.4), transparent)',
-          opacity: 0.4
+          opacity: 0.4,
+          // Performance optimizations
+          willChange: 'background-position',
+          transform: 'translate3d(0, 0, 0)'
         }}
-        animate={{
-          /* Removed opacity animation to prevent color changing */
-          backgroundPosition: ['0% 0%', '100% 0%', '0% 0%']
-        }}
-        transition={{
-          backgroundPosition: { duration: 15, repeat: Infinity, repeatType: 'reverse' }
-        }}
+        animate={optimizedAnimations.border1}
+        transition={optimizedTransitions.border1}
       />
-      
+
       <motion.div
         style={{
           position: 'absolute',
@@ -97,15 +147,13 @@ const HeroBackground = () => {
           width: '100%',
           height: '2px',
           background: 'linear-gradient(90deg, transparent, rgba(21, 101, 192, 0.4), transparent)',
-          opacity: 0.4
+          opacity: 0.4,
+          // Performance optimizations
+          willChange: 'background-position',
+          transform: 'translate3d(0, 0, 0)'
         }}
-        animate={{
-          /* Removed opacity animation to prevent color changing */
-          backgroundPosition: ['100% 0%', '0% 0%', '100% 0%']
-        }}
-        transition={{
-          backgroundPosition: { duration: 15, delay: 2, repeat: Infinity, repeatType: 'reverse' }
-        }}
+        animate={optimizedAnimations.border2}
+        transition={optimizedTransitions.border2}
       />
     </div>
   );

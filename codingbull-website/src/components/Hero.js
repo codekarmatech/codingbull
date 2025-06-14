@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAnimation, useMotionValue } from 'framer-motion';
 import { staggerContainer } from '../animations/variants';
 import HeroContainer from './hero/HeroContainer';
 import HeroTextContent from './hero/HeroTextContent';
 import HeroVisual from './hero/HeroVisual';
-import { HeroContent } from './hero/HeroStyles';
+import DevelopmentCycle from './hero/DevelopmentCycle';
+import { HeroContent, DevelopmentCycleWrapper } from './hero/HeroStyles';
 
 
 
@@ -50,6 +51,9 @@ const Hero = () => {
 
   return (
     <HeroContainer>
+      {/* Full-screen particle system */}
+      <HeroVisual />
+
       <HeroContent
         className="hero-content"
         variants={staggerContainer}
@@ -59,7 +63,11 @@ const Hero = () => {
         style={{ transformStyle: 'preserve-3d' }}
       >
         <HeroTextContent />
-        <HeroVisual />
+
+        {/* Development cycle positioned in layout */}
+        <DevelopmentCycleWrapper>
+          <DevelopmentCycle />
+        </DevelopmentCycleWrapper>
       </HeroContent>
     </HeroContainer>
   );

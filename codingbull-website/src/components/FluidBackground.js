@@ -1,6 +1,6 @@
-import React from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const BackgroundContainer = styled.div`
   position: absolute;
@@ -14,7 +14,7 @@ const BackgroundContainer = styled.div`
   transform-style: preserve-3d;
 `;
 
-// Simplified gradient blob component
+// Enterprise-optimized gradient blob component
 const GradientBlob = styled(motion.div)`
   position: absolute;
   border-radius: 50%;
@@ -23,6 +23,12 @@ const GradientBlob = styled(motion.div)`
   mix-blend-mode: screen;
   will-change: transform;
   transform-origin: center center;
+  /* Enterprise performance optimizations */
+  contain: 'layout style paint';
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 `;
 
 // Simplified blob styles using consistent brand blue theme
@@ -86,53 +92,78 @@ const Aurora = styled(motion.div)`
 `;
 
 const FluidBackground = () => {
-  
+  const shouldReduceMotion = useReducedMotion();
+
+  // Enterprise-level animation optimization
+  const optimizedAnimations = useMemo(() => {
+    if (shouldReduceMotion) {
+      return {
+        primary: { scale: 1, rotate: 0 },
+        secondary: { scale: 1, rotate: 0 },
+        aurora: { scaleY: 1, opacity: 0.6 }
+      };
+    }
+
+    return {
+      primary: {
+        x: [0, 20, -10, 15, 0],
+        y: [0, -15, 10, -8, 0],
+        scale: [1, 1.1, 0.9, 1.05, 1],
+        rotate: [0, 5, -5, 3, 0]
+      },
+      secondary: {
+        x: [0, -15, 12, -8, 0],
+        y: [0, 10, -15, 5, 0],
+        scale: [1, 0.95, 1.08, 0.98, 1],
+        rotate: [0, -3, 8, -2, 0]
+      },
+      aurora: {
+        scaleY: [1, 1.1, 0.95, 1.05, 1],
+        opacity: [0.6, 0.7, 0.5, 0.65, 0.6]
+      }
+    };
+  }, [shouldReduceMotion]);
+
+  // Enterprise-level transition optimization
+  const optimizedTransitions = useMemo(() => ({
+    primary: {
+      duration: shouldReduceMotion ? 0 : 20,
+      repeat: shouldReduceMotion ? 0 : Infinity,
+      repeatType: "mirror",
+      ease: "linear" // Linear for better performance
+    },
+    secondary: {
+      duration: shouldReduceMotion ? 0 : 25,
+      repeat: shouldReduceMotion ? 0 : Infinity,
+      repeatType: "mirror",
+      ease: "linear" // Linear for better performance
+    },
+    aurora: {
+      duration: shouldReduceMotion ? 0 : 15,
+      repeat: shouldReduceMotion ? 0 : Infinity,
+      repeatType: "mirror",
+      ease: "linear" // Linear for better performance
+    }
+  }), [shouldReduceMotion]);
+
   return (
     <BackgroundContainer>
-      {/* Primary brand blue blob */}
+      {/* Optimized Primary brand blue blob */}
       <PrimaryBlob
-        animate={{
-          x: [0, 20, -10, 15, 0],
-          y: [0, -15, 10, -8, 0],
-          scale: [1, 1.1, 0.9, 1.05, 1],
-          rotate: [0, 5, -5, 3, 0]
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut"
-        }}
+        animate={optimizedAnimations.primary}
+        transition={optimizedTransitions.primary}
       />
 
-      {/* Secondary brand blue blob */}
+      {/* Optimized Secondary brand blue blob */}
       <SecondaryBlob
-        animate={{
-          x: [0, -15, 12, -8, 0],
-          y: [0, 10, -15, 5, 0],
-          scale: [1, 0.95, 1.08, 0.98, 1],
-          rotate: [0, -3, 8, -2, 0]
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut"
-        }}
+        animate={optimizedAnimations.secondary}
+        transition={optimizedTransitions.secondary}
       />
 
-      {/* Aurora effect */}
+      {/* Optimized Aurora effect */}
       <Aurora
-        animate={{
-          scaleY: [1, 1.1, 0.95, 1.05, 1],
-          opacity: [0.6, 0.7, 0.5, 0.65, 0.6]
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut"
-        }}
+        animate={optimizedAnimations.aurora}
+        transition={optimizedTransitions.aurora}
       />
 
       {/* Noise texture overlay for grain effect */}

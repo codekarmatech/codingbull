@@ -1,7 +1,114 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const DevelopmentCycle = () => {
+  const shouldReduceMotion = useReducedMotion();
+
+  // Enterprise-level animation optimization
+  const optimizedAnimations = useMemo(() => {
+    if (shouldReduceMotion) {
+      return {
+        centralOrb: { scale: 1, opacity: 1 },
+        innerContent: { scale: 1 },
+        connectingSquare: { opacity: 0.7, rotate: 0 },
+        ring1: { opacity: 1, rotateZ: 0 },
+        ring2: { opacity: 1, rotateZ: 0 },
+        glowEffect: { opacity: 0.4 },
+        cycleElements: { opacity: 1, scale: 1 }
+      };
+    }
+
+    return {
+      centralOrb: {
+        scale: [1, 1.005, 1], // Reduced from 1.01 to 1.005
+        opacity: 1
+      },
+      innerContent: {
+        scale: [1, 1.002, 1] // Reduced from 1.005 to 1.002
+      },
+      connectingSquare: {
+        opacity: [0.7, 0.75, 0.7], // Reduced range
+        rotate: [0, 360]
+      },
+      ring1: {
+        opacity: 1,
+        rotateZ: 360
+      },
+      ring2: {
+        opacity: 1,
+        rotateZ: 0
+      },
+      glowEffect: {
+        opacity: [0.4, 0.5, 0.4] // Reduced range
+      },
+      cycleElements: {
+        opacity: 1,
+        scale: [0.99, 1.005, 0.99] // Reduced from 0.98-1.01 to 0.99-1.005
+      }
+    };
+  }, [shouldReduceMotion]);
+
+  const optimizedTransitions = useMemo(() => ({
+    centralOrb: {
+      scale: {
+        duration: shouldReduceMotion ? 0 : 8, // Increased from 6 to 8
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear" // Changed from easeInOut to linear
+      },
+      opacity: { duration: shouldReduceMotion ? 0 : 1 }
+    },
+    innerContent: {
+      scale: {
+        duration: shouldReduceMotion ? 0 : 12, // Increased from 8 to 12
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    },
+    connectingSquare: {
+      opacity: {
+        duration: shouldReduceMotion ? 0 : 12, // Increased from 8 to 12
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      },
+      rotate: {
+        duration: shouldReduceMotion ? 0 : 120, // Increased from 80 to 120
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    },
+    ring1: {
+      opacity: { duration: shouldReduceMotion ? 0 : 1 },
+      rotateZ: {
+        duration: shouldReduceMotion ? 0 : 60, // Increased from 40 to 60
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    },
+    ring2: {
+      opacity: { duration: shouldReduceMotion ? 0 : 1.5 },
+      rotateZ: {
+        duration: shouldReduceMotion ? 0 : 90, // Increased from 60 to 90
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    },
+    glowEffect: {
+      opacity: {
+        duration: shouldReduceMotion ? 0 : 12, // Increased from 8 to 12
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    },
+    cycleElements: {
+      opacity: { duration: shouldReduceMotion ? 0 : 0.8, delay: 0.3 },
+      scale: {
+        duration: shouldReduceMotion ? 0 : 12, // Increased from 8 to 12
+        repeat: shouldReduceMotion ? 0 : Infinity,
+        ease: "linear"
+      }
+    }
+  }), [shouldReduceMotion]);
+
   return (
     <motion.div
       style={{
@@ -10,20 +117,18 @@ const DevelopmentCycle = () => {
         height: '600px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        // Enterprise performance optimizations
+        contain: 'layout style paint',
+        willChange: 'transform',
+        transform: 'translate3d(0, 0, 0)'
       }}
     >
-      {/* Enhanced central glowing orb with professional CODING BULL styling */}
+      {/* Optimized central glowing orb */}
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
-        animate={{
-          scale: [1, 1.01, 1],
-          opacity: 1
-        }}
-        transition={{
-          scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          opacity: { duration: 1 }
-        }}
+        animate={optimizedAnimations.centralOrb}
+        transition={optimizedTransitions.centralOrb}
         style={{
           position: 'absolute',
           width: '140px',
@@ -39,17 +144,22 @@ const DevelopmentCycle = () => {
           fontWeight: 'bold',
           fontSize: '18px',
           letterSpacing: '0.5px',
-          boxShadow: '0 0 60px rgba(30, 136, 229, 0.8), 0 0 120px rgba(30, 136, 229, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.1)',
+          // Simplified shadows for better performance
+          boxShadow: '0 0 40px rgba(30, 136, 229, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1)',
           border: '3px solid rgba(66, 165, 245, 0.5)',
           overflow: 'hidden',
-          willChange: 'transform'
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden',
+          contain: 'layout style paint'
         }}
         whileHover={{
-          scale: 1.03,
-          transition: { duration: 0.2 }
+          scale: shouldReduceMotion ? 1 : 1.02, // Reduced from 1.03 to 1.02
+          transition: { duration: 0.3, ease: "linear" }
         }}
       >
-        {/* Inner content with professional styling */}
+        {/* Optimized inner content */}
         <motion.div
           style={{
             display: 'flex',
@@ -60,14 +170,13 @@ const DevelopmentCycle = () => {
             width: '100%',
             height: '100%',
             background: 'radial-gradient(circle at center, rgba(30, 136, 229, 0.9), rgba(21, 101, 192, 0.95), rgba(13, 71, 161, 1))',
-            padding: '10px'
+            padding: '10px',
+            // Performance optimizations
+            willChange: 'transform',
+            transform: 'translate3d(0, 0, 0)'
           }}
-          animate={{
-            scale: [1, 1.005, 1]
-          }}
-          transition={{
-            scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
-          }}
+          animate={optimizedAnimations.innerContent}
+          transition={optimizedTransitions.innerContent}
         >
           <motion.span
             style={{
@@ -100,86 +209,77 @@ const DevelopmentCycle = () => {
         </motion.div>
       </motion.div>
 
-      {/* Professional rotating square connecting structure */}
+      {/* Optimized rotating square connecting structure */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{
-          opacity: [0.7, 0.8, 0.7],
-          rotate: [0, 360]
-        }}
-        transition={{
-          opacity: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-          rotate: { duration: 80, repeat: Infinity, ease: "linear" }
-        }}
+        animate={optimizedAnimations.connectingSquare}
+        transition={optimizedTransitions.connectingSquare}
         style={{
           position: 'absolute',
           width: '360px',
           height: '360px',
-          transform: 'rotate(45deg)',
           border: '2px solid rgba(30, 136, 229, 0.6)',
           borderRadius: '20px',
-          boxShadow: '0 0 40px rgba(30, 136, 229, 0.4), inset 0 0 40px rgba(30, 136, 229, 0.1)',
+          // Simplified shadows for better performance
+          boxShadow: '0 0 30px rgba(30, 136, 229, 0.3)',
           zIndex: 2,
           background: 'linear-gradient(45deg, transparent 30%, rgba(30, 136, 229, 0.05) 50%, transparent 70%)',
-          willChange: 'transform'
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0) rotate(45deg)',
+          backfaceVisibility: 'hidden'
         }}
       />
 
-      {/* Enhanced orbital ring with professional glow */}
+      {/* Optimized orbital ring 1 */}
       <motion.div
         initial={{ opacity: 0, rotateZ: 0 }}
-        animate={{
-          opacity: 1,
-          rotateZ: 360,
-        }}
-        transition={{
-          opacity: { duration: 1 },
-          rotateZ: { duration: 40, repeat: Infinity, ease: "linear" }
-        }}
+        animate={optimizedAnimations.ring1}
+        transition={optimizedTransitions.ring1}
         style={{
           position: 'absolute',
           width: '360px',
           height: '360px',
           borderRadius: '50%',
           border: '3px solid rgba(30, 136, 229, 0.6)',
-          boxShadow: 'inset 0 0 40px rgba(30, 136, 229, 0.2), 0 0 60px rgba(30, 136, 229, 0.4)',
+          // Simplified shadows for better performance
+          boxShadow: '0 0 40px rgba(30, 136, 229, 0.3)',
           zIndex: 1,
-          background: 'radial-gradient(circle at center, transparent 40%, rgba(30, 136, 229, 0.08) 70%, transparent 100%)'
+          background: 'radial-gradient(circle at center, transparent 40%, rgba(30, 136, 229, 0.08) 70%, transparent 100%)',
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
         }}
       />
 
-      {/* Second orbital ring with enhanced glow */}
+      {/* Optimized orbital ring 2 */}
       <motion.div
         initial={{ opacity: 0, rotateZ: 360 }}
-        animate={{
-          opacity: 1,
-          rotateZ: 0,
-        }}
-        transition={{
-          opacity: { duration: 1.5 },
-          rotateZ: { duration: 60, repeat: Infinity, ease: "linear" }
-        }}
+        animate={optimizedAnimations.ring2}
+        transition={optimizedTransitions.ring2}
         style={{
           position: 'absolute',
           width: '400px',
           height: '400px',
           borderRadius: '50%',
           border: '2px solid rgba(30, 136, 229, 0.4)',
-          boxShadow: 'inset 0 0 30px rgba(30, 136, 229, 0.15), 0 0 40px rgba(30, 136, 229, 0.3)',
+          // Simplified shadows for better performance
+          boxShadow: '0 0 30px rgba(30, 136, 229, 0.2)',
           zIndex: 1,
-          background: 'radial-gradient(circle at center, transparent 50%, rgba(30, 136, 229, 0.05) 80%, transparent 100%)'
+          background: 'radial-gradient(circle at center, transparent 50%, rgba(30, 136, 229, 0.05) 80%, transparent 100%)',
+          // Performance optimizations
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
         }}
       />
 
-      {/* Enhanced pulsing glow effect */}
+      {/* Optimized pulsing glow effect */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
-        animate={{
-          opacity: [0.4, 0.6, 0.4]
-        }}
-        transition={{
-          opacity: { duration: 8, repeat: Infinity, ease: "easeInOut" }
-        }}
+        animate={optimizedAnimations.glowEffect}
+        transition={optimizedTransitions.glowEffect}
         style={{
           position: 'absolute',
           width: '450px',
@@ -187,7 +287,11 @@ const DevelopmentCycle = () => {
           borderRadius: '50%',
           background: 'radial-gradient(circle at center, rgba(30, 136, 229, 0.2) 0%, rgba(30, 136, 229, 0.1) 40%, transparent 70%)',
           filter: 'blur(20px)',
-          zIndex: 0
+          zIndex: 0,
+          // Performance optimizations
+          willChange: 'opacity',
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden'
         }}
       />
 
@@ -207,17 +311,22 @@ const DevelopmentCycle = () => {
           <motion.div
             key={index}
             initial={{ opacity: 0, x, y, scale: 0.7 }}
-            animate={{
-              opacity: 1,
-              scale: [0.98, 1.01, 0.98]
-            }}
+            animate={optimizedAnimations.cycleElements}
             transition={{
-              opacity: { duration: 0.8, delay: 0.3 + (index * 0.2) },
-              scale: { duration: 8, repeat: Infinity, ease: "easeInOut", delay: index * 1 }
+              opacity: {
+                duration: shouldReduceMotion ? 0 : 0.8,
+                delay: shouldReduceMotion ? 0 : 0.3 + (index * 0.2)
+              },
+              scale: {
+                duration: shouldReduceMotion ? 0 : 12, // Increased from 8 to 12
+                repeat: shouldReduceMotion ? 0 : Infinity,
+                ease: "linear", // Changed from easeInOut to linear
+                delay: shouldReduceMotion ? 0 : index * 1
+              }
             }}
             whileHover={{
-              scale: 1.08,
-              transition: { duration: 0.2 }
+              scale: shouldReduceMotion ? 1 : 1.05, // Reduced from 1.08 to 1.05
+              transition: { duration: 0.3, ease: "linear" }
             }}
             style={{
               position: 'absolute',
@@ -234,11 +343,17 @@ const DevelopmentCycle = () => {
               fontWeight: 'bold',
               fontSize: '13px',
               letterSpacing: '0.8px',
-              boxShadow: `0 0 30px ${item.color}80, 0 0 60px ${item.color}40, inset 0 0 15px rgba(255, 255, 255, 0.2)`,
+              // Simplified shadows for better performance
+              boxShadow: `0 0 20px ${item.color}60, inset 0 0 10px rgba(255, 255, 255, 0.2)`,
               border: '2px solid rgba(255, 255, 255, 0.4)',
               zIndex: 5,
               cursor: 'pointer',
-              padding: '8px'
+              padding: '8px',
+              // Performance optimizations
+              willChange: 'transform',
+              transform: 'translate3d(0, 0, 0)',
+              backfaceVisibility: 'hidden',
+              contain: 'layout style paint'
             }}
           >
             <span style={{

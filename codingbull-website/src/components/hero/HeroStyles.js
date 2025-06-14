@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
-// Hero container with enhanced dark styling and optimized layout
+// Hero container with enhanced dark styling and enterprise performance optimization
 export const HeroContainerStyled = styled.section`
   min-height: 100vh; /* Fit in viewport without scrolling */
   display: flex;
@@ -12,6 +12,29 @@ export const HeroContainerStyled = styled.section`
   background: #050510; /* Deep space blue-black for ultra slick look */
   perspective: 2000px; /* Enhanced perspective for 3D effect */
   transform-style: preserve-3d; /* Preserve 3D for children */
+
+  /* Enterprise-level performance optimizations */
+  contain: layout style paint;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Global animation performance optimization */
+  * {
+    animation-play-state: var(--hero-animations, running);
+    /* Prevent flickering across all elements */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+  }
+
+  /* Optimize all motion elements */
+  [data-framer-component-type] {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
   
   /* Enhanced dark gradient overlay with subtle animation */
   &::before {
@@ -141,8 +164,52 @@ export const HeroTextContentWrapper = styled(motion.div)`
   }
 `;
 
-// Right side content (development cycle) with optimized spacing
+// Enterprise-level full-screen particle system wrapper
 export const HeroVisualWrapper = styled(motion.div)`
+  /* Full-screen positioning for enterprise-level particle coverage */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* Below navbar (sticky: 1100) but above background */
+  pointer-events: none; /* Allow clicks to pass through to content */
+  overflow: hidden;
+
+  /* Enterprise-level performance optimizations */
+  contain: layout style paint;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+
+  /* Ensure particles cover full screen on all devices */
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+`;
+
+// Development cycle visual wrapper - positioned normally in layout
+export const DevelopmentCycleWrapper = styled(motion.div)`
   flex: 1;
   display: flex;
   justify-content: center;
@@ -150,34 +217,37 @@ export const HeroVisualWrapper = styled(motion.div)`
   position: relative;
   margin-left: 2.5rem; /* Optimized spacing between columns */
   margin-top: 0.5rem; /* Reduced top margin to fit in viewport */
-  
+  z-index: 15; /* Above particles */
+
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     order: 1;
     width: 100%;
     margin-left: 0; /* Remove margin on mobile */
     margin-top: 2rem; /* Optimized top margin */
   }
-  
+
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     max-width: 600px; /* Optimized max-width */
     margin: 2rem auto 0; /* Center content with optimized margin */
   }
-  
+
   @media (max-width: ${props => props.theme.breakpoints.sm}) {
     margin-top: 1.5rem; /* Optimized margin on small screens */
   }
 `;
 
-// Headline with enhanced gradient effect and optimized styling
+// Headline with enhanced gradient effect and optimized styling - Fixed text cutting
 export const Headline = styled(motion.h1)`
   font-size: clamp(2.2rem, 4.5vw, 3.5rem); /* Optimized font size */
-  line-height: 1.2; /* Improved line height */
+  line-height: 1.3; /* Increased line height to prevent text cutting */
   margin-bottom: 1.5rem; /* Optimized bottom margin */
   position: relative;
   font-family: 'Montserrat', sans-serif; /* More elegant font */
   font-weight: 800; /* Bolder weight for more impact */
   letter-spacing: -0.5px; /* Tighter letter spacing for luxury feel */
-  
+  overflow: visible; /* Ensure text is not clipped */
+  padding: 0.2rem 0; /* Added padding to prevent text cutting */
+
   /* Clean styling without interfering glow effects */
   
   @keyframes depthFloat {
@@ -194,6 +264,9 @@ export const Headline = styled(motion.h1)`
   .main-title {
     display: inline-block;
     margin-bottom: 1rem; /* Optimized margin */
+    overflow: visible; /* Ensure text is not clipped */
+    padding: 0.2rem 0; /* Added padding to prevent text cutting */
+    line-height: 1.3; /* Ensure proper line height */
   }
   
   .company-name {

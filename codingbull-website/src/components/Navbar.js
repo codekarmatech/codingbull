@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import bullLogo from '../assets/codingbulllogo.png';
 
-// Professional navbar container with glass morphism - Smaller height
+// Professional navbar container with glass morphism - Enterprise optimized with logo visibility fix
 const NavbarContainer = styled(motion.header)`
   position: fixed;
   top: 0;
@@ -14,7 +14,18 @@ const NavbarContainer = styled(motion.header)`
   z-index: ${props => props.theme.zIndex.sticky};
   padding: ${props => props.theme.spacing[1]} ${props => props.theme.spacing[6]}; /* Reduced from spacing[2] to spacing[1] */
   transition: all ${props => props.theme.animations.normal};
-  height: 70px; /* Fixed smaller height */
+  height: 70px; /* Fixed height - logo will break out */
+  overflow: visible; /* Critical: Allow logo to extend beyond navbar boundaries */
+  /* Add extra padding-bottom to accommodate logo breakout */
+  padding-bottom: 15px;
+  /* Add padding-top to prevent logo clipping at the top */
+  padding-top: 25px;
+
+  /* Enterprise performance optimizations */
+  contain: layout style; /* Removed paint to allow overflow visibility */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 
   background: ${props => props.$scrolled
     ? props.theme.colors.glassDark
@@ -29,7 +40,12 @@ const NavbarContainer = styled(motion.header)`
 
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     padding: ${props => props.theme.spacing[1]} ${props => props.theme.spacing[4]}; /* Reduced padding */
-    height: 60px; /* Smaller height on mobile */
+    height: 60px; /* Height on mobile - logo will break out */
+    overflow: visible; /* Allow logo to extend beyond navbar on mobile */
+    /* Add extra padding-bottom to accommodate logo breakout */
+    padding-bottom: 20px;
+    /* Add padding-top to prevent logo clipping at the top on mobile */
+    padding-top: 20px;
   }
 `;
 
@@ -44,76 +60,112 @@ const NavbarContent = styled.div`
   height: 100%; /* Ensure full height usage */
 `;
 
-// Professional logo container with enhanced styling (simplified)
+// Professional logo container with modern styling - Enhanced for logo visibility
 const LogoContainer = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: ${props => props.theme.spacing[3]};
+  gap: ${props => props.theme.spacing[4]}; /* Increased gap for better separation */
   cursor: pointer;
-  padding: ${props => props.theme.spacing[2]};
+  padding: ${props => props.theme.spacing[2]} ${props => props.theme.spacing[3]};
   border-radius: ${props => props.theme.borderRadius.lg};
-  transition: all ${props => props.theme.animations.normal};
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  perspective: 1000px; /* Enable 3D perspective for logo image */
-  transform-style: preserve-3d;
+  min-height: 100px; /* Increased to accommodate larger logo with breakout */
+  overflow: visible; /* Critical: Allow logo to break out of container */
+  z-index: ${props => props.theme.zIndex.sticky}; /* Ensure container has proper layering */
 
   &:hover {
-    background: ${props => props.theme.colors.glassLight};
-    transform: translateY(-1px);
-    box-shadow: ${props => props.theme.shadows.glowSoft};
+    background: rgba(43, 155, 244, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(43, 155, 244, 0.15);
   }
 `;
 
-// Enhanced logo image with 3D effects and larger size
-const LogoImage = styled.img`
-  height: 60px; /* Increased from 48px */
-  width: auto;
-  transition: all ${props => props.theme.animations.normal};
+// Separate container for logo image with modern hover effects - Enhanced visibility positioning
+const LogoImageContainer = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  z-index: 2;
+  top: 15px; /* Adjusted to prevent top clipping while maintaining breakout effect */
+  z-index: ${props => props.theme.zIndex.banner}; /* Higher z-index for better visibility */
+  border-radius: 50%;
+  overflow: visible; /* Container can safely use overflow: visible */
 
-  /* 3D effect with multiple shadows and transforms */
-  filter:
-    drop-shadow(0 0 12px rgba(43, 155, 244, 0.4))
-    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))
-    drop-shadow(0 0 20px rgba(43, 155, 244, 0.2));
+  /* Ensure adequate space for logo breakout */
+  min-height: 100px;
+  min-width: 100px;
 
-  transform:
-    translateZ(20px) /* Push logo forward in 3D space */
-    rotateX(2deg); /* Slight tilt for depth */
+  &:hover {
+    transform: translateY(8px); /* Maintain position on hover */
+    background: radial-gradient(circle, rgba(43, 155, 244, 0.1) 0%, transparent 70%);
+  }
 
   @media (max-width: ${props => props.theme.breakpoints.md}) {
-    height: 50px; /* Increased from 40px */
+    top: -3px; /* Adjusted to prevent top clipping on mobile */
+    min-height: 85px;
+    min-width: 85px;
+  }
+`;
+
+// Separate container for logo text with modern hover effects
+const LogoTextContainer = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+`;
+
+// Enhanced logo image with modern, sleek effects - Fixed overflow warning
+const LogoImage = styled.img`
+  height: 90px; /* Further increased to ensure proper breakout visibility */
+  width: auto;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: ${props => props.theme.zIndex.modal}; /* Maximum z-index for logo visibility */
+  /* Removed overflow: visible to fix browser warning */
+
+  /* Clean, modern glow effect */
+  filter:
+    drop-shadow(0 4px 12px rgba(43, 155, 244, 0.3))
+    drop-shadow(0 0 8px rgba(43, 155, 244, 0.2));
+
+  transform: translateY(0px) scale(1);
+
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    height: 75px; /* Increased for better mobile visibility */
   }
 
-  ${LogoContainer}:hover & {
-    transform:
-      translateZ(30px) /* Push further forward on hover */
-      rotateX(-2deg)
-      rotateY(3deg)
-      scale(1.1); /* Increased scale effect */
-
+  ${LogoImageContainer}:hover & {
+    transform: translateY(-3px) scale(1.08);
     filter:
-      drop-shadow(0 0 20px rgba(43, 155, 244, 0.6))
-      drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4))
-      drop-shadow(0 0 30px rgba(43, 155, 244, 0.3))
-      drop-shadow(0 0 40px rgba(94, 186, 255, 0.2)); /* Additional glow layers */
+      drop-shadow(0 8px 20px rgba(43, 155, 244, 0.4))
+      drop-shadow(0 0 15px rgba(43, 155, 244, 0.3))
+      drop-shadow(0 0 25px rgba(43, 155, 244, 0.1));
   }
 
-  /* Subtle floating animation */
-  animation: logoFloat 4s ease-in-out infinite;
+  /* Smooth pulse animation */
+  animation: logoPulse 3s ease-in-out infinite;
 
-  @keyframes logoFloat {
+  @keyframes logoPulse {
     0%, 100% {
-      transform: translateZ(20px) rotateX(2deg) translateY(0px);
+      filter:
+        drop-shadow(0 4px 12px rgba(43, 155, 244, 0.3))
+        drop-shadow(0 0 8px rgba(43, 155, 244, 0.2));
     }
     50% {
-      transform: translateZ(25px) rotateX(1deg) translateY(-2px);
+      filter:
+        drop-shadow(0 4px 12px rgba(43, 155, 244, 0.4))
+        drop-shadow(0 0 12px rgba(43, 155, 244, 0.3));
     }
   }
 `;
 
-// Professional logo text with gradient and glow (reverted to original)
+// Professional logo text with gradient and glow - Fixed text cutting
 const LogoText = styled.h1`
   font-size: ${props => props.theme.fontSizes['2xl']};
   font-weight: ${props => props.theme.fontWeights.bold};
@@ -125,13 +177,18 @@ const LogoText = styled.h1`
   background-clip: text;
   filter: drop-shadow(0 0 8px rgba(0, 102, 255, 0.4));
   letter-spacing: -0.02em;
+  line-height: 1.2; /* Added to prevent text cutting */
+  padding: 0.1rem 0; /* Added padding to prevent clipping */
+  overflow: visible; /* Ensure text is not clipped */
 
   @media (max-width: ${props => props.theme.breakpoints.md}) {
     font-size: ${props => props.theme.fontSizes.xl};
   }
 
-  ${LogoContainer}:hover & {
+  &:hover {
     filter: drop-shadow(0 0 12px rgba(0, 102, 255, 0.6));
+    transform: translateY(-1px);
+    transition: all ${props => props.theme.animations.normal};
   }
 `;
 
@@ -303,6 +360,36 @@ const linkVariants = {
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  // Enterprise-level animation optimization
+  const optimizedAnimations = useMemo(() => {
+    if (shouldReduceMotion) {
+      return {
+        navbar: { y: 0 },
+        logo: { opacity: 1, y: 0 },
+        logoImage: { scale: 1 },
+        logoText: { y: 0 },
+        navLinks: { scale: 1 },
+        menuButton: { scale: 1 }
+      };
+    }
+
+    return {
+      navbar: { y: 0 },
+      logo: { opacity: 1, y: 0 },
+      logoImage: {
+        scale: 1.02,
+        transition: { duration: 0.3, ease: "linear" }
+      },
+      logoText: {
+        y: -1,
+        transition: { duration: 0.3, ease: "linear" }
+      },
+      navLinks: { scale: 1.05 },
+      menuButton: { scale: 1.1 }
+    };
+  }, [shouldReduceMotion]);
   
   // Navigation links
   const navItems = [
@@ -349,20 +436,38 @@ const Navbar = () => {
     <NavbarContainer
       $scrolled={scrolled}
       initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+      animate={optimizedAnimations.navbar}
+      transition={{
+        type: shouldReduceMotion ? 'tween' : 'spring',
+        stiffness: shouldReduceMotion ? 0 : 100,
+        damping: shouldReduceMotion ? 0 : 20,
+        duration: shouldReduceMotion ? 0.3 : undefined
+      }}
     >
       <NavbarContent>
         <Link to="/" style={{ textDecoration: 'none' }}>
           <LogoContainer
             initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            animate={optimizedAnimations.logo}
+            transition={{
+              duration: shouldReduceMotion ? 0.3 : 0.8,
+              ease: shouldReduceMotion ? "linear" : [0.4, 0, 0.2, 1]
+            }}
+            whileHover={{ y: shouldReduceMotion ? 0 : -2 }}
+            whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
           >
-            <LogoImage src={bullLogo} alt="CodingBull Logo" />
-            <LogoText>CodingBull</LogoText>
+            <LogoImageContainer
+              whileHover={shouldReduceMotion ? {} : optimizedAnimations.logoImage}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 0.96 }}
+            >
+              <LogoImage src={bullLogo} alt="CodingBull Logo" />
+            </LogoImageContainer>
+            <LogoTextContainer
+              whileHover={shouldReduceMotion ? {} : optimizedAnimations.logoText}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 0.98 }}
+            >
+              <LogoText>CodingBull</LogoText>
+            </LogoTextContainer>
           </LogoContainer>
         </Link>
         
@@ -375,8 +480,8 @@ const Navbar = () => {
               initial="hidden"
               animate="visible"
               variants={linkVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={shouldReduceMotion ? {} : optimizedAnimations.navLinks}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 0.95 }}
             >
               {item.name}
             </NavLink>
@@ -395,8 +500,8 @@ const Navbar = () => {
         
         <MenuButton
           onClick={toggleMobileMenu}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={shouldReduceMotion ? {} : optimizedAnimations.menuButton}
+          whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
         >
           {mobileMenuOpen ? '✕' : '☰'}
         </MenuButton>

@@ -21,7 +21,11 @@ const HeroTextContent = () => {
         }}
       >
         {/* Company name now as the main title with larger, more prominent styling */}
-        <div className="main-title" style={{ marginBottom: "1.5rem" }}>
+        <div className="main-title" style={{
+          marginBottom: "1.5rem",
+          overflow: "visible", // Ensure text is not clipped
+          padding: "0.2rem 0" // Added padding to prevent text cutting
+        }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +34,8 @@ const HeroTextContent = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "flex-start",
-              gap: "0.5rem"
+              gap: "0.5rem",
+              overflow: "visible" // Ensure text is not clipped
             }}
           >
             {/* Main Company Name - Clean and Readable */}
@@ -43,10 +48,12 @@ const HeroTextContent = () => {
                 fontSize: "clamp(2.8rem, 5.5vw, 4.2rem)",
                 fontWeight: "900",
                 letterSpacing: "-1px",
-                lineHeight: 0.9,
+                lineHeight: 1.2, // Increased from 0.9 to prevent text cutting
                 fontFamily: "'Inter', sans-serif",
                 position: "relative",
                 zIndex: 10, // Ensure text is above background elements
+                padding: "0.2rem 0", // Added padding to prevent text clipping
+                overflow: "visible", // Ensure text is not clipped
               }}
               whileHover={{
                 scale: 1.02,
