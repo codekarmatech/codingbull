@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const BackgroundContainer = styled.div`
   position: absolute;
@@ -14,77 +14,42 @@ const BackgroundContainer = styled.div`
   transform-style: preserve-3d;
 `;
 
-// Using .attrs to handle motion props and reduce class generation
-const GradientBlob = styled(motion.div).attrs(props => ({
-  // Explicitly forward motion props
-  animate: props.animate,
-  style: props.style,
-}))`
+// Simplified gradient blob component
+const GradientBlob = styled(motion.div)`
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.5;
+  opacity: 0.4;
   mix-blend-mode: screen;
   will-change: transform;
   transform-origin: center center;
-  
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-    transition: none;
-  }
 `;
 
-// Specific blob styles using theme variables
-const PurpleBlob = styled(GradientBlob)`
-  width: 50vw;
-  height: 50vw;
-  left: 20%;
-  top: 20%;
-  background: ${props => `radial-gradient(
-    circle at center, 
-    ${props.theme.colors.brightPurple}4D 0%, 
-    ${props.theme.colors.deepPurple}1A 70%, 
-    rgba(0, 0, 0, 0) 100%
-  )`};
-`;
-
-const BlueBlob = styled(GradientBlob)`
+// Simplified blob styles using consistent brand blue theme
+const PrimaryBlob = styled(GradientBlob)`
   width: 60vw;
   height: 60vw;
-  right: 10%;
-  bottom: 10%;
-  background: ${props => `radial-gradient(
-    circle at center, 
-    ${props.theme.colors.electricBlue}40 0%, 
-    ${props.theme.colors.deepBlue}1A 70%, 
+  left: 10%;
+  top: 10%;
+  background: radial-gradient(
+    circle at center,
+    rgba(43, 155, 244, 0.3) 0%,
+    rgba(43, 155, 244, 0.1) 50%,
     rgba(0, 0, 0, 0) 100%
-  )`};
+  );
 `;
 
-const CyanBlob = styled(GradientBlob)`
-  width: 40vw;
-  height: 40vw;
-  left: 5%;
-  bottom: 15%;
-  background: ${props => `radial-gradient(
-    circle at center, 
-    ${props.theme.colors.neonCyan}26 0%, 
-    ${props.theme.colors.electricBlue}0D 70%, 
+const SecondaryBlob = styled(GradientBlob)`
+  width: 70vw;
+  height: 70vw;
+  right: 5%;
+  bottom: 5%;
+  background: radial-gradient(
+    circle at center,
+    rgba(43, 155, 244, 0.2) 0%,
+    rgba(43, 155, 244, 0.05) 50%,
     rgba(0, 0, 0, 0) 100%
-  )`};
-`;
-
-const MagentaBlob = styled(GradientBlob)`
-  width: 45vw;
-  height: 45vw;
-  right: 15%;
-  top: 5%;
-  background: ${props => `radial-gradient(
-    circle at center, 
-    rgba(255, 0, 128, 0.15) 0%, 
-    ${props.theme.colors.deepPurple}0D 70%, 
-    rgba(0, 0, 0, 0) 100%
-  )`};
+  );
 `;
 
 const NoiseOverlay = styled.div`
@@ -99,249 +64,77 @@ const NoiseOverlay = styled.div`
   pointer-events: none;
 `;
 
-// Shooting star component
-const ShootingStar = styled(motion.div)`
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  z-index: 1;
-  overflow: visible;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 1px;
-    background: linear-gradient(to left, white, transparent);
-    right: 1px;
-  }
-`;
-
-// Aurora effect
+// Simplified aurora effect with consistent blue theme
 const Aurora = styled(motion.div)`
   position: absolute;
   width: 100%;
-  height: 40vh;
-  bottom: -20vh;
+  height: 30vh;
+  bottom: -15vh;
   left: 0;
   right: 0;
   background: linear-gradient(
     to top,
-    rgba(10, 10, 30, 0),
-    rgba(76, 0, 153, 0.05) 20%,
-    rgba(0, 112, 255, 0.05) 40%,
-    rgba(0, 200, 255, 0.05) 60%,
-    rgba(0, 255, 200, 0.05) 80%,
-    rgba(10, 10, 30, 0)
+    rgba(0, 0, 0, 0),
+    rgba(43, 155, 244, 0.02) 30%,
+    rgba(43, 155, 244, 0.04) 60%,
+    rgba(0, 0, 0, 0)
   );
-  filter: blur(40px);
-  opacity: 0.4;
+  filter: blur(50px);
+  opacity: 0.6;
   mix-blend-mode: screen;
-  transform-origin: bottom center;
   z-index: 1;
 `;
 
 const FluidBackground = () => {
-  // Animation controls for blobs - create individually to avoid hooks in callbacks
-  const blobControl1 = useAnimation();
-  const blobControl2 = useAnimation();
-  const blobControl3 = useAnimation();
-  const blobControl4 = useAnimation();
-  const blobControls = [blobControl1, blobControl2, blobControl3, blobControl4];
-  
-  // Create random motion values for more organic movement - individually to avoid hooks in callbacks
-  const randomX1 = useMotionValue(0);
-  const randomX2 = useMotionValue(0);
-  const randomX = [randomX1, randomX2];
-  
-  const randomY1 = useMotionValue(0);
-  const randomY2 = useMotionValue(0);
-  const randomY = [randomY1, randomY2];
-  
-  // Transform the motion values to create larger movements - individually to avoid hooks in callbacks
-  const x1 = useTransform(randomX1, [-1, 1], [-15, 15]);
-  const x2 = useTransform(randomX2, [-1, 1], [-15, 15]);
-  const x = [x1, x2];
-  
-  const y1 = useTransform(randomY1, [-1, 1], [-15, 15]);
-  const y2 = useTransform(randomY2, [-1, 1], [-15, 15]);
-  const y = [y1, y2];
-  
-  // Animation configurations for blobs
-  const blobAnimations = [
-    {
-      x: [0, 15, -15, 8, 0],
-      y: [0, -20, 8, -15, 0],
-      scale: [1, 1.05, 0.95, 1.02, 1],
-      rotate: [0, 8, -8, 4, 0],
-      duration: 15
-    },
-    {
-      x: [0, -20, 15, -8, 0],
-      y: [0, 15, -20, 8, 0],
-      scale: [1, 0.95, 1.05, 0.98, 1],
-      rotate: [0, -8, 12, -4, 0],
-      duration: 18
-    },
-    {
-      x: [0, 12, -18, 4, 0],
-      y: [0, -12, -4, 18, 0],
-      scale: [1, 1.03, 0.97, 1.06, 1],
-      rotate: [0, 4, -12, 8, 0],
-      duration: 20
-    },
-    {
-      x: [0, -8, 22, -12, 0],
-      y: [0, 18, 4, -15, 0],
-      scale: [1, 0.97, 1.08, 0.92, 1],
-      rotate: [0, -4, 8, -12, 0],
-      duration: 22
-    }
-  ];
-  
-  // Generate shooting stars - reduced count for performance
-  const shootingStars = useMemo(() => {
-    return Array.from({ length: 8 }).map((_, i) => {
-      const startX = Math.random() * 100;
-      const startY = Math.random() * 100;
-      const angle = Math.random() * 45 + 15; // 15-60 degrees
-      const distance = 80 + Math.random() * 100; // Travel distance
-      const duration = 1.0 + Math.random() * 0.8; // Animation duration
-      const delay = Math.random() * 12; // Random delay
-      const size = 1 + Math.random() * 2; // Star size
-      const tailLength = 30 + Math.random() * 70; // Tail length
-      
-      // Calculate end position based on angle and distance
-      const radians = angle * (Math.PI / 180);
-      const endX = startX + Math.cos(radians) * distance;
-      const endY = startY + Math.sin(radians) * distance;
-      
-      return {
-        id: i,
-        startX,
-        startY,
-        endX,
-        endY,
-        duration,
-        delay,
-        size,
-        tailLength
-      };
-    });
-  }, []);
-  
-  // Start animations on component mount
-  useEffect(() => {
-    // Animate each blob with its configuration
-    blobAnimations.forEach((animation, index) => {
-      blobControls[index].start({
-        ...animation,
-        transition: { 
-          duration: animation.duration, 
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatType: "mirror"
-        }
-      });
-    });
-    
-    // Add subtle random movement for more organic feel
-    const interval = setInterval(() => {
-      randomX.forEach(val => val.set(Math.random() * 2 - 1));
-      randomY.forEach(val => val.set(Math.random() * 2 - 1));
-    }, 2000);
-    
-    return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   
   return (
     <BackgroundContainer>
-      {/* Deep purple blob */}
-      <PurpleBlob
-        animate={blobControls[0]}
-        style={{ 
-          x: x[0], 
-          y: y[0]
-        }}
-      />
-      
-      {/* Electric blue blob */}
-      <BlueBlob
-        animate={blobControls[1]}
-        style={{ 
-          x: x[1], 
-          y: y[1]
-        }}
-      />
-      
-      {/* Cyan accent blob */}
-      <CyanBlob
-        animate={blobControls[2]}
-      />
-      
-      {/* Magenta accent blob */}
-      <MagentaBlob
-        animate={blobControls[3]}
-      />
-      
-      {/* Aurora effect */}
-      <Aurora 
+      {/* Primary brand blue blob */}
+      <PrimaryBlob
         animate={{
-          scaleY: [1, 1.2, 0.9, 1.1, 1],
-          opacity: [0.4, 0.5, 0.3, 0.45, 0.4],
-          filter: [
-            'blur(40px)',
-            'blur(45px)',
-            'blur(35px)',
-            'blur(42px)',
-            'blur(40px)'
-          ]
+          x: [0, 20, -10, 15, 0],
+          y: [0, -15, 10, -8, 0],
+          scale: [1, 1.1, 0.9, 1.05, 1],
+          rotate: [0, 5, -5, 3, 0]
         }}
         transition={{
-          duration: 10,
+          duration: 20,
           repeat: Infinity,
           repeatType: "mirror",
           ease: "easeInOut"
         }}
       />
-      
-      {/* Shooting stars */}
-      {shootingStars.map(star => (
-        <ShootingStar
-          key={star.id}
-          initial={{ 
-            x: `${star.startX}vw`, 
-            y: `${star.startY}vh`,
-            opacity: 0,
-            scale: 0,
-            width: `${star.size}px`,
-            height: `${star.size}px`
-          }}
-          animate={{
-            x: [`${star.startX}vw`, `${star.endX}vw`],
-            y: [`${star.startY}vh`, `${star.endY}vh`],
-            opacity: [0, 1, 1, 0],
-            scale: [0, 1, 1, 0]
-          }}
-          transition={{
-            duration: star.duration,
-            delay: star.delay,
-            repeat: Infinity,
-            repeatDelay: 15 + Math.random() * 20,
-            times: [0, 0.1, 0.9, 1]
-          }}
-          style={{
-            boxShadow: `0 0 ${star.size * 2}px rgba(255, 255, 255, 0.8)`,
-            zIndex: 3
-          }}
-        />
-      ))}
-      
+
+      {/* Secondary brand blue blob */}
+      <SecondaryBlob
+        animate={{
+          x: [0, -15, 12, -8, 0],
+          y: [0, 10, -15, 5, 0],
+          scale: [1, 0.95, 1.08, 0.98, 1],
+          rotate: [0, -3, 8, -2, 0]
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut"
+        }}
+      />
+
+      {/* Aurora effect */}
+      <Aurora
+        animate={{
+          scaleY: [1, 1.1, 0.95, 1.05, 1],
+          opacity: [0.6, 0.7, 0.5, 0.65, 0.6]
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut"
+        }}
+      />
+
       {/* Noise texture overlay for grain effect */}
       <NoiseOverlay />
     </BackgroundContainer>

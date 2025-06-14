@@ -29,7 +29,7 @@ export const HeroContainerStyled = styled.section`
     );
     z-index: 1; /* Above FluidBackground but below content */
     pointer-events: none;
-    animation: gradientShift 20s infinite alternate ease-in-out;
+    /* Removed gradientShift animation to prevent color changing */
   }
   
   /* Additional subtle vignette for professional depth with animation */
@@ -47,7 +47,7 @@ export const HeroContainerStyled = styled.section`
     );
     z-index: 3; /* Above background elements but below content */
     pointer-events: none;
-    animation: pulseVignette 15s infinite alternate ease-in-out;
+    /* Removed pulseVignette animation to prevent color changing */
   }
   
   /* Modern morphing shapes animation - 2025 trending */
@@ -70,33 +70,7 @@ export const HeroContainerStyled = styled.section`
     }
   }
   
-  @keyframes gradientShift {
-    0%, 100% {
-      background: linear-gradient(
-        135deg,
-        rgba(5, 5, 20, 0.95) 0%,
-        rgba(10, 10, 30, 0.85) 50%,
-        rgba(5, 5, 20, 0.95) 100%
-      );
-    }
-    50% {
-      background: linear-gradient(
-        135deg,
-        rgba(8, 8, 25, 0.92) 0%,
-        rgba(12, 12, 35, 0.88) 50%,
-        rgba(8, 8, 25, 0.92) 100%
-      );
-    }
-  }
-
-  @keyframes pulseVignette {
-    0%, 100% {
-      opacity: 0.8;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
+  /* Removed gradientShift and pulseVignette keyframes to prevent color changing */
   
   @media (max-width: ${props => props.theme.breakpoints.lg}) {
     padding: 80px 2rem 1.5rem; /* Adjusted padding for larger screens */
