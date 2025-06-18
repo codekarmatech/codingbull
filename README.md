@@ -38,7 +38,9 @@ codingbull/
 │   │   └── middleware.py       # Custom Security Middleware
 │   ├── media/                  # Client Logos & Project Images
 │   └── manage.py               # Django Management
-├── SECURITY_MONITORING.md      # Security System Documentation
+├── DEPLOYMENT_GUIDE_SIMPLIFIED.md  # Production Deployment Guide
+├── audit-production.sh         # Production Audit Script
+├── deploy.sh                   # Automated Deployment Script
 └── requirements.txt            # Python Dependencies
 ```
 
@@ -253,28 +255,27 @@ python manage.py test --coverage  # With coverage
 
 ## 🚀 Production Deployment
 
-### Frontend Deployment
+**For complete deployment instructions, see:** [`DEPLOYMENT_GUIDE_SIMPLIFIED.md`](./DEPLOYMENT_GUIDE_SIMPLIFIED.md)
+
+### Quick Deployment Overview
+- **Frontend**: Cloudflare Pages → https://codingbullz.com
+- **Backend**: Koyeb VPS → https://api.codingbullz.com
+- **Database**: PostgreSQL (Aiven/ElephantSQL/Railway)
+- **Domain**: Managed via Hostinger.com
+
+### Deployment Scripts
 ```bash
-cd codingbull-website
-npm run build              # Create production build
-# Deploy build/ directory to CDN/static hosting
+# Run production audit
+./audit-production.sh
+
+# Automated deployment preparation
+./deploy.sh
 ```
 
-### Backend Deployment
-```bash
-cd codingbull_backend
-# Set production environment variables
-python manage.py migrate           # Database migrations
-python manage.py collectstatic     # Static files
-# Deploy with Gunicorn + Nginx
-```
-
-### Deployment Architecture
-- **Frontend**: Static files served via CDN
-- **Backend**: Django + Gunicorn + Nginx
-- **Database**: PostgreSQL for production
-- **Media**: AWS S3 for client logos and project images
-- **Monitoring**: Sentry for error tracking
+### Production URLs
+- **Website**: https://codingbullz.com
+- **API**: https://api.codingbullz.com/api/v1/
+- **Admin**: https://api.codingbullz.com/admin/
 
 ## 🔐 Proprietary CodingBull Software
 

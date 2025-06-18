@@ -935,11 +935,8 @@ const ServicePage = () => {
 
   if (!service) return null;
 
-  // Log the source being passed to ImageWithFallback for the hero image
-  if (service) {
-    const imageSrcForHero = service.icon || service.image || service.image_url;
-    // Image source for hero - removed console.log for production
-  }
+  // Calculate image source once to follow DRY principle
+  const imageSrcForHero = service.icon || service.image || service.image_url;
   return (
     <ServicePageContainer
       variants={pageTransition}
@@ -993,7 +990,7 @@ const ServicePage = () => {
               The explicit emoji rendering path is removed to prioritize images from these fields.
             */}
             <ImageWithFallback
-              src={service?.icon || service?.image || service?.image_url}
+              src={imageSrcForHero}
               alt={service?.name || service?.title || 'Service Icon'}
               fallbackText={service?.name || service?.title || "Icon"} // Text for ImageWithFallback's own placeholder
               showFallbackText={true} // Show text if the image fails and ImageWithFallback's placeholder is used
