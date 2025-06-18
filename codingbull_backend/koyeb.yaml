@@ -1,4 +1,6 @@
 # Koyeb Deployment Configuration for CodingBull Backend
+# Note: Replace DATABASE_URL with your actual cloud PostgreSQL URL
+# Recommended providers: Supabase, Neon, Aiven, Railway
 apiVersion: koyeb.io/v1
 kind: App
 metadata:
@@ -25,7 +27,7 @@ spec:
         - name: DJANGO_ALLOWED_HOSTS
           value: "codingbull-backend.koyeb.app,codingbullz.com,www.codingbullz.com"
         - name: DATABASE_URL
-          value: "postgresql://bulldb:Bull@2747.@localhost:5432/bulldb"
+          value: "your-cloud-postgresql-url-here"
         - name: CORS_ALLOWED_ORIGINS_PRODUCTION
           value: "https://codingbullz.com,https://www.codingbullz.com"
         - name: SECURE_SSL_REDIRECT

@@ -5,11 +5,12 @@
 **Project Structure:**
 - **Frontend:** React app in `codingbull-website/`
 - **Backend:** Django API in `codingbull_backend/`
-- **Database:** PostgreSQL (bulldb/bulldb/Bull@2747.)
+- **Database:** PostgreSQL (Cloud-hosted)
 
 **Deployment Targets:**
 - **Frontend:** Cloudflare Pages → https://codingbullz.com
 - **Backend:** Koyeb VPS → https://api.codingbullz.com
+- **Database:** Cloud PostgreSQL (Supabase/Neon/Aiven)
 - **Domain:** Managed via Hostinger.com
 
 ---
@@ -41,19 +42,31 @@ npm run env:prod
 npm run build:prod
 ```
 
-### 1.2 Database Migration
+### 1.2 Database Setup
 
-**Setup PostgreSQL** (choose one):
-- **Aiven:** [aiven.io](https://aiven.io) (Free 1 month)
-- **ElephantSQL:** [elephantsql.com](https://elephantsql.com) (Free tier)
-- **Railway:** [railway.app](https://railway.app) ($5 credit monthly)
+**📖 Detailed Database Setup:** See [DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md)
 
-**Migrate Data:**
+**Quick Setup:**
 ```bash
 cd codingbull_backend
+
+# Create production environment file
+cp .env.example .env.production
+
+# Edit .env.production with your cloud PostgreSQL URL
+# Recommended: Supabase or Neon (both have generous free tiers)
+
+# Test database connection
+python check_database_status.py
+
+# Migrate data from SQLite to PostgreSQL
 cp .env.production .env
 python migrate_to_postgresql.py
 ```
+
+**Recommended Providers:**
+- **🟢 Supabase:** [supabase.com](https://supabase.com) (500MB free)
+- **🟢 Neon:** [neon.tech](https://neon.tech) (512MB free)
 
 ---
 
@@ -92,9 +105,14 @@ DJANGO_SECRET_KEY=your-generated-key
 DJANGO_ENV=production
 DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=codingbull-backend.koyeb.app,api.codingbullz.com
-DATABASE_URL=your-postgresql-url
+DATABASE_URL=your-cloud-postgresql-url
 CORS_ALLOWED_ORIGINS_PRODUCTION=https://codingbullz.com,https://www.codingbullz.com
 ```
+
+**Database URL Examples:**
+- **Supabase:** `postgresql://postgres:password@db.supabase.co:5432/postgres`
+- **Neon:** `postgresql://user:password@ep-xxx.us-east-1.aws.neon.tech/neondb`
+- **Railway:** `postgresql://postgres:password@containers-us-west-xxx.railway.app:5432/railway`
 
 5. **Add Custom Domain:** `api.codingbullz.com`
 
@@ -169,7 +187,11 @@ npm run build:prod:analyze
 **CORS Errors:** Check CORS_ALLOWED_ORIGINS in backend environment
 **API Not Loading:** Verify DNS propagation and API endpoint URL
 **Build Failures:** Check platform build logs and environment variables
-**Database Issues:** Verify DATABASE_URL format and PostgreSQL service
+**Database Issues:**
+- Verify DATABASE_URL format matches your provider
+- Check database service is running (Supabase/Neon dashboard)
+- Test connection: `python check_database_status.py`
+- Ensure database allows external connections
 
 ---
 

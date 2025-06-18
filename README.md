@@ -131,7 +131,8 @@ DJANGO_DEBUG=True       # False for production
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,codingbullz.com
 
 # Database (SQLite for dev, PostgreSQL for production)
-DATABASE_URL=postgresql://user:password@localhost:5432/codingbull_db
+# For production, use cloud PostgreSQL (Supabase/Neon recommended)
+DATABASE_URL=postgresql://user:password@host:port/database
 
 # CORS Settings (Frontend URLs)
 CORS_ALLOWED_ORIGINS=http://localhost:3000,https://codingbullz.com
@@ -149,8 +150,10 @@ SENTRY_DSN=your-sentry-dsn-for-production-errors
 ### Production Deployment Notes
 - Frontend builds to static files (served via CDN/Nginx)
 - Backend runs on Django + Gunicorn + Nginx
-- Database: PostgreSQL for production
+- Database: Cloud PostgreSQL (Supabase/Neon recommended)
 - Media files: AWS S3 or similar for client logos/project images
+
+**📖 Database Setup:** See [DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md) for detailed configuration
 
 ## 📡 API Reference
 
@@ -260,7 +263,7 @@ python manage.py test --coverage  # With coverage
 ### Quick Deployment Overview
 - **Frontend**: Cloudflare Pages → https://codingbullz.com
 - **Backend**: Koyeb VPS → https://api.codingbullz.com
-- **Database**: PostgreSQL (Aiven/ElephantSQL/Railway)
+- **Database**: Cloud PostgreSQL (Supabase/Neon/Aiven)
 - **Domain**: Managed via Hostinger.com
 
 ### Deployment Scripts
