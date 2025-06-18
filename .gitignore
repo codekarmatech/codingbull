@@ -29,7 +29,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-media/
 static/
 .coverage
 htmlcov/

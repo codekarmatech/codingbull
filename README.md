@@ -151,7 +151,14 @@ SENTRY_DSN=your-sentry-dsn-for-production-errors
 - Frontend builds to static files (served via CDN/Nginx)
 - Backend runs on Django + Gunicorn + Nginx
 - Database: Cloud PostgreSQL (Supabase/Neon recommended)
-- Media files: AWS S3 or similar for client logos/project images
+- **Media files: Simple git-based storage** (images committed to repository)
+
+### 🖼️ Image Storage
+Images are stored simply and reliably:
+- **Development & Production**: Same files, committed to git repository
+- **No External Services**: No cloud storage setup required
+- **Automatic Serving**: Django handles image serving with proper headers
+- **Ready to Deploy**: Images work immediately in production
 
 **📖 Database Setup:** See [DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md) for detailed configuration
 
