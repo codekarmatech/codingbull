@@ -31,8 +31,11 @@ const validateEnvironment = () => {
   const missing = requiredEnvVars.filter(envVar => !process.env[envVar]);
 
   if (missing.length > 0) {
-    console.warn('Missing environment variables:', missing);
-    console.warn('Using default values. For production, ensure all variables are set.');
+    // Only log warnings in development
+    if (currentEnvironment === 'development') {
+      console.warn('Missing environment variables:', missing);
+      console.warn('Using default values. For production, ensure all variables are set.');
+    }
 
     // Only throw error in production for critical missing vars
     if (currentEnvironment === 'production' && missing.includes('REACT_APP_API_BASE_URL')) {
@@ -168,8 +171,8 @@ const config = {
 // Freeze the configuration object to prevent modifications
 Object.freeze(config);
 
-// Enhanced logging with environment detection
-if (config.features.enableDebugMode) {
+// Enhanced logging with environment detection - only in development
+if (config.features.enableDebugMode && config.isDevelopment) {
   console.log(`🔧 CodingBull Configuration [${config.env.toUpperCase()}]:`, {
     environment: config.env,
     api: {
@@ -188,17 +191,10 @@ if (config.features.enableDebugMode) {
     },
   });
 
-  // Environment-specific warnings
-  if (config.env === 'development') {
-    console.log('🚀 Running in DEVELOPMENT mode');
-    if (config.api.baseUrl.includes('localhost')) {
-      console.log('📡 Using local API server');
-    }
-  } else if (config.env === 'production') {
-    console.log('🏭 Running in PRODUCTION mode');
-    if (config.features.enableDebugMode) {
-      console.warn('⚠️ Debug mode is enabled in production!');
-    }
+  // Environment-specific warnings - development only
+  console.log('🚀 Running in DEVELOPMENT mode');
+  if (config.api.baseUrl.includes('localhost')) {
+    console.log('📡 Using local API server');
   }
 }
 

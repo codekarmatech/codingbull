@@ -227,12 +227,14 @@ export const performanceMonitoring = {
     const { name, value, id } = metric;
     
     if (config.features.enablePerformanceMonitoring) {
-      console.log(`Performance Metric - ${name}:`, {
-        value: Math.round(value),
-        id,
-        timestamp: Date.now(),
-      });
-      
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Performance Metric - ${name}:`, {
+          value: Math.round(value),
+          id,
+          timestamp: Date.now(),
+        });
+      }
+
       // Send to analytics in production
       if (config.isProduction && window.gtag) {
         window.gtag('event', name, {
@@ -325,7 +327,9 @@ export const serviceWorkerUtils = {
     if ('serviceWorker' in navigator && config.isProduction) {
       try {
         const registration = await navigator.serviceWorker.register(swPath);
-        console.log('Service Worker registered:', registration);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Service Worker registered:', registration);
+        }
         return registration;
       } catch (error) {
         console.error('Service Worker registration failed:', error);

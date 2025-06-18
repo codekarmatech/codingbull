@@ -125,8 +125,8 @@ class PerformanceMonitor {
     };
 
     this.metrics.set(`${name}-${Date.now()}`, metric);
-    
-    // Log in development
+
+    // Log in development only
     if (config.isDevelopment) {
       console.log(`📊 Performance Metric: ${name} = ${value}ms`, metric);
     }

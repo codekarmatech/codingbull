@@ -29,7 +29,7 @@ const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
-const TestPage = lazy(() => import('./pages/TestPage'));
+// TestPage removed for production
 
 // Removed old LoadingFallback component definition
 
@@ -61,7 +61,6 @@ function App() {
                     <Route path="/our-projects" element={<ProjectsPage />} />
                     <Route path="/our-projects/:id" element={<ProjectsPage />} />
                     <Route path="/contact" element={<ContactPage />} />
-                    <Route path="/test" element={<TestPage />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

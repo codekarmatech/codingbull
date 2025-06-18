@@ -114,10 +114,13 @@ const DevelopmentCycle = () => {
       style={{
         position: 'relative',
         width: '100%',
-        height: '600px',
+        height: 'clamp(350px, 60vh, 600px)', // Responsive height that prevents clipping
+        minHeight: '350px', // Ensure minimum space for all elements
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        overflow: 'visible', // Ensure elements aren't clipped
+        padding: 'clamp(10px, 3vw, 20px)', // Responsive padding for safety margin
         // Enterprise performance optimizations
         contain: 'layout style paint',
         willChange: 'transform',
@@ -131,8 +134,9 @@ const DevelopmentCycle = () => {
         transition={optimizedTransitions.centralOrb}
         style={{
           position: 'absolute',
-          width: '140px',
-          height: '140px',
+          // Responsive central orb sizing
+          width: window.innerWidth < 640 ? 'clamp(100px, 20vw, 120px)' : '140px',
+          height: window.innerWidth < 640 ? 'clamp(100px, 20vw, 120px)' : '140px',
           borderRadius: '50%',
           background: 'radial-gradient(circle at 30%, #1E88E5, #1565C0, #0D47A1)',
           zIndex: 10,
@@ -142,8 +146,9 @@ const DevelopmentCycle = () => {
           color: 'white',
           fontFamily: "'Poppins', 'Inter', sans-serif",
           fontWeight: 'bold',
-          fontSize: '18px',
-          letterSpacing: '0.5px',
+          // Responsive font sizing for central text
+          fontSize: window.innerWidth < 640 ? 'clamp(14px, 3.5vw, 16px)' : '18px',
+          letterSpacing: window.innerWidth < 640 ? '0.3px' : '0.5px',
           // Simplified shadows for better performance
           boxShadow: '0 0 40px rgba(30, 136, 229, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.1)',
           border: '3px solid rgba(66, 165, 245, 0.5)',
@@ -182,11 +187,14 @@ const DevelopmentCycle = () => {
             style={{
               fontFamily: "'Poppins', 'Inter', sans-serif",
               fontWeight: '700',
-              fontSize: '18px',
-              textShadow: '0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(66, 165, 245, 0.8)',
-              letterSpacing: '1.2px',
+              // Responsive font sizing for CODING text
+              fontSize: window.innerWidth < 640 ? 'clamp(12px, 3vw, 14px)' : '18px',
+              textShadow: window.innerWidth < 640 
+                ? '0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(66, 165, 245, 0.8)'
+                : '0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(66, 165, 245, 0.8)',
+              letterSpacing: window.innerWidth < 640 ? '0.8px' : '1.2px',
               lineHeight: '1.1',
-              marginBottom: '4px',
+              marginBottom: window.innerWidth < 640 ? '2px' : '4px',
               color: '#FFFFFF'
             }}
 
@@ -197,9 +205,12 @@ const DevelopmentCycle = () => {
             style={{
               fontFamily: "'Poppins', 'Inter', sans-serif",
               fontWeight: '800',
-              fontSize: '22px',
-              textShadow: '0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(66, 165, 245, 0.8)',
-              letterSpacing: '1.5px',
+              // Responsive font sizing for BULL text
+              fontSize: window.innerWidth < 640 ? 'clamp(14px, 4vw, 18px)' : '22px',
+              textShadow: window.innerWidth < 640 
+                ? '0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(66, 165, 245, 0.8)'
+                : '0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(66, 165, 245, 0.8)',
+              letterSpacing: window.innerWidth < 640 ? '1px' : '1.5px',
               color: '#FFFFFF'
             }}
 
@@ -303,7 +314,11 @@ const DevelopmentCycle = () => {
         { text: 'INNOVATE', icon: '💡', color: '#1565C0', position: 'top' }
       ].map((item, index) => {
         const angle = (index * 90) * (Math.PI / 180);
-        const radius = 180; // Increased radius for better spacing
+        // Enterprise-level responsive radius calculation to prevent clipping
+        const baseRadius = 180;
+        const vwRadius = Math.min(window.innerWidth * 0.25, baseRadius); // 25% of viewport width, max 180px
+        const safeRadius = Math.max(vwRadius, 100); // Minimum 100px radius
+        const radius = window.innerWidth < 640 ? safeRadius : baseRadius;
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
 
@@ -330,8 +345,9 @@ const DevelopmentCycle = () => {
             }}
             style={{
               position: 'absolute',
-              width: '85px',
-              height: '85px',
+              // Enterprise-level responsive sizing to prevent clipping
+              width: window.innerWidth < 640 ? 'clamp(50px, 12vw, 70px)' : '85px',
+              height: window.innerWidth < 640 ? 'clamp(50px, 12vw, 70px)' : '85px',
               borderRadius: '50%',
               background: `radial-gradient(circle at 30%, ${item.color}, ${item.color}E6, ${item.color}CC)`,
               display: 'flex',
@@ -341,14 +357,19 @@ const DevelopmentCycle = () => {
               color: 'white',
               fontFamily: "'Poppins', 'Inter', sans-serif",
               fontWeight: 'bold',
-              fontSize: '13px',
-              letterSpacing: '0.8px',
-              // Simplified shadows for better performance
-              boxShadow: `0 0 20px ${item.color}60, inset 0 0 10px rgba(255, 255, 255, 0.2)`,
-              border: '2px solid rgba(255, 255, 255, 0.4)',
+              // Responsive font sizing
+              fontSize: window.innerWidth < 640 ? 'clamp(9px, 2.5vw, 11px)' : '13px',
+              letterSpacing: window.innerWidth < 640 ? '0.5px' : '0.8px',
+              // Responsive shadows for better performance on mobile
+              boxShadow: window.innerWidth < 640 
+                ? `0 0 10px ${item.color}60, inset 0 0 5px rgba(255, 255, 255, 0.2)`
+                : `0 0 20px ${item.color}60, inset 0 0 10px rgba(255, 255, 255, 0.2)`,
+              border: window.innerWidth < 640 
+                ? '1px solid rgba(255, 255, 255, 0.4)'
+                : '2px solid rgba(255, 255, 255, 0.4)',
               zIndex: 5,
               cursor: 'pointer',
-              padding: '8px',
+              padding: window.innerWidth < 640 ? '4px' : '8px',
               // Performance optimizations
               willChange: 'transform',
               transform: 'translate3d(0, 0, 0)',
@@ -357,17 +378,21 @@ const DevelopmentCycle = () => {
             }}
           >
             <span style={{
-              fontSize: '20px',
-              marginBottom: '4px',
+              // Responsive icon sizing
+              fontSize: window.innerWidth < 640 ? 'clamp(14px, 4vw, 16px)' : '20px',
+              marginBottom: window.innerWidth < 640 ? '2px' : '4px',
               filter: 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))'
             }}>
               {item.icon}
             </span>
             <span style={{
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.3)',
+              textShadow: window.innerWidth < 640 
+                ? '0 0 5px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(0, 0, 0, 0.3)'
+                : '0 0 10px rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.3)',
               fontWeight: '700',
-              letterSpacing: '1px',
-              fontSize: '12px'
+              letterSpacing: window.innerWidth < 640 ? '0.5px' : '1px',
+              // Responsive text sizing
+              fontSize: window.innerWidth < 640 ? 'clamp(8px, 2vw, 10px)' : '12px'
             }}>
               {item.text}
             </span>

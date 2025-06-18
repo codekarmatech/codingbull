@@ -156,8 +156,23 @@ class ErrorBoundary extends React.Component {
 
     // In production, send to error monitoring service
     if (process.env.NODE_ENV === 'production') {
-      // Example: fetch('/api/errors', { method: 'POST', body: JSON.stringify(errorData) });
-      console.error('Production Error:', errorData);
+      // Send to error monitoring service (Sentry, LogRocket, etc.)
+      try {
+        fetch('/api/v1/track-error/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(errorData)
+        }).catch(() => {
+          // Silently fail if error tracking is unavailable
+        });
+      } catch (e) {
+        // Silently fail if error tracking is unavailable
+      }
+    } else {
+      // Only log to console in development
+      console.error('Development Error:', errorData);
     }
   };
 

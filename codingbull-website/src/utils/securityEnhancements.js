@@ -350,7 +350,9 @@ export const securityMonitor = {
       console.warn('Security Event:', securityEvent);
       // Send to monitoring service
     } else {
-      console.log('Security Event:', securityEvent);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Security Event:', securityEvent);
+      }
     }
   },
   

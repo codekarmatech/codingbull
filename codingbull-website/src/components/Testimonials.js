@@ -587,7 +587,7 @@ const Testimonials = () => {
       
       try {
         const response = await apiService.testimonials.getTestimonials();
-        console.log('Testimonials API response:', response);
+        // Testimonials API response - removed console.log for production
         
         let testimonialsData = [];
         if (response && Array.isArray(response)) {

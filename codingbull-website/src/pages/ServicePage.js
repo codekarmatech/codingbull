@@ -858,14 +858,14 @@ const ServicePage = () => {
         
         // Use apiService instead of direct fetch to handle common error cases
         const serviceData = await apiService.services.getService(slug);
-        console.log('[ServicePage] Fetched service data for slug:', slug, serviceData);
+        // Service data fetched successfully - removed console.log for production
         setService(serviceData);
       } catch (err) {
         console.error('[ServicePage] Error fetching service:', err.message, 'for slug:', slug);
         setError(err.message); // Set error state
         // Fallback to mock data if API fails
         const fallbackServiceData = fallbackServices.find(s => s.slug === slug) || fallbackServices[0];
-        console.log('[ServicePage] Falling back to service data for slug:', slug, fallbackServiceData);
+        // Falling back to service data - removed console.log for production
         setService(fallbackServiceData);
       } finally {
         setLoading(false);
@@ -938,7 +938,7 @@ const ServicePage = () => {
   // Log the source being passed to ImageWithFallback for the hero image
   if (service) {
     const imageSrcForHero = service.icon || service.image || service.image_url;
-    console.log('[ServicePage] Source for Hero ImageWithFallback:', imageSrcForHero, 'Full service object:', service);
+    // Image source for hero - removed console.log for production
   }
   return (
     <ServicePageContainer

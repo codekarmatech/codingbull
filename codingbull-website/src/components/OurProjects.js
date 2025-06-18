@@ -1128,7 +1128,7 @@ const OurProjects = () => {
 
   // Project click handler
   const handleProjectClick = (project) => {
-    console.log('Project clicked:', project);
+    // Project clicked - removed console.log for production
     // Navigate to individual project page
     navigate(`/our-projects/${project.id}`);
   };
