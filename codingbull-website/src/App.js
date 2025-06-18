@@ -29,6 +29,10 @@ const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ServicePage = lazy(() => import('./pages/ServicePage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+// Legal pages
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
+const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
 // TestPage removed for production
 
 // Removed old LoadingFallback component definition
@@ -61,6 +65,10 @@ function App() {
                     <Route path="/our-projects" element={<ProjectsPage />} />
                     <Route path="/our-projects/:id" element={<ProjectsPage />} />
                     <Route path="/contact" element={<ContactPage />} />
+                    {/* Legal pages */}
+                    <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                    <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                    <Route path="/cookie-policy" element={<CookiePolicyPage />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

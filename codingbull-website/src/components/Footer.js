@@ -393,9 +393,9 @@ const Footer = () => {
             © 2025-{new Date().getFullYear()} CodingBull Technovations Pvt Ltd | GSTIN: 24AAMCC7617E1ZP | Remote-enabled team | Serving clients worldwide
           </Copyright>
           <FooterBottomLinks variants={staggerContainer} initial="hidden" animate="visible"> {/* Stagger links */}
-            <motion.a variants={fadeIn} href="/privacy-policy">Privacy Policy</motion.a>
-            <motion.a variants={fadeIn} href="/terms-of-service">Terms of Service</motion.a>
-            <motion.a variants={fadeIn} href="/cookie-policy">Cookie Policy</motion.a>
+            <FooterLink variants={fadeIn} to="/privacy-policy">Privacy Policy</FooterLink>
+            <FooterLink variants={fadeIn} to="/terms-of-service">Terms of Service</FooterLink>
+            <FooterLink variants={fadeIn} to="/cookie-policy">Cookie Policy</FooterLink>
           </FooterBottomLinks>
         </FooterBottom>
       </FooterContent>
