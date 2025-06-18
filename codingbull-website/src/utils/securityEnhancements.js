@@ -358,12 +358,17 @@ export const securityMonitor = {
   
   // Monitor for suspicious activity
   detectSuspiciousActivity: () => {
+    // Only monitor in production to avoid development noise
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+
     // Check for rapid page navigation
     const navigationCount = sessionStorage.getItem('navigation_count') || 0;
     const newCount = parseInt(navigationCount) + 1;
     sessionStorage.setItem('navigation_count', newCount);
-    
-    if (newCount > 50) { // Threshold for suspicious activity
+
+    if (newCount > 100) { // Increased threshold for suspicious activity
       securityMonitor.logSecurityEvent('suspicious_navigation', {
         count: newCount,
       });

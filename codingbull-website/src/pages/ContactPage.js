@@ -393,11 +393,31 @@ const ContactPage = () => {
       newErrors.email = 'Invalid email address';
     }
     
-    // Phone validation
+    // Phone validation - Enterprise level: No parentheses, max 10 digits after +91
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number';
+    } else {
+      const cleanPhone = formData.phone.replace(/[\s-]/g, ''); // Only remove spaces and hyphens
+
+      // Check for parentheses (not allowed)
+      if (/[()]/.test(cleanPhone)) {
+        newErrors.phone = 'Parentheses are not allowed in phone numbers';
+      } else if (cleanPhone.startsWith('+91')) {
+        // Indian numbers: +91 followed by exactly 10 digits
+        if (!/^\+91[1-9]\d{9}$/.test(cleanPhone)) {
+          newErrors.phone = 'Indian phone number must be +91 followed by exactly 10 digits';
+        }
+      } else if (cleanPhone.startsWith('+')) {
+        // International numbers: + followed by 7-15 digits
+        if (!/^\+[1-9]\d{6,14}$/.test(cleanPhone)) {
+          newErrors.phone = 'International phone number must be + followed by 7-15 digits';
+        }
+      } else {
+        // Domestic numbers: 7-15 digits, no leading zero
+        if (!/^[1-9]\d{6,14}$/.test(cleanPhone)) {
+          newErrors.phone = 'Phone number must be 7-15 digits without leading zero';
+        }
+      }
     }
     
     // Subject validation
@@ -624,7 +644,7 @@ const ContactPage = () => {
                       type="tel"
                       id="phone"
                       name="phone"
-                      placeholder="Enter your phone number"
+                      placeholder="Enter phone number (e.g., +917575053969 or 7575053969)"
                       value={formData.phone}
                       onChange={handleChange}
                     />

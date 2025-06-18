@@ -367,13 +367,6 @@ Button.propTypes = {
   'aria-label': PropTypes.string,
 };
 
-// Default props
-Button.defaultProps = {
-  variant: 'primary',
-  size: 'md',
-  loading: false,
-  disabled: false,
-  type: 'button',
-};
+// Note: defaultProps removed in favor of JavaScript default parameters (React 18+ best practice)
 
 export default memo(Button);
