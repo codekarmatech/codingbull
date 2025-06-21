@@ -52,9 +52,9 @@ class ContactInquiryAdmin(admin.ModelAdmin):
 @admin.register(IPAddress)
 class IPAddressAdmin(admin.ModelAdmin):
     list_display = [
-        'ip_address', 'reputation_score_badge', 'country', 'total_requests', 
-        'suspicious_requests', 'blocked_requests', 'suspicious_ratio_display',
-        'is_blacklisted', 'is_whitelisted', 'last_seen'
+        'ip_address', 'country', 'reputation_score', 'total_requests',
+        'suspicious_requests', 'blocked_requests', 'is_blacklisted',
+        'is_whitelisted', 'last_seen'
     ]
     list_filter = [
         'is_blacklisted', 'is_whitelisted', 'country', 'reputation_score',
@@ -63,10 +63,11 @@ class IPAddressAdmin(admin.ModelAdmin):
     ]
     search_fields = ['ip_address', 'country', 'city', 'organization', 'isp']
     readonly_fields = [
-        'first_seen', 'last_seen', 'total_requests', 'suspicious_requests', 
-        'blocked_requests', 'suspicious_ratio_display', 'reputation_score'
+        'first_seen', 'last_seen', 'total_requests', 'suspicious_requests',
+        'blocked_requests', 'suspicious_ratio', 'reputation_score'
     ]
     actions = ['blacklist_ips', 'whitelist_ips', 'update_reputation']
+    list_per_page = 25
     
     fieldsets = (
         ('IP Information', {
@@ -81,42 +82,13 @@ class IPAddressAdmin(admin.ModelAdmin):
         }),
         ('Statistics', {
             'fields': (
-                'first_seen', 'last_seen', 'total_requests', 
-                'suspicious_requests', 'blocked_requests', 'suspicious_ratio_display'
+                'first_seen', 'last_seen', 'total_requests',
+                'suspicious_requests', 'blocked_requests', 'suspicious_ratio'
             ),
             'classes': ('collapse',)
         }),
     )
-    
-    @admin.display(description='Reputation', ordering='reputation_score')
-    def reputation_score_badge(self, obj):
-        if obj.reputation_score >= 80:
-            color = 'green'
-        elif obj.reputation_score >= 50:
-            color = 'orange'
-        else:
-            color = 'red'
-        
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{}</span>',
-            color, obj.reputation_score
-        )
-    
-    @admin.display(description='Suspicious %')
-    def suspicious_ratio_display(self, obj):
-        ratio = obj.suspicious_ratio
-        if ratio > 50:
-            color = 'red'
-        elif ratio > 25:
-            color = 'orange'
-        else:
-            color = 'green'
-        
-        return format_html(
-            '<span style="color: {};">{:.1f}%</span>',
-            color, ratio
-        )
-    
+
     @admin.action(description="Blacklist selected IPs")
     def blacklist_ips(self, request, queryset):
         updated = queryset.update(is_blacklisted=True, created_by=request.user)
