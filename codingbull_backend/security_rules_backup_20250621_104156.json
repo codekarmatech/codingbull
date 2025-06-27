@@ -1,0 +1,487 @@
+{
+  "backup_date": "2025-06-21T10:41:56.957771",
+  "blacklist_rules": [
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.\\./\\.\\./.*",
+      "reason": "Directory traversal (multiple levels)",
+      "is_active": true,
+      "match_count": 89,
+      "created_at": "2025-06-21T10:16:32.151145+00:00",
+      "last_matched": "2025-06-19T09:16:32.151062+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "^/\\.git(/.*)?$",
+      "reason": "Git repository access attempt (consolidated)",
+      "is_active": true,
+      "match_count": 34,
+      "created_at": "2025-06-21T10:16:32.147186+00:00",
+      "last_matched": "2025-06-16T10:16:32.147100+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "^/\\.env$",
+      "reason": "Environment file access attempt (consolidated)",
+      "is_active": true,
+      "match_count": 123,
+      "created_at": "2025-06-21T10:16:32.146268+00:00",
+      "last_matched": "2025-06-19T16:16:32.146135+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.php\\?.*eval\\(.*",
+      "reason": "PHP eval() code injection",
+      "is_active": true,
+      "match_count": 78,
+      "created_at": "2025-06-21T10:16:32.145173+00:00",
+      "last_matched": "2025-06-18T19:16:32.145049+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.php\\?.*base64_decode.*",
+      "reason": "PHP code injection via base64",
+      "is_active": true,
+      "match_count": 45,
+      "created_at": "2025-06-21T10:16:32.144235+00:00",
+      "last_matched": "2025-06-17T00:16:32.144105+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "/phpmyadmin/index\\.php.*",
+      "reason": "phpMyAdmin unauthorized access",
+      "is_active": true,
+      "match_count": 67,
+      "created_at": "2025-06-21T10:16:32.142446+00:00",
+      "last_matched": "2025-06-17T19:16:32.142358+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "^/wp-login\\.php",
+      "reason": "WordPress login attack attempt (consolidated)",
+      "is_active": true,
+      "match_count": 156,
+      "created_at": "2025-06-21T10:16:32.141151+00:00",
+      "last_matched": "2025-06-19T16:16:32.140970+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "/wp-admin/admin-ajax\\.php.*action=.*",
+      "reason": "WordPress AJAX exploitation attempts",
+      "is_active": true,
+      "match_count": 89,
+      "created_at": "2025-06-21T10:16:32.139838+00:00",
+      "last_matched": "2025-06-19T01:16:32.139542+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "country",
+      "pattern": "IR",
+      "reason": "Iran - High-risk region for cyber attacks",
+      "is_active": true,
+      "match_count": 145,
+      "created_at": "2025-06-21T10:11:15.995733+00:00",
+      "last_matched": "2025-06-18T23:11:15.995652+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "country",
+      "pattern": "KP",
+      "reason": "North Korea - State-sponsored attacks",
+      "is_active": true,
+      "match_count": 23,
+      "created_at": "2025-06-21T10:11:15.994927+00:00",
+      "last_matched": "2025-06-14T04:11:15.994846+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "referer",
+      "pattern": ".*https?://[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+.*",
+      "reason": "Direct IP address referers (suspicious)",
+      "is_active": true,
+      "match_count": 178,
+      "created_at": "2025-06-21T10:11:15.994018+00:00",
+      "last_matched": "2025-06-21T10:33:22.233198+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "referer",
+      "pattern": ".*\\.(tk|ml|ga|cf).*",
+      "reason": "Suspicious free domain TLDs",
+      "is_active": true,
+      "match_count": 234,
+      "created_at": "2025-06-21T10:11:15.993266+00:00",
+      "last_matched": "2025-06-19T12:11:15.993151+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip",
+      "pattern": "159.89.49.60",
+      "reason": "VPS hosting malware C&C server",
+      "is_active": true,
+      "match_count": 78,
+      "created_at": "2025-06-21T10:11:15.992493+00:00",
+      "last_matched": "2025-06-18T16:11:15.992422+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip",
+      "pattern": "185.220.100.240",
+      "reason": "Tor exit node - known malicious activity",
+      "is_active": true,
+      "match_count": 345,
+      "created_at": "2025-06-21T10:11:15.991693+00:00",
+      "last_matched": "2025-06-21T00:11:15.991622+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": ".*Mozilla/4\\.0.*compatible.*",
+      "reason": "Suspicious legacy user agent pattern",
+      "is_active": true,
+      "match_count": 89,
+      "created_at": "2025-06-21T10:11:15.990614+00:00",
+      "last_matched": "2025-06-17T04:11:15.990521+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "(?i)(bot|crawler|spider|scraper)(?!.*(googlebot|bingbot|facebookexternalhit|twitterbot|linkedinbot))",
+      "reason": "Malicious bots (excluding legitimate crawlers)",
+      "is_active": true,
+      "match_count": 298,
+      "created_at": "2025-06-21T10:11:15.989693+00:00",
+      "last_matched": "2025-06-21T04:11:15.989631+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "(?i)(curl|wget)(?!/[\\d.]+\\s+\\(compatible)",
+      "reason": "Suspicious automated tools (refined)",
+      "is_active": true,
+      "match_count": 167,
+      "created_at": "2025-06-21T10:11:15.989107+00:00",
+      "last_matched": "2025-06-19T13:11:15.989040+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.git/(config|HEAD|logs).*",
+      "reason": "Git repository information disclosure",
+      "is_active": true,
+      "match_count": 45,
+      "created_at": "2025-06-21T10:11:15.987751+00:00",
+      "last_matched": "2025-06-15T22:11:15.987644+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "referer",
+      "pattern": ".*spam-casino\\.net.*",
+      "reason": "Spam referrer traffic",
+      "is_active": true,
+      "match_count": 167,
+      "created_at": "2025-06-21T09:51:55.341012+00:00",
+      "last_matched": "2025-06-19T05:51:55.340933+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "referer",
+      "pattern": ".*phishing-example\\.org.*",
+      "reason": "Phishing site referrer",
+      "is_active": true,
+      "match_count": 45,
+      "created_at": "2025-06-21T09:51:55.340283+00:00",
+      "last_matched": "2025-06-15T14:51:55.340209+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "referer",
+      "pattern": ".*malware-site\\.com.*",
+      "reason": "Known malware distribution site",
+      "is_active": true,
+      "match_count": 23,
+      "created_at": "2025-06-21T09:51:55.339397+00:00",
+      "last_matched": "2025-06-12T20:51:55.339305+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "country",
+      "pattern": "RU",
+      "reason": "Geo-blocking due to security policy",
+      "is_active": false,
+      "match_count": 892,
+      "created_at": "2025-06-21T09:51:55.338517+00:00",
+      "last_matched": "2025-06-20T19:51:55.338459+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "country",
+      "pattern": "CN",
+      "reason": "High-risk country - frequent attacks",
+      "is_active": false,
+      "match_count": 1247,
+      "created_at": "2025-06-21T09:51:55.337987+00:00",
+      "last_matched": "2025-06-20T11:51:55.337925+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.php\\?.*union.*select.*",
+      "reason": "SQL injection via PHP",
+      "is_active": true,
+      "match_count": 38,
+      "created_at": "2025-06-21T09:51:55.336644+00:00",
+      "last_matched": "2025-06-16T04:51:55.336585+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": ".*\\.\\./.*",
+      "reason": "Directory traversal attack attempt",
+      "is_active": true,
+      "match_count": 92,
+      "created_at": "2025-06-21T09:51:55.334422+00:00",
+      "last_matched": "2025-06-18T10:51:55.334353+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "python-requests.*",
+      "reason": "Automated script attacks",
+      "is_active": true,
+      "match_count": 78,
+      "created_at": "2025-06-21T09:51:55.333626+00:00",
+      "last_matched": "2025-06-18T04:51:55.333531+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": ".*ZmEu.*",
+      "reason": "Known malicious bot",
+      "is_active": true,
+      "match_count": 203,
+      "created_at": "2025-06-21T09:51:55.332866+00:00",
+      "last_matched": "2025-06-19T16:51:55.332813+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip_range",
+      "pattern": "10.0.0.0/16",
+      "reason": "Internal network - external access blocked",
+      "is_active": true,
+      "match_count": 12,
+      "created_at": "2025-06-21T09:51:55.330719+00:00",
+      "last_matched": "2025-06-13T10:51:55.330662+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip_range",
+      "pattern": "192.168.100.0/24",
+      "reason": "Compromised network range",
+      "is_active": true,
+      "match_count": 89,
+      "created_at": "2025-06-21T09:51:55.330179+00:00",
+      "last_matched": "2025-06-18T04:51:55.330121+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip",
+      "pattern": "203.0.113.42",
+      "reason": "Brute force attack source",
+      "is_active": true,
+      "match_count": 156,
+      "created_at": "2025-06-21T09:51:55.329640+00:00",
+      "last_matched": "2025-06-19T19:51:55.329579+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip",
+      "pattern": "10.0.0.99",
+      "reason": "Suspicious scanning activity detected",
+      "is_active": true,
+      "match_count": 23,
+      "created_at": "2025-06-21T09:51:55.329056+00:00",
+      "last_matched": "2025-06-15T15:51:55.328982+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "ip",
+      "pattern": "192.168.100.50",
+      "reason": "Known malicious IP - multiple attack attempts",
+      "is_active": true,
+      "match_count": 45,
+      "created_at": "2025-06-21T09:51:55.328382+00:00",
+      "last_matched": "2025-06-18T16:51:55.328257+00:00",
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "path",
+      "pattern": "/xmlrpc\\.php",
+      "reason": "WordPress XML-RPC attack attempt",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.318000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "hydra",
+      "reason": "Password cracking tool",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.313000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "dirb",
+      "reason": "Directory brute forcer",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.312000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "gobuster",
+      "reason": "Directory/file brute forcer",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.312000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "w3af",
+      "reason": "Web application attack and audit framework",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.311000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "burp",
+      "reason": "Web application security testing tool",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.310000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "(?i)masscan",
+      "reason": "Masscan port scanner (consolidated)",
+      "is_active": true,
+      "match_count": 67,
+      "created_at": "2025-05-31T17:50:23.309000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "acunetix",
+      "reason": "Web vulnerability scanner",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.309000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "(?i)nikto",
+      "reason": "Nikto vulnerability scanner (consolidated)",
+      "is_active": true,
+      "match_count": 41,
+      "created_at": "2025-05-31T17:50:23.308000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "nmap",
+      "reason": "Network scanner",
+      "is_active": false,
+      "match_count": 0,
+      "created_at": "2025-05-31T17:50:23.308000+00:00",
+      "last_matched": null,
+      "created_by": "admin"
+    },
+    {
+      "rule_type": "user_agent",
+      "pattern": "(?i)sqlmap",
+      "reason": "SQLMap injection tool (consolidated)",
+      "is_active": true,
+      "match_count": 102,
+      "created_at": "2025-05-31T17:50:23.307000+00:00",
+      "last_matched": "2025-05-31T17:52:53.008000+00:00",
+      "created_by": "admin"
+    }
+  ],
+  "ratelimit_rules": [
+    {
+      "name": "Authentication Rate Limit",
+      "description": "Rate limiting for authentication endpoints",
+      "path_pattern": ".*(login|auth|signin).*",
+      "max_requests": 10,
+      "time_window": 300,
+      "block_duration": 1800,
+      "is_active": true,
+      "created_at": "2025-05-31T17:50:23.305000+00:00"
+    },
+    {
+      "name": "Newsletter Subscription Rate Limit",
+      "description": "Specific rate limiting for newsletter subscriptions to prevent spam",
+      "path_pattern": "^/api/v1/contact.*",
+      "max_requests": 3,
+      "time_window": 1800,
+      "block_duration": 1800,
+      "is_active": true,
+      "created_at": "2025-06-02T19:35:43.723000+00:00"
+    },
+    {
+      "name": "Contact Form Rate Limit",
+      "description": "Rate limiting for contact form submissions",
+      "path_pattern": "^/api/v1/contact.*",
+      "max_requests": 5,
+      "time_window": 3600,
+      "block_duration": 3600,
+      "is_active": true,
+      "created_at": "2025-05-31T17:50:23.306000+00:00"
+    },
+    {
+      "name": "Admin Rate Limit",
+      "description": "Rate limiting for admin interface",
+      "path_pattern": "^/admin/.*",
+      "max_requests": 50,
+      "time_window": 300,
+      "block_duration": 900,
+      "is_active": true,
+      "created_at": "2025-05-31T17:50:23.305000+00:00"
+    },
+    {
+      "name": "API General Rate Limit",
+      "description": "General rate limiting for API endpoints",
+      "path_pattern": "^/api/.*",
+      "max_requests": 100,
+      "time_window": 300,
+      "block_duration": 600,
+      "is_active": true,
+      "created_at": "2025-05-31T17:50:23.302000+00:00"
+    }
+  ]
+}

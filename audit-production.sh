@@ -220,16 +220,36 @@ check_build_config() {
     fi
     
     # Check deployment configuration
+    # Check that Cloudflare/Koyeb dependencies have been removed
     if [ -f "codingbull-website/_redirects" ]; then
-        print_check "Cloudflare Pages redirects configured"
+        print_warning "Cloudflare Pages redirects file still exists - should be removed for Hostinger VPS deployment"
     else
-        print_warning "Cloudflare Pages redirects not configured"
+        print_check "Cloudflare Pages redirects properly removed"
+    fi
+
+    if [ -f "deploy.sh" ] && grep -q "cloudflare\|koyeb" deploy.sh 2>/dev/null; then
+        print_warning "Old Cloudflare/Koyeb deployment script still active - should be replaced with deploy-hostinger.sh"
+    else
+        print_check "Cloudflare/Koyeb deployment dependencies removed"
     fi
     
-    if [ -f "codingbull_backend/Dockerfile" ]; then
-        print_check "Docker configuration exists"
+    # Check for Hostinger VPS native deployment configuration
+    if [ -f "deploy-hostinger.sh" ]; then
+        print_check "Hostinger VPS deployment script exists"
     else
-        print_warning "Docker configuration missing"
+        print_warning "Hostinger VPS deployment script missing"
+    fi
+
+    if [ -f "nginx.conf" ]; then
+        print_check "Nginx configuration exists"
+    else
+        print_warning "Nginx configuration missing"
+    fi
+
+    if [ -f "codingbull-gunicorn.service" ]; then
+        print_check "Systemd service configuration exists"
+    else
+        print_warning "Systemd service configuration missing"
     fi
 }
 

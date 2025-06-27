@@ -711,6 +711,11 @@ class EnhancedSecurityMiddleware(MiddlewareMixin):
     
     def _check_blacklist_rules(self, request_info: Dict[str, Any]) -> bool:
         """Check if request matches any blacklist rules"""
+        # Skip blacklist checking for localhost admin access in development
+        if self._is_localhost_request(request_info) and request_info['path'].startswith('/admin/'):
+            logger.debug(f"Blacklist check skipped for localhost admin access: {request_info['path']}")
+            return False
+        
         rules = BlacklistRule.objects.filter(is_active=True)
         
         for rule in rules:
@@ -729,6 +734,13 @@ class EnhancedSecurityMiddleware(MiddlewareMixin):
             # Note: country checking would require geolocation lookup
             
             if value and rule.matches(value):
+                # Additional check: Skip admin path rules for localhost in development
+                if (rule.rule_type == 'path' and 
+                    self._is_localhost_request(request_info) and 
+                    request_info['path'].startswith('/admin/')):
+                    logger.debug(f"Admin path blacklist rule skipped for localhost: {rule.pattern}")
+                    continue
+                
                 rule.record_match()
                 return True
         

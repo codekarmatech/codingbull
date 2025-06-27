@@ -24,6 +24,7 @@
     "build": "react-scripts build",
     "build:dev": "node scripts/switch-env.js development && react-scripts build",
     "build:prod": "node scripts/switch-env.js production && GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false react-scripts build && node scripts/optimize-build.js",
+    "build:hostinger": "cp .env.hostinger .env && GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false react-scripts build && node scripts/optimize-build.js",
     "build:prod:analyze": "node scripts/switch-env.js production && GENERATE_SOURCEMAP=true react-scripts build && npm run analyze",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
@@ -32,7 +33,8 @@
     "env:switch": "node scripts/switch-env.js",
     "env:status": "node scripts/switch-env.js status",
     "env:dev": "node scripts/switch-env.js development",
-    "env:prod": "node scripts/switch-env.js production"
+    "env:prod": "node scripts/switch-env.js production",
+    "env:hostinger": "cp .env.hostinger .env && echo 'Switched to Hostinger VPS environment'"
   },
   "eslintConfig": {
     "extends": [

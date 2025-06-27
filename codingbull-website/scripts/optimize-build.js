@@ -164,9 +164,11 @@ function createDeploymentManifest() {
       'Gzip compression enabled'
     ],
     deployment: {
-      frontend: 'Cloudflare Pages',
-      backend: 'Koyeb VPS',
-      database: 'PostgreSQL'
+      frontend: 'Hostinger VPS (Nginx)',
+      backend: 'Hostinger VPS (Gunicorn)',
+      database: 'PostgreSQL (Local)',
+      infrastructure: 'Hostinger VPS Enterprise',
+      platform: 'Ubuntu 24.04 LTS'
     }
   };
   

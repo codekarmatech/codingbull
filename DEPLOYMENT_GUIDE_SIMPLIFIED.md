@@ -1,72 +1,106 @@
-# 🚀 CodingBull Deployment Guide
+# 🚀 CodingBull Deployment Guide - Hostinger VPS
 
 ## 📋 Quick Overview
 
 **Project Structure:**
 - **Frontend:** React app in `codingbull-website/`
 - **Backend:** Django API in `codingbull_backend/`
-- **Database:** PostgreSQL (Cloud-hosted)
+- **Database:** PostgreSQL (Local on VPS)
 
-**Deployment Targets:**
-- **Frontend:** Cloudflare Pages → https://codingbullz.com
-- **Backend:** Koyeb VPS → https://api.codingbullz.com
-- **Database:** Cloud PostgreSQL (Supabase/Neon/Aiven)
+**Deployment Target:**
+- **Platform:** Hostinger VPS (Ubuntu)
+- **Frontend:** Nginx static file serving → https://codingbullz.com
+- **Backend:** Gunicorn + Nginx reverse proxy → https://api.codingbullz.com
+- **Database:** PostgreSQL (Local installation on VPS)
 - **Domain:** Managed via Hostinger.com
 
 ---
 
-## 🔧 Phase 1: Pre-deployment Setup
+## 🔧 Phase 1: VPS Setup & Prerequisites
 
-### 1.1 Environment Configuration
+### 1.1 Hostinger VPS Initial Setup
+
+**Connect to your VPS:**
+```bash
+ssh root@31.97.61.151
+```
+
+**Update system and install dependencies:**
+```bash
+# Update system packages
+apt update && apt upgrade -y
+
+# Install required packages
+apt install -y python3 python3-pip python3-venv nginx postgresql postgresql-contrib git curl ufw
+
+# Install Node.js (for frontend build)
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+apt install -y nodejs
+
+# Create application user
+adduser --disabled-password --gecos '' codingbull
+usermod -aG sudo codingbull
+```
+
+### 1.2 PostgreSQL Database Setup
+
+**Configure PostgreSQL:**
+```bash
+# Switch to postgres user
+sudo -u postgres psql
+
+# Create database and user
+CREATE DATABASE bulldb;
+CREATE USER bulldb WITH PASSWORD 'your-secure-password';
+GRANT ALL PRIVILEGES ON DATABASE bulldb TO bulldb;
+ALTER USER bulldb CREATEDB;
+\q
+
+# Configure PostgreSQL for local connections
+sudo nano /etc/postgresql/*/main/pg_hba.conf
+# Add: local   bulldb   bulldb   md5
+
+# Restart PostgreSQL
+systemctl restart postgresql
+systemctl enable postgresql
+```
+
+### 1.3 Environment Configuration
 
 **Backend Setup:**
 ```bash
-cd codingbull_backend
+# Switch to application user
+su - codingbull
+
+# Clone repository (replace with your repo URL)
+git clone https://github.com/your-username/codingbull.git
+cd codingbull/codingbull_backend
+
+# Create Python virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install Python dependencies
+pip install -r ../requirements.txt
 
 # Generate secret key
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 
-# Create production environment
-cp .env .env.production
-# Edit .env.production with:
-# - Generated secret key
-# - DJANGO_DEBUG=False
-# - Production database URL
-# - CORS_ALLOWED_ORIGINS=https://codingbullz.com
+# Update .env.production with VPS-specific settings
+cp .env.production .env.hostinger
+# Edit .env.hostinger with your VPS domain and generated secret key
 ```
 
 **Frontend Setup:**
 ```bash
-cd codingbull-website
-npm run env:prod
+cd ../codingbull-website
+
+# Install Node.js dependencies
+npm ci --production=false
+
+# Build for production
 npm run build:prod
 ```
-
-### 1.2 Database Setup
-
-**📖 Detailed Database Setup:** See [DATABASE_SETUP_GUIDE.md](./DATABASE_SETUP_GUIDE.md)
-
-**Quick Setup:**
-```bash
-cd codingbull_backend
-
-# Create production environment file
-cp .env.example .env.production
-
-# Edit .env.production with your cloud PostgreSQL URL
-# Recommended: Supabase or Neon (both have generous free tiers)
-
-# Test database connection
-python check_database_status.py
-
-# Migrate data from SQLite to PostgreSQL
-cp .env.production .env
-python migrate_to_postgresql.py
-```
-
-**Recommended Providers:**
-- **🟢 Supabase:** [supabase.com](https://supabase.com) (500MB free)
-- **🟢 Neon:** [neon.tech](https://neon.tech) (512MB free)
 
 ---
 
@@ -80,65 +114,83 @@ python migrate_to_postgresql.py
 
 | Type | Name | Value | TTL |
 |------|------|-------|-----|
-| CNAME | @ | codingbull-website.pages.dev | 3600 |
-| CNAME | www | codingbull-website.pages.dev | 3600 |
-| CNAME | api | codingbull-backend.koyeb.app | 3600 |
+| A | @ | YOUR_VPS_IP_ADDRESS | 3600 |
+| A | www | YOUR_VPS_IP_ADDRESS | 3600 |
+| A | api | YOUR_VPS_IP_ADDRESS | 3600 |
 
 ---
 
-## 🚀 Phase 3: Backend Deployment (Koyeb)
+## 🚀 Phase 3: Hostinger VPS Deployment
 
-### 3.1 Koyeb Setup
+### 3.1 Automated Enterprise Deployment
 
-1. **Sign up:** [koyeb.com](https://koyeb.com)
-2. **Create App:** Connect GitHub repository
-3. **Configure Service:**
-   - **App name:** `codingbull-backend`
-   - **Build directory:** `codingbull_backend`
-   - **Build command:** `pip install -r ../requirements.txt`
-   - **Run command:** `gunicorn codingbull_api.wsgi:application --bind 0.0.0.0:8000`
-   - **Port:** `8000`
-
-4. **Environment Variables:**
+1. **Run the enterprise deployment script:**
+```bash
+chmod +x deploy-hostinger.sh
+./deploy-hostinger.sh
 ```
-DJANGO_SECRET_KEY=your-generated-key
+
+2. **The script automatically configures:**
+   - Python environment and dependencies
+   - Local PostgreSQL database
+   - Secure environment variables generation
+   - Nginx for static file serving and reverse proxy
+   - Gunicorn with systemd service
+   - Enterprise security hardening
+
+3. **Manual steps (if needed):**
+   - Update VPS IP address in environment files
+   - Configure SSL certificates with Let's Encrypt
+   - Set up custom domain DNS records
+
+### 3.2 Environment Configuration
+
+The deployment uses `.env.hostinger` with these settings:
+```
+DJANGO_SECRET_KEY=auto-generated-secure-key
 DJANGO_ENV=production
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=codingbull-backend.koyeb.app,api.codingbullz.com
-DATABASE_URL=your-cloud-postgresql-url
+DJANGO_ALLOWED_HOSTS=YOUR_VPS_IP,api.codingbullz.com,codingbullz.com
+DATABASE_URL=postgresql://bulldb:secure-password@localhost:5432/bulldb
 CORS_ALLOWED_ORIGINS_PRODUCTION=https://codingbullz.com,https://www.codingbullz.com
 ```
 
-**Database URL Examples:**
-- **Supabase:** `postgresql://postgres:password@db.supabase.co:5432/postgres`
-- **Neon:** `postgresql://user:password@ep-xxx.us-east-1.aws.neon.tech/neondb`
-- **Railway:** `postgresql://postgres:password@containers-us-west-xxx.railway.app:5432/railway`
-
-5. **Add Custom Domain:** `api.codingbullz.com`
+**Local Database Configuration:**
+- **Database:** PostgreSQL (local on VPS)
+- **Host:** localhost
+- **Port:** 5432
+- **Zero external dependencies**
 
 ---
 
-## 🌟 Phase 4: Frontend Deployment (Cloudflare Pages)
+## 🌟 Phase 4: Frontend Configuration (Nginx Static Serving)
 
-### 4.1 Cloudflare Pages Setup
+### 4.1 Frontend Build and Deployment
 
-1. **Sign up:** [cloudflare.com](https://cloudflare.com)
-2. **Create Project:** Connect GitHub repository
-3. **Configure Build:**
-   - **Project name:** `codingbull-website`
-   - **Build directory:** `codingbull-website`
-   - **Build command:** `npm run build:prod`
-   - **Output directory:** `build`
+The frontend is automatically built and deployed by the `deploy-hostinger.sh` script:
 
-4. **Environment Variables:**
+1. **Automatic build process:**
+```bash
+cd codingbull-website
+npm run build:hostinger  # Uses .env.hostinger configuration
+```
+
+2. **Nginx serves static files:**
+   - Static files served from `/home/codingbull/codingbull/staticfiles/`
+   - React Router support with fallback to `index.html`
+   - Gzip and Brotli compression enabled
+   - Security headers applied
+
+3. **Environment Configuration:**
 ```
 REACT_APP_ENV=production
 REACT_APP_API_BASE_URL=https://api.codingbullz.com/api/v1
 REACT_APP_ENABLE_DEBUG_MODE=false
 GENERATE_SOURCEMAP=false
+REACT_APP_DEPLOYMENT_TARGET=hostinger-vps
 ```
 
-5. **Add Custom Domain:** `codingbullz.com`
+4. **Zero external dependencies** - everything served from Hostinger VPS
 
 ---
 

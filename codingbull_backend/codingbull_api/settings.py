@@ -37,8 +37,8 @@ DEBUG = ENVIRONMENT == 'development' or os.environ.get('DJANGO_DEBUG', 'True').l
 if ENVIRONMENT == 'production':
     DEBUG = False
 
-# Get allowed hosts from environment variable
-ALLOWED_HOSTS_ENV = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,codingbullz.com,www.codingbullz.com,codingbull-backend.koyeb.app')
+# Get allowed hosts from environment variable - Hostinger VPS only (no external services)
+ALLOWED_HOSTS_ENV = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,codingbullz.com,www.codingbullz.com,api.codingbullz.com')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
 
 
@@ -186,7 +186,12 @@ elif ENVIRONMENT == 'production':
             'PORT': os.environ.get('DB_PORT', '5432'),
             'OPTIONS': {
                 'connect_timeout': 60,
+                'sslmode': 'prefer',
+                'application_name': 'codingbull_hostinger_vps',
             },
+            'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', '600')),
+            'CONN_HEALTH_CHECKS': os.environ.get('DB_CONN_HEALTH_CHECKS', 'True').lower() == 'true',
+            'ATOMIC_REQUESTS': os.environ.get('DB_ATOMIC_REQUESTS', 'True').lower() == 'true',
         }
     }
 else:
@@ -234,6 +239,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Additional directories where Django should look for static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Media files (user uploaded content)
 MEDIA_URL = '/media/'
@@ -352,3 +362,33 @@ SECURITY_MIDDLEWARE_SETTINGS = {
     'LOCAL_NETWORK_RANGES': ['192.168.', '10.', '172.'],  # Local network prefixes
     'RESPECT_DEBUG_MODE': True,  # Disable rate limiting when DEBUG=True
 }
+
+# ============================================================================
+# HOSTINGER VPS ENTERPRISE CONFIGURATION
+# ============================================================================
+
+# Enterprise security settings for Hostinger VPS deployment
+if ENVIRONMENT == 'production':
+    # Enhanced security headers
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() == 'true'
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'True').lower() == 'true'
+    CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'True').lower() == 'true'
+    SECURE_BROWSER_XSS_FILTER = os.environ.get('SECURE_BROWSER_XSS_FILTER', 'True').lower() == 'true'
+    SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get('SECURE_CONTENT_TYPE_NOSNIFF', 'True').lower() == 'true'
+    SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True').lower() == 'true'
+    SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'True').lower() == 'true'
+    SECURE_FRAME_DENY = os.environ.get('SECURE_FRAME_DENY', 'True').lower() == 'true'
+    SECURE_REFERRER_POLICY = os.environ.get('SECURE_REFERRER_POLICY', 'strict-origin-when-cross-origin')
+
+    # Session security
+    SESSION_COOKIE_HTTPONLY = os.environ.get('SESSION_COOKIE_HTTPONLY', 'True').lower() == 'true'
+    SESSION_COOKIE_SAMESITE = os.environ.get('SESSION_COOKIE_SAMESITE', 'Strict')
+    CSRF_COOKIE_HTTPONLY = os.environ.get('CSRF_COOKIE_HTTPONLY', 'True').lower() == 'true'
+    CSRF_COOKIE_SAMESITE = os.environ.get('CSRF_COOKIE_SAMESITE', 'Strict')
+
+    # Additional enterprise security
+    X_FRAME_OPTIONS = 'DENY'
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = os.environ.get('SESSION_EXPIRE_AT_BROWSER_CLOSE', 'True').lower() == 'true'
+    SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', '3600'))

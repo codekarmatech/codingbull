@@ -1,0 +1,333 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/blacklist_admin.css' %}">
+<style>
+.blacklist-stats {
+    background: #1a1a1a !important;
+    border: 1px solid #555 !important;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    color: #e0e0e0 !important;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #1a1a1a !important;
+    border: 1px solid #555 !important;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    color: #e0e0e0 !important;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e0e0e0 !important;
+    display: block;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #bbb !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+}
+
+.rule-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.rule-type-item {
+    background: #1a1a1a !important;
+    border: 1px solid #555 !important;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #e0e0e0 !important;
+}
+
+.top-rules {
+    background: #1a1a1a !important;
+    border: 1px solid #555 !important;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+    color: #e0e0e0 !important;
+}
+
+.top-rules h4 {
+    margin: 0 0 10px 0;
+    color: #4a9eff !important;
+    font-size: 14px;
+}
+
+.top-rule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #444 !important;
+    font-size: 12px;
+    color: #e0e0e0 !important;
+}
+
+.top-rule-item:last-child {
+    border-bottom: none;
+}
+
+.rule-pattern {
+    font-family: monospace;
+    color: #e0e0e0 !important;
+    flex: 1;
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rule-matches {
+    background: #007bff !important;
+    color: white !important;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.alert-info {
+    background: #1a1a1a !important;
+    border: 1px solid #17a2b8 !important;
+    color: #4a9eff !important;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+</style>
+{% endblock %}
+
+{% block content_title %}
+<h1>🛡️ Blacklist Rules Management</h1>
+<p class="help">Manage security blacklist rules to protect your application from malicious requests and known threats.</p>
+{% endblock %}
+
+{% block result_list %}
+{% if blacklist_stats %}
+<div class="blacklist-stats-dashboard">
+    <h3>🛡️ Enterprise Security Dashboard</h3>
+    
+    <!-- Main Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card primary">
+            <h3>{{ blacklist_stats.total_rules }}</h3>
+            <p>Total Rules</p>
+        </div>
+        
+        <div class="stat-card success">
+            <h3>{{ blacklist_stats.active_rules }}</h3>
+            <p>Active Rules</p>
+        </div>
+        
+        <div class="stat-card {% if blacklist_stats.expired_rules > 0 %}warning{% else %}success{% endif %}">
+            <h3>{{ blacklist_stats.expired_rules }}</h3>
+            <p>Expired Rules</p>
+        </div>
+        
+        <div class="stat-card info">
+            <h3>{{ blacklist_stats.total_blocked_requests|default:0 }}</h3>
+            <p>Total Blocked Requests</p>
+        </div>
+        
+        <div class="stat-card {% if blacklist_stats.effectiveness_rate >= 70 %}success{% elif blacklist_stats.effectiveness_rate >= 40 %}warning{% else %}danger{% endif %}">
+            <h3>{{ blacklist_stats.effectiveness_rate|default:0 }}%</h3>
+            <p>Rule Effectiveness</p>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="stats-grid">
+        <div class="stat-card {% if blacklist_stats.never_matched > 0 %}danger{% else %}success{% endif %}">
+            <h3>{{ blacklist_stats.never_matched|default:0 }}</h3>
+            <p>Never Matched</p>
+        </div>
+        
+        <div class="stat-card success">
+            <h3>{{ blacklist_stats.high_activity|default:0 }}</h3>
+            <p>High Activity (100+)</p>
+        </div>
+        
+        <div class="stat-card warning">
+            <h3>{{ blacklist_stats.medium_activity|default:0 }}</h3>
+            <p>Medium Activity (10-99)</p>
+        </div>
+        
+        <div class="stat-card info">
+            <h3>{{ blacklist_stats.low_activity|default:0 }}</h3>
+            <p>Low Activity (1-9)</p>
+        </div>
+        
+        <div class="stat-card {% if blacklist_stats.recent_high_activity > 0 %}warning{% else %}info{% endif %}">
+            <h3>{{ blacklist_stats.recent_high_activity|default:0 }}</h3>
+            <p>Recent High Activity</p>
+        </div>
+    </div>
+
+    <!-- Rule Types Breakdown -->
+    {% if blacklist_stats.rule_types %}
+    <div class="security-impact">
+        <h4>📊 Rule Types Analysis</h4>
+        <table class="top-rules-table">
+            <thead>
+                <tr>
+                    <th>Rule Type</th>
+                    <th>Count</th>
+                    <th>Active</th>
+                    <th>Total Matches</th>
+                    <th>Effectiveness</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for type_name, type_data in blacklist_stats.rule_types.items %}
+                <tr>
+                    <td><strong>{{ type_name }}</strong></td>
+                    <td>{{ type_data.count|default:0 }}</td>
+                    <td>{{ type_data.active|default:0 }}</td>
+                    <td>{{ type_data.matches|default:0 }}</td>
+                    <td>
+                        {% if type_data.count > 0 and type_data.matches > 0 %}
+                            {% if type_data.matches > 50 %}
+                                <span class="effectiveness-high">🔥 High</span>
+                            {% elif type_data.matches > 10 %}
+                                <span class="effectiveness-medium">⚡ Medium</span>
+                            {% else %}
+                                <span class="effectiveness-low">📊 Low</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="effectiveness-none">💤 None</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Top Performing Rules -->
+    {% if blacklist_stats.top_rules %}
+    <div class="security-impact">
+        <h4>🏆 Top Performing Rules</h4>
+        <table class="top-rules-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Pattern</th>
+                    <th>Matches</th>
+                    <th>Last Activity</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in blacklist_stats.top_rules %}
+                <tr>
+                    <td>
+                        <span class="rule-type-badge">{{ rule.get_rule_type_display }}</span>
+                    </td>
+                    <td>
+                        <code class="pattern-display" title="{{ rule.pattern }}">
+                            {% if rule.pattern|length > 40 %}
+                                {{ rule.pattern|slice:":40" }}...
+                            {% else %}
+                                {{ rule.pattern }}
+                            {% endif %}
+                        </code>
+                    </td>
+                    <td>
+                        <strong>{{ rule.match_count }}</strong>
+                    </td>
+                    <td>
+                        {% if rule.last_matched %}
+                            {{ rule.last_matched|timesince }} ago
+                        {% else %}
+                            <span style="color: #bbb !important;">Never</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if rule.is_active %}
+                            <span class="status-badge status-active">Active</span>
+                        {% else %}
+                            <span class="status-badge status-inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Attention Required -->
+    {% if blacklist_stats.expiring_soon or blacklist_stats.unused_rules %}
+    <div class="admin-alert admin-alert-warning">
+        <h4>⚠️ Rules Requiring Attention</h4>
+        <ul>
+            {% if blacklist_stats.expiring_soon %}
+                <li><strong>{{ blacklist_stats.expiring_soon }}</strong> rules expiring within 7 days</li>
+            {% endif %}
+            {% if blacklist_stats.unused_rules %}
+                <li><strong>{{ blacklist_stats.unused_rules }}</strong> rules created 30+ days ago with no matches</li>
+            {% endif %}
+        </ul>
+        <p><em>💡 Consider reviewing these rules for optimization or cleanup.</em></p>
+    </div>
+    {% endif %}
+
+    <!-- Security Insights -->
+    <div class="security-impact">
+        <h4>🎯 Security Insights</h4>
+        <div class="stats-grid">
+            <div class="admin-alert admin-alert-info">
+                <h5>📈 Weekly Activity</h5>
+                <p><strong>{{ blacklist_stats.recent_matches|default:0 }}</strong> rules matched in the last 7 days</p>
+            </div>
+            
+            <div class="admin-alert admin-alert-success">
+                <h5>🛡️ Protection Level</h5>
+                <p>
+                    {% if blacklist_stats.effectiveness_rate >= 70 %}
+                        <strong>Excellent</strong> - Your security rules are highly effective
+                    {% elif blacklist_stats.effectiveness_rate >= 40 %}
+                        <strong>Good</strong> - Consider optimizing underperforming rules
+                    {% else %}
+                        <strong>Needs Improvement</strong> - Review and update your rule set
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{{ block.super }}
+{% endblock %}
+
+{% block extrajs %}
+{{ block.super }}
+<script src="{% static 'admin/js/blacklist_admin.js' %}"></script>
+{% endblock %}

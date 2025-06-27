@@ -1,0 +1,15 @@
+# Systemd socket file for CodingBull Gunicorn
+# Place this file at: /etc/systemd/system/codingbull-gunicorn.socket
+# Enable with: sudo systemctl enable codingbull-gunicorn.socket
+
+[Unit]
+Description=CodingBull Gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn/codingbull.sock
+SocketUser=www-data
+SocketGroup=www-data
+SocketMode=0660
+
+[Install]
+WantedBy=sockets.target

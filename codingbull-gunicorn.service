@@ -1,0 +1,56 @@
+# Systemd service file for CodingBull Gunicorn
+# Place this file at: /etc/systemd/system/codingbull-gunicorn.service
+# Enable with: sudo systemctl enable codingbull-gunicorn.service
+
+[Unit]
+Description=CodingBull Gunicorn daemon
+Requires=codingbull-gunicorn.socket
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=codingbull
+Group=codingbull
+RuntimeDirectory=gunicorn
+WorkingDirectory=/home/codingbull/codingbull/codingbull_backend
+ExecStart=/home/codingbull/codingbull/codingbull_backend/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn/codingbull.sock \
+          --timeout 120 \
+          --keep-alive 5 \
+          --max-requests 1000 \
+          --max-requests-jitter 100 \
+          --preload \
+          codingbull_api.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Environment="DJANGO_SETTINGS_MODULE=codingbull_api.settings"
+EnvironmentFile=/home/codingbull/codingbull/codingbull_backend/.env.production
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/codingbull/codingbull
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Restart policy
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
