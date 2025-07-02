@@ -1,0 +1,614 @@
+/* Enterprise Blacklist Rule Admin Styles */
+
+/* Global admin overrides for less white appearance */
+.module h2, .module caption, .inline-group h2 {
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-bottom: 1px solid #555 !important;
+}
+
+.results {
+    background: #1a1a1a !important;
+}
+
+#result_list {
+    background: #1a1a1a !important;
+}
+
+#result_list thead th {
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-bottom: 1px solid #555 !important;
+}
+
+#result_list tbody tr {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+#result_list tbody tr:nth-child(odd) {
+    background: #222 !important;
+}
+
+#result_list tbody tr:hover {
+    background: #333 !important;
+}
+
+#result_list tbody td {
+    border-bottom: 1px solid #444 !important;
+}
+
+.paginator {
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #555 !important;
+}
+
+.paginator a:link, .paginator a:visited {
+    color: #4a9eff !important;
+}
+
+.form-row {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+.form-row label {
+    color: #e0e0e0 !important;
+}
+
+.breadcrumbs {
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #555 !important;
+}
+
+.breadcrumbs a {
+    color: #4a9eff !important;
+}
+
+.blacklist-stats-dashboard {
+    background: #2b2b2b;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 15px 0;
+    color: #e0e0e0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #1a1a1a;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 10px;
+    text-align: center;
+    color: #e0e0e0;
+}
+
+.stat-card:hover {
+    background: #333;
+}
+
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #bbb;
+    font-size: 14px;
+}
+
+.stat-card.success {
+    border-left: 4px solid #28a745;
+}
+
+.stat-card.warning {
+    border-left: 4px solid #ffc107;
+}
+
+.stat-card.danger {
+    border-left: 4px solid #dc3545;
+}
+
+.stat-card.info {
+    border-left: 4px solid #17a2b8;
+}
+
+.stat-card.primary {
+    border-left: 4px solid #007bff;
+}
+
+/* Rule Type Badges */
+.rule-type-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 11px;
+    text-align: center;
+    min-width: 80px;
+    color: white;
+    text-transform: uppercase;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.status-active {
+    background: #28a745;
+    color: white;
+}
+
+.status-inactive {
+    background: #6c757d;
+    color: white;
+}
+
+.status-expired {
+    background: #ffc107;
+    color: #212529;
+}
+
+/* Pattern Display */
+.pattern-display {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid #555;
+}
+
+/* Effectiveness Indicators */
+.effectiveness-high {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.effectiveness-medium {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.effectiveness-low {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+.effectiveness-none {
+    color: #6c757d;
+}
+
+/* Admin Actions Styling */
+.admin-action-selected {
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+}
+
+/* Form Enhancements */
+.blacklist-form-help {
+    background: #2b2b2b;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+    color: #e0e0e0;
+}
+
+.blacklist-form-help h4 {
+    margin: 0 0 5px 0;
+    color: #4a9eff;
+}
+
+.pattern-validation-success {
+    color: #28a745 !important;
+    background: #1a1a1a !important;
+    border: 1px solid #28a745 !important;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.pattern-validation-error {
+    color: #dc3545 !important;
+    background: #1a1a1a !important;
+    border: 1px solid #dc3545 !important;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        margin-bottom: 10px;
+    }
+}
+
+/* Top Rules Table */
+.top-rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: #1a1a1a !important;
+}
+
+.top-rules-table th,
+.top-rules-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #444 !important;
+    color: #e0e0e0 !important;
+    background: #1a1a1a !important;
+}
+
+.top-rules-table th {
+    background: #2b2b2b !important;
+    font-weight: bold;
+    color: #e0e0e0 !important;
+}
+
+.top-rules-table tr:hover {
+    background: #333 !important;
+}
+
+.top-rules-table tr:hover th,
+.top-rules-table tr:hover td {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Alert Styles */
+.admin-alert {
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: #1a1a1a !important;
+}
+
+.admin-alert-info {
+    color: #4a9eff !important;
+    background-color: #1a1a1a !important;
+    border-color: #17a2b8 !important;
+}
+
+.admin-alert-warning {
+    color: #ffc107 !important;
+    background-color: #1a1a1a !important;
+    border-color: #ffc107 !important;
+}
+
+.admin-alert-danger {
+    color: #dc3545 !important;
+    background-color: #1a1a1a !important;
+    border-color: #dc3545 !important;
+}
+
+.admin-alert-success {
+    color: #28a745 !important;
+    background-color: #1a1a1a !important;
+    border-color: #28a745 !important;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '⏳ Loading...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #555 !important;
+}
+
+/* Export/Import Buttons */
+.export-actions {
+    margin: 15px 0;
+    padding: 15px;
+    background: #2b2b2b;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #e0e0e0;
+}
+
+.export-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.export-btn:hover {
+    background: #0056b3;
+}
+
+.export-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Additional fixes for rule analytics and hover states */
+.security-impact {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    border: 1px solid #555;
+}
+
+.security-impact h4 {
+    color: #4a9eff !important;
+    margin: 0 0 15px 0;
+}
+
+.security-impact h5 {
+    color: #e0e0e0 !important;
+    margin: 0 0 10px 0;
+}
+
+.security-impact p {
+    color: #bbb !important;
+    margin: 0;
+}
+
+/* Override any remaining white backgrounds and grey text in all child elements */
+.blacklist-stats-dashboard *,
+.security-impact *,
+.top-rules-table * {
+    background-color: inherit !important;
+    color: inherit !important;
+}
+
+.blacklist-stats-dashboard .stat-card,
+.blacklist-stats-dashboard .admin-alert,
+.blacklist-stats-dashboard .top-rules-table th,
+.blacklist-stats-dashboard .top-rules-table td {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+.blacklist-stats-dashboard .stat-card:hover,
+.blacklist-stats-dashboard .top-rules-table tr:hover th,
+.blacklist-stats-dashboard .top-rules-table tr:hover td {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Fix any spans or other inline elements that might show up white */
+.blacklist-stats-dashboard span,
+.security-impact span,
+.top-rules-table span {
+    background: transparent !important;
+}
+
+/* Ensure all text elements have proper contrast */
+.blacklist-stats-dashboard .stat-card p {
+    color: #bbb !important;
+}
+
+.effectiveness-high {
+    color: #28a745 !important;
+}
+
+.effectiveness-medium {
+    color: #ffc107 !important;
+}
+
+.effectiveness-low {
+    color: #fd7e14 !important;
+}
+
+.effectiveness-none {
+    color: #6c757d !important;
+}
+
+/* Comprehensive override for ALL white backgrounds and hover states */
+.blacklist-stats-dashboard,
+.blacklist-stats-dashboard *,
+.security-impact,
+.security-impact *,
+.top-rules-table,
+.top-rules-table *,
+.admin-alert,
+.admin-alert *,
+.stat-card,
+.stat-card *,
+.rule-type-item,
+.rule-type-item *,
+.top-rules,
+.top-rules *,
+.top-rule-item,
+.top-rule-item *,
+.rule-pattern,
+.rule-matches,
+table,
+table *,
+tbody,
+tbody *,
+thead,
+thead *,
+tr,
+tr *,
+td,
+td *,
+th,
+th * {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+/* Force dark backgrounds on main containers */
+.blacklist-stats-dashboard,
+.security-impact,
+.top-rules-table,
+.admin-alert,
+.stat-card,
+.rule-type-item,
+.top-rules,
+.blacklist-stats-dashboard table,
+.security-impact table {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+/* Force dark backgrounds on table elements */
+.blacklist-stats-dashboard table th,
+.blacklist-stats-dashboard table td,
+.security-impact table th,
+.security-impact table td,
+.top-rules-table th,
+.top-rules-table td {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+/* Force dark hover states */
+.blacklist-stats-dashboard *:hover,
+.security-impact *:hover,
+.top-rules-table *:hover,
+.admin-alert *:hover,
+.stat-card:hover,
+.stat-card:hover *,
+.rule-type-item:hover,
+.rule-type-item:hover *,
+.top-rules:hover,
+.top-rules:hover *,
+.top-rule-item:hover,
+.top-rule-item:hover *,
+.blacklist-stats-dashboard table tr:hover,
+.blacklist-stats-dashboard table tr:hover *,
+.security-impact table tr:hover,
+.security-impact table tr:hover *,
+.top-rules-table tr:hover,
+.top-rules-table tr:hover * {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Specific fixes for table headers */
+.blacklist-stats-dashboard table thead th,
+.security-impact table thead th,
+.top-rules-table thead th {
+    background: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+.blacklist-stats-dashboard table thead th:hover,
+.security-impact table thead th:hover,
+.top-rules-table thead th:hover {
+    background: #333 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Fix any remaining spans, strong tags, and other inline elements */
+.blacklist-stats-dashboard span,
+.blacklist-stats-dashboard strong,
+.blacklist-stats-dashboard em,
+.blacklist-stats-dashboard code,
+.security-impact span,
+.security-impact strong,
+.security-impact em,
+.security-impact code,
+.top-rules-table span,
+.top-rules-table strong,
+.top-rules-table em,
+.top-rules-table code {
+    background: transparent !important;
+    color: inherit !important;
+}
+
+/* Override any Django admin default styles that might interfere */
+.module h2, 
+.module caption, 
+.inline-group h2,
+.results,
+#result_list,
+#result_list thead th,
+#result_list tbody tr,
+#result_list tbody tr:nth-child(odd),
+#result_list tbody tr:hover,
+#result_list tbody td,
+.paginator,
+.form-row,
+.breadcrumbs {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-color: #555 !important;
+}
+
+/* Make sure all text is readable */
+.blacklist-stats-dashboard h3,
+.blacklist-stats-dashboard h4,
+.blacklist-stats-dashboard h5,
+.blacklist-stats-dashboard p,
+.security-impact h3,
+.security-impact h4,
+.security-impact h5,
+.security-impact p {
+    color: #e0e0e0 !important;
+}
+
+/* Special handling for status badges and effectiveness indicators */
+.rule-type-badge,
+.status-badge,
+.pattern-display,
+.effectiveness-high,
+.effectiveness-medium,
+.effectiveness-low,
+.effectiveness-none {
+    background: #1a1a1a !important;
+    border: 1px solid #555 !important;
+}
+
+.status-active {
+    background: #28a745 !important;
+    color: white !important;
+}
+
+.status-inactive {
+    background: #6c757d !important;
+    color: white !important;
+}
+
+.rule-matches {
+    background: #007bff !important;
+    color: white !important;
+}

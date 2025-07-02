@@ -29,7 +29,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-static/
 .coverage
 htmlcov/
 .pytest_cache/
@@ -103,8 +102,6 @@ db.sqlite3-journal
 # Build and distribution files
 build/
 dist/
-staticfiles/
-
 # Virtual environments
 venv/
 /venv
