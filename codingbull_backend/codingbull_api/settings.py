@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environment variables from .env file
-load_dotenv(BASE_DIR / '.env')
+load_dotenv(BASE_DIR / '.env.hostinger')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'api.security_middleware.EnhancedSecurityMiddleware',  # Enhanced security middleware first
     'api.security_headers_middleware.SecurityHeadersMiddleware',  # Security headers
     'api.security_headers_middleware.APISecurityHeadersMiddleware',  # API-specific headers
