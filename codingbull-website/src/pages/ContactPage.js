@@ -385,7 +385,7 @@ const ContactPage = () => {
     switch (name) {
       case 'name':
         // Only allow letters, spaces, hyphens, apostrophes, and periods
-        sanitizedValue = value.replace(/[^a-zA-Z\s\-'\.]/g, '');
+        sanitizedValue = value.replace(/[^a-zA-Z\s\-'.]/g, '');
         // Limit to 50 characters
         sanitizedValue = sanitizedValue.slice(0, 50);
         break;
@@ -470,7 +470,7 @@ const ContactPage = () => {
       const injectionError = checkForInjection(nameValue, 'Name');
       if (injectionError) {
         newErrors.name = injectionError;
-      } else if (!/^[a-zA-Z\s\-'\.]+$/.test(nameValue)) {
+      } else if (!/^[a-zA-Z\s\-'.]+$/.test(nameValue)) {
         newErrors.name = 'Name can only contain letters, spaces, hyphens, apostrophes, and periods';
       } else if (nameValue.length < 2) {
         newErrors.name = 'Name must be at least 2 characters long';
@@ -554,7 +554,7 @@ const ContactPage = () => {
       const injectionError = checkForInjection(messageValue, 'Message');
       if (injectionError) {
         newErrors.message = injectionError;
-      } else if (!/^[a-zA-Z0-9\s\-_.,!?()@#$%&*+=\[\]{}|\\:";'<>/~`^]+$/.test(messageValue)) {
+      } else if (!/^[a-zA-Z0-9\s\-_.,!?()@#$%&*+=[\]{}|\\:";'<>/~`^]+$/.test(messageValue)) {
         newErrors.message = 'Message contains invalid characters';
       } else if (messageValue.length < 10) {
         newErrors.message = 'Message must be at least 10 characters long';
