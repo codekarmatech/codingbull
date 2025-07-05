@@ -886,8 +886,8 @@ const AboutPage = () => {
   // Company stats
   const stats = [
     { value: '1', label: 'Year Experience' },
-    { value: '5+', label: 'Projects Completed' },
-    { value: '7+', label: 'Services Offered' },
+    { value: '30+', label: 'Projects Completed' },
+    { value: '15+', label: 'Services Offered' },
     { value: '3', label: 'Core Technologies' }
   ];
   

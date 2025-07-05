@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { slideUp, staggerContainer, fadeIn } from '../animations/variants'; // Added fadeIn
@@ -353,9 +354,10 @@ const Services = () => {
               
               <CTAWrapper>
                 <Button
+                  as={Link}
+                  to="/contact"
                   variant="secondary"
                   size="sm"
-                  onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
                 >
                   Discuss Your Project
                 </Button>

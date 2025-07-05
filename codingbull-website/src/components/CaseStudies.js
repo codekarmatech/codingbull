@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { slideInLeft, slideInRight } from '../animations/variants';
@@ -356,9 +357,10 @@ const CaseStudies = () => {
             Want results like these? Contact the CodingBull team
           </h3>
           <Button
+            as={Link}
+            to="/contact"
             variant="primary"
             size="lg"
-            onClick={() => document.getElementById('contact') && document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
           >
             Discuss Your Project
           </Button>

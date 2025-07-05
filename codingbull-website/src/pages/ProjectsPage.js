@@ -959,7 +959,7 @@ const ProjectsPage = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <p>Over</p>
-              <span>{projects.length || '10'}+</span>
+              <span>32+</span>
               <p>Projects Delivered</p>
             </ProjectCounter>
           </HeroContent>

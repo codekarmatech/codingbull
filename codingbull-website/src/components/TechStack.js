@@ -645,8 +645,8 @@ const TechStack = () => {
 
             <div style={{
               position: 'relative',
-              marginTop: '2rem',
-              padding: '1rem',
+              marginTop: '2.5rem', // Increased margin for better spacing
+              padding: '1.5rem 1rem 1rem', // Increased top padding to prevent text overlap
               border: '1px dashed rgba(255, 152, 0, 0.5)',
               borderRadius: '8px'
             }}>
@@ -656,12 +656,23 @@ const TechStack = () => {
                 left: '50%',
                 transform: 'translateX(-50%)',
                 background: '#121212',
-                padding: '0 10px',
-                color: '#FF9800'
+                padding: '0 12px', // Increased horizontal padding for better text clearance
+                color: '#FF9800',
+                fontSize: '0.9rem', // Slightly smaller font to prevent overlap on small screens
+                whiteSpace: 'nowrap', // Prevent text wrapping
+                zIndex: 1 // Ensure text appears above border
               }}>
                 Supported By
               </div>
-              <div style={{ color: '#FF9800', fontWeight: 'bold' }}>Infrastructure Layer (Docker, CI/CD, Cloud Services)</div>
+              <div style={{ 
+                color: '#FF9800', 
+                fontWeight: 'bold',
+                fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', // Responsive font size to prevent overflow
+                textAlign: 'center',
+                lineHeight: '1.4' // Better line height for readability
+              }}>
+                Infrastructure Layer (Docker, CI/CD, Cloud Services)
+              </div>
             </div>
           </div>
         </TechVisualization>

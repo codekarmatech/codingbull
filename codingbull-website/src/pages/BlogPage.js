@@ -200,6 +200,12 @@ const BlogCardContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0; // Allow flex items to shrink below content size
+  overflow: hidden; // Prevent content from overflowing card boundaries
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    padding: 1rem; // Reduced padding on small screens for more content space
+  }
 `;
 
 // Blog meta
@@ -242,7 +248,21 @@ const BlogDate = styled.span`
 const BlogTitle = styled.h3`
   font-size: ${props => props.theme.fontSizes.xl};
   margin-bottom: 0.75rem;
-  line-height: 1.3;
+  line-height: 1.4; // Improved line height for better readability
+  word-wrap: break-word; // Allow long words to break
+  overflow-wrap: break-word; // Modern property for word breaking
+  hyphens: auto; // Enable hyphenation for better text flow
+  
+  // Responsive font sizing to prevent overflow
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    font-size: ${props => props.theme.fontSizes.lg};
+    line-height: 1.5;
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    font-size: ${props => props.theme.fontSizes.base};
+    line-height: 1.6;
+  }
 `;
 
 // Blog excerpt
@@ -250,6 +270,20 @@ const BlogExcerpt = styled.p`
   color: ${props => props.theme.colors.textSecondary};
   margin-bottom: 1.5rem;
   flex: 1;
+  line-height: 1.6; // Better line height for readability
+  word-wrap: break-word; // Allow long words to break
+  overflow-wrap: break-word; // Modern property for word breaking
+  
+  // Limit text to prevent excessive height on cards
+  display: -webkit-box;
+  -webkit-line-clamp: 3; // Limit to 3 lines
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    -webkit-line-clamp: 2; // Limit to 2 lines on small screens
+    font-size: ${props => props.theme.fontSizes.sm};
+  }
 `;
 
 // Blog footer
