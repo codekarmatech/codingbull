@@ -70,19 +70,6 @@ const DesktopNavLinks = styled.div`
   }
 `;
 
-const NavLink = styled(Link)`
-  color: ${props => props.theme.colors.textPrimary};
-  text-decoration: none;
-  font-weight: ${props => props.theme.fontWeights.medium};
-  font-size: ${props => props.theme.fontSizes.base};
-  transition: all ${props => props.theme.animations.normal};
-  
-  &:hover {
-    color: ${props => props.theme.colors.brandPrimary};
-    text-shadow: ${props => props.theme.colors.glowSubtle};
-  }
-`;
-
 // Mobile menu button
 const MenuButton = styled(motion.button)`
   display: none;
@@ -156,26 +143,6 @@ const CloseButton = styled(motion.button)`
   }
 `;
 
-// Mobile navigation links
-const MobileNavLink = styled(Link)`
-  color: ${props => props.theme.colors.textPrimary};
-  text-decoration: none;
-  font-size: ${props => props.theme.fontSizes.lg};
-  font-weight: ${props => props.theme.fontWeights.medium};
-  padding: ${props => props.theme.spacing[4]} ${props => props.theme.spacing[3]};
-  border-radius: ${props => props.theme.borderRadius.md};
-  transition: all ${props => props.theme.animations.normal};
-  border: 1px solid transparent;
-  
-  &:hover {
-    color: ${props => props.theme.colors.brandPrimary};
-    background: ${props => props.theme.colors.glassLight};
-    border-color: ${props => props.theme.colors.glassBorder};
-    transform: translateX(4px);
-    box-shadow: ${props => props.theme.shadows.glowSoft};
-  }
-`;
-
 // Mobile contact button
 const MobileContactButton = styled(motion.div)`
   margin-top: ${props => props.theme.spacing[6]};
@@ -234,18 +201,6 @@ const overlayVariants = {
       duration: 0.3
     }
   }
-};
-
-const linkVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: (i) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.3
-    }
-  })
 };
 
 const Navbar = () => {
@@ -312,9 +267,30 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <DesktopNavLinks>
           {navItems.map((item) => (
-            <NavLink key={item.name} to={item.path}>
+            <Link 
+              key={item.name} 
+              to={item.path}
+              style={{
+                color: '#FFFFFF',
+                textDecoration: 'none',
+                fontWeight: '500',
+                fontSize: '1rem',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.5rem'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#2B9BF4';
+                e.target.style.backgroundColor = 'rgba(43, 155, 244, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = '#FFFFFF';
+                e.target.style.backgroundColor = 'transparent';
+              }}
+            >
               {item.name}
-            </NavLink>
+            </Link>
           ))}
           <Link to="/contact" style={{ textDecoration: 'none' }}>
             <Button variant="primary" size="md">
@@ -363,18 +339,37 @@ const Navbar = () => {
 
               {/* Navigation Links */}
               {navItems.map((item, i) => (
-                <MobileNavLink
+                <Link
                   key={item.name}
                   to={item.path}
                   onClick={closeMobileMenu}
-                  as={motion.a}
-                  custom={i}
-                  initial="hidden"
-                  animate="visible"
-                  variants={linkVariants}
+                  style={{
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    fontSize: '1.25rem',
+                    fontWeight: '500',
+                    padding: '1rem 0.75rem',
+                    borderRadius: '0.5rem',
+                    transition: 'all 0.3s ease',
+                    border: '1px solid transparent',
+                    display: 'block',
+                    marginBottom: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = '#2B9BF4';
+                    e.target.style.backgroundColor = 'rgba(43, 155, 244, 0.1)';
+                    e.target.style.borderColor = 'rgba(43, 155, 244, 0.3)';
+                    e.target.style.transform = 'translateX(4px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = '#FFFFFF';
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.borderColor = 'transparent';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
                 >
                   {item.name}
-                </MobileNavLink>
+                </Link>
               ))}
               
               {/* Contact Button */}
