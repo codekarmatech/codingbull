@@ -1,3 +1,9 @@
-# https://www.robotstxt.org/robotstxt.html
+# Robots.txt for CodingBull Technovations PVT LTD (Registered 2025)
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /api/
+Disallow: /static/admin/
+Disallow: /django-admin/
+Allow: /static/frontend/
+Crawl-delay: 10
+Sitemap: https://codingbullz.com/sitemap.xml

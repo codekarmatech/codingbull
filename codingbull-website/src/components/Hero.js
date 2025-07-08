@@ -63,6 +63,36 @@ const Hero = () => {
         style={{ transformStyle: 'preserve-3d' }}
       >
         <HeroTextContent />
+        
+        {/* LocalBusiness Schema Markup */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "CodingBull Technovations PVT LTD",
+            "image": "https://codingbullz.com/codingbulllogo.png",
+            "@id": "https://codingbullz.com",
+            "url": "https://codingbullz.com",
+            "telephone": "+91 7984891664",
+            "priceRange": "$$$$",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Ghatlodia",
+              "addressLocality": "Ahmedabad",
+              "postalCode": "380061",
+              "addressCountry": "IN"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 23.0225,
+              "longitude": 72.5714
+            },
+            "sameAs": [
+              "https://linkedin.com/company/codingbull",
+              "https://twitter.com/codingbullz"
+            ]
+          })}
+        </script>
 
         {/* Development cycle positioned in layout */}
         <DevelopmentCycleWrapper>

@@ -24,7 +24,7 @@ const SEO = ({
   // Default site metadata
   const defaultTitle = 'CodingBull - Web & Mobile Development Agency';
   const defaultDescription = 'CodingBull is a premium web and mobile development agency specializing in React, Python, Django, and Three.js solutions for businesses worldwide.';
-  const defaultImage = '/logo512.png'; // Path relative to public folder
+  const defaultImage = '/codingbulllogo.png';
   const siteUrl = 'https://codingbull.dev'; // Replace with your actual domain
 
   // Merge with defaults

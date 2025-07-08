@@ -19,8 +19,18 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib.sitemaps.views import sitemap
 from rest_framework import routers
 from api import views, admin_views
+from api.sitemaps import BlogPostSitemap, ServiceSitemap, ProjectSitemap, StaticViewSitemap
+
+# Sitemap configuration
+sitemaps = {
+    'blog_posts': BlogPostSitemap,
+    'services': ServiceSitemap,
+    'projects': ProjectSitemap,
+    'static': StaticViewSitemap,
+}
 
 # Function to register common routes to avoid duplication
 def register_common_routes(router):
@@ -52,6 +62,8 @@ urlpatterns = [
     path('api/v1/error-tracking/performance/', views.track_performance, name='track-performance'),
     path('api/v1/error-tracking/session/', views.track_session, name='track-session'),
     path('api/v1/error-tracking/session-update/', views.update_session, name='update-session'),
+    # Sitemap endpoint
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 # Create a separate router for backward compatibility
