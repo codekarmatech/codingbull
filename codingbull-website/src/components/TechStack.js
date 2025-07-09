@@ -94,10 +94,8 @@ const TechIcon = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  border-radius: ${props => props.theme.borderRadius.md};
-  background: ${props => props.theme.colors.mediumGrey};
   transition: all 0.3s ease;
-  padding: 12px;
+  padding: 0;
 
   img {
     width: 100%;
@@ -105,10 +103,17 @@ const TechIcon = styled.div`
     object-fit: contain;
   }
 
+  span {
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
   ${TechItem}:hover & {
     transform: translateY(-5px);
-    box-shadow: ${props => props.theme.shadows.md};
-    background: ${props => props.theme.colors.deepGrey};
   }
 `;
 
@@ -215,37 +220,67 @@ const TechStack = () => {
   // Tech stack data
   const techStack = [
     // Frontend
-    { name: 'HTML5', category: 'frontend', icon: '🌐', useCase: 'Semantic markup for all web projects' },
-    { name: 'CSS3', category: 'frontend', icon: '🎨', useCase: 'Styling and animations' },
-    { name: 'JavaScript', category: 'frontend', icon: 'JS', useCase: 'Core language for interactive web apps' },
-    { name: 'TypeScript', category: 'frontend', icon: 'TS', useCase: 'Type-safe code for enterprise projects' },
-    { name: 'React', category: 'frontend', icon: '⚛️', useCase: 'UI library for interactive interfaces' },
-    { name: 'Redux Toolkit', category: 'frontend', icon: '🔄', useCase: 'State management for complex apps' },
-    { name: 'Tailwind CSS', category: 'frontend', icon: '🌊', useCase: 'Utility-first CSS framework' },
+    { name: 'HTML5', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" />, useCase: 'Semantic markup for all web projects' },
+    { name: 'CSS3', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" />, useCase: 'Styling and animations' },
+    { name: 'JavaScript', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" />, useCase: 'Core language for interactive web apps' },
+    { name: 'TypeScript', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" />, useCase: 'Type-safe code for enterprise projects' },
+    { name: 'React', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" />, useCase: 'UI library for interactive interfaces' },
+    { name: 'Redux Toolkit', category: 'frontend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" alt="Redux" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'State management for complex apps' },
+    { name: 'Tailwind CSS', category: 'frontend', icon: <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS" style={{ width: 48, height: 48, background: '#fff', borderRadius: '8px', padding: 6, border: '1px solid #e0e0e0', boxSizing: 'border-box' }} />, useCase: 'Utility-first CSS framework' },
 
     // Backend
-    { name: 'Python', category: 'backend', icon: '🐍', useCase: 'Backend development and data processing' },
-    { name: 'Django', category: 'backend', icon: '🎸', useCase: 'Full-featured web framework with ORM' },
-    { name: 'Flask', category: 'backend', icon: '🧪', useCase: 'Lightweight API development' },
-    { name: 'Node.js', category: 'backend', icon: '📦', useCase: 'JavaScript runtime for backend services' },
-    { name: 'Express', category: 'backend', icon: '🚂', useCase: 'Web framework for Node.js' },
+    { name: 'Python', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" />, useCase: 'Backend development and data processing' },
+    { name: 'Django', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django" />, useCase: 'Full-featured web framework with ORM' },
+    { name: 'Flask', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original-wordmark.svg" alt="Flask" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'Lightweight API development' },
+    { name: 'Node.js', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" />, useCase: 'JavaScript runtime for backend services' },
+    { name: 'Express', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="Express" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'Web framework for Node.js' },
 
     // Database
-    { name: 'MongoDB', category: 'database', icon: '🍃', useCase: 'NoSQL database for flexible schemas' },
-    { name: 'PostgreSQL', category: 'database', icon: '🐘', useCase: 'Relational database for complex data' },
-    { name: 'Redis', category: 'database', icon: '🔴', useCase: 'In-memory data store and caching' },
+    { name: 'MongoDB', category: 'database', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" />, useCase: 'NoSQL database for flexible schemas' },
+    { name: 'PostgreSQL', category: 'database', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" />, useCase: 'Relational database for complex data' },
+    { name: 'Redis', category: 'database', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" />, useCase: 'In-memory data store and caching' },
 
     // DevOps
-    { name: 'Docker', category: 'devops', icon: '🐳', useCase: 'Containerization for consistent environments' },
-    { name: 'GitHub Actions', category: 'devops', icon: '🔄', useCase: 'CI/CD automation' },
-    { name: 'AWS', category: 'devops', icon: '☁️', useCase: 'Cloud infrastructure and services' },
-    { name: 'Azure', category: 'devops', icon: '☁️', useCase: 'Microsoft cloud platform' },
+    { name: 'Docker', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" />, useCase: 'Containerization for consistent environments' },
+    { name: 'GitHub Actions', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub Actions" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'CI/CD automation' },
+    { name: 'AWS', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" style={{background: '#fff', borderRadius: '8px', padding: 4}} />, useCase: 'Cloud infrastructure and services' },
+    { name: 'Azure', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'Microsoft cloud platform' },
 
     // 3D & Visualization
-    { name: 'Three.js', category: '3d', icon: '🧊', useCase: '3D graphics in the browser' },
-    { name: 'WebGL', category: '3d', icon: '🎮', useCase: 'Low-level 3D rendering' },
-    { name: 'React Three Fiber', category: '3d', icon: '⚛️', useCase: 'React renderer for Three.js' }
+    { name: 'Three.js', category: '3d', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg" alt="Three.js" style={{background: '#fff', borderRadius: '8px'}} />, useCase: '3D graphics in the browser' },
+    { name: 'WebGL', category: '3d', icon: (
+      <svg width="48" height="48" viewBox="0 0 512 512" style={{ background: '#fff', borderRadius: '8px', padding: 6, border: '1px solid #e0e0e0', boxSizing: 'border-box' }} xmlns="http://www.w3.org/2000/svg">
+        <g>
+          <ellipse cx="256" cy="256" rx="246" ry="110" fill="#fff" stroke="#7B1FA2" strokeWidth="20"/>
+          <path d="M 70 320 Q 256 420 442 320" fill="none" stroke="#7B1FA2" strokeWidth="20"/>
+          <text x="50%" y="60%" textAnchor="middle" fill="#7B1FA2" fontSize="120" fontWeight="bold" fontFamily="Arial, Helvetica, sans-serif" dy=".3em">WebGL</text>
+        </g>
+      </svg>
+    ), useCase: 'Low-level 3D rendering' },
+    { name: 'React Three Fiber', category: '3d', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React Three Fiber" />, useCase: 'React renderer for Three.js' }
   ];
+
+  // Additional technologies to add
+  const additionalTech = [
+    // AI/ML
+    { name: 'TensorFlow', category: 'ai', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow" />, useCase: 'Machine learning framework' },
+    { name: 'PyTorch', category: 'ai', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" alt="PyTorch" />, useCase: 'Deep learning framework' },
+    
+    // Mobile
+    { name: 'Flutter', category: 'mobile', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" alt="Flutter" />, useCase: 'Cross-platform mobile development' },
+    { name: 'Kotlin', category: 'mobile', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="Kotlin" />, useCase: 'Android development' },
+    { name: 'Swift', category: 'mobile', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg" alt="Swift" />, useCase: 'iOS development' },
+    
+    // DevOps Expansion
+    { name: 'Kubernetes', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="Kubernetes" />, useCase: 'Container orchestration' },
+    { name: 'GCP', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" alt="Google Cloud" />, useCase: 'Cloud infrastructure' },
+    
+    // Additional Web
+    { name: 'GraphQL', category: 'backend', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" alt="GraphQL" />, useCase: 'API query language' }
+  ];
+
+  // Combine original and additional technologies
+  const fullTechStack = [...techStack, ...additionalTech];
 
   // Categories
   const categories = [
@@ -254,6 +289,8 @@ const TechStack = () => {
     { id: 'backend', name: 'Backend' },
     { id: 'database', name: 'Database' },
     { id: 'devops', name: 'DevOps' },
+    { id: 'ai', name: 'AI/ML' },
+    { id: 'mobile', name: 'Mobile' },
     { id: '3d', name: '3D & Visualization' }
   ];
 
@@ -263,8 +300,8 @@ const TechStack = () => {
 
   // Filter tech stack by category
   const filteredTechStack = activeCategory === 'all'
-    ? techStack
-    : techStack.filter(tech => tech.category === activeCategory);
+    ? fullTechStack
+    : fullTechStack.filter(tech => tech.category === activeCategory);
 
   return (
     <TechStackContainer id="tech-stack">
@@ -317,7 +354,10 @@ const TechStack = () => {
                 onMouseLeave={() => setActiveTooltip(null)}
               >
                 <TechIcon>
-                  <span style={{ fontSize: '24px' }}>{tech.icon}</span>
+                  {typeof tech.icon === 'string' ?
+                    <span>{tech.icon}</span> :
+                    tech.icon
+                  }
                 </TechIcon>
                 <TechName>{tech.name}</TechName>
 
@@ -384,7 +424,8 @@ const TechStack = () => {
 
               <div style={{ marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>⚛️</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>React + TypeScript</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Component-based UI architecture with type safety</p>
@@ -392,7 +433,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔄</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" alt="Redux Toolkit" style={{ width: 32, height: 32, marginRight: 10, filter: 'brightness(0) invert(1)' }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="RTK Query" style={{ width: 32, height: 32, marginRight: 10, opacity: 0.5 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Redux Toolkit + RTK Query</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Centralized state management with optimized API requests</p>
@@ -400,7 +442,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🎨</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" alt="Tailwind CSS" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/framer/framer-original.svg" alt="Framer Motion" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Tailwind CSS + Framer Motion</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Utility-first styling with fluid animations</p>
@@ -445,7 +488,8 @@ const TechStack = () => {
 
               <div style={{ marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🐍</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="DRF" style={{ width: 32, height: 32, marginRight: 10, opacity: 0.5 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Django + DRF</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Robust ORM with RESTful API capabilities</p>
@@ -453,7 +497,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>�</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="Express" style={{ width: 32, height: 32, marginRight: 10, filter: 'brightness(0) invert(1)' }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Node.js + Express</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Event-driven architecture for real-time applications</p>
@@ -461,7 +506,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔐</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jwt/jwt-plain.svg" alt="JWT" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oauth/oauth-original.svg" alt="OAuth2" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>JWT + OAuth2</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Secure authentication and authorization flows</p>
@@ -506,7 +552,8 @@ const TechStack = () => {
 
               <div style={{ marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🐘</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/timescaledb/timescaledb-original.svg" alt="TimescaleDB" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>PostgreSQL + TimescaleDB</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Relational data with time-series capabilities</p>
@@ -514,7 +561,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🍃</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongoose/mongoose-original.svg" alt="Mongoose" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>MongoDB + Mongoose</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Document-oriented storage with schema validation</p>
@@ -522,7 +570,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.5rem', marginRight: '10px' }}>🔴</span>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elasticsearch/elasticsearch-original.svg" alt="Elasticsearch" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Redis + Elasticsearch</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Caching and full-text search capabilities</p>
@@ -579,7 +628,9 @@ const TechStack = () => {
                 borderRadius: '8px',
                 height: '100%'
               }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>🐳</div>
+                <div style={{ marginBottom: '0.8rem' }}>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" style={{ width: 32, height: 32 }} />
+                </div>
                 <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Containerization</h5>
                 <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Docker + Docker Compose for consistent environments across development and production</p>
               </div>
@@ -590,7 +641,10 @@ const TechStack = () => {
                 borderRadius: '8px',
                 height: '100%'
               }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>⚙️</div>
+                <div style={{ marginBottom: '0.8rem' }}>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub Actions" style={{ width: 32, height: 32, filter: 'brightness(0) invert(1)' }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" alt="Jenkins" style={{ width: 32, height: 32, marginLeft: 8 }} />
+                </div>
                 <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>CI/CD Pipeline</h5>
                 <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>GitHub Actions + Jenkins for automated testing, building, and deployment workflows</p>
               </div>
@@ -601,7 +655,11 @@ const TechStack = () => {
                 borderRadius: '8px',
                 height: '100%'
               }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>☁️</div>
+                <div style={{ marginBottom: '0.8rem' }}>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" alt="AWS" style={{ width: 32, height: 32, filter: 'brightness(0) invert(1)' }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure" style={{ width: 32, height: 32, marginLeft: 8, filter: 'brightness(0) invert(1)' }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" alt="Terraform" style={{ width: 32, height: 32, marginLeft: 8 }} />
+                </div>
                 <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Cloud Services</h5>
                 <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>AWS/Azure with Infrastructure as Code (Terraform) for scalable and reproducible environments</p>
               </div>
@@ -612,7 +670,11 @@ const TechStack = () => {
                 borderRadius: '8px',
                 height: '100%'
               }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.8rem' }}>�</div>
+                <div style={{ marginBottom: '0.8rem' }}>
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg" alt="Prometheus" style={{ width: 32, height: 32 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg" alt="Grafana" style={{ width: 32, height: 32, marginLeft: 8 }} />
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elasticsearch/elasticsearch-original.svg" alt="ELK Stack" style={{ width: 32, height: 32, marginLeft: 8 }} />
+                </div>
                 <h5 style={{ color: '#E0E0E0', marginBottom: '0.5rem' }}>Monitoring & Logging</h5>
                 <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Prometheus + Grafana for metrics and ELK Stack for centralized logging and analysis</p>
               </div>

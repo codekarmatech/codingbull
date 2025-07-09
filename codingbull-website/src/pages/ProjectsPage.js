@@ -171,10 +171,13 @@ const ShowcaseContent = styled.div`
 // Project filter tabs
 const FilterTabs = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 1rem;
   margin-bottom: 4rem;
   position: relative;
-  
+  padding: 0 1rem;
+
   &::after {
     content: '';
     position: absolute;
@@ -190,6 +193,11 @@ const FilterTabs = styled.div`
       transparent
     );
   }
+
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
 `;
 
 // Filter tab
@@ -197,13 +205,14 @@ const FilterTab = styled.button`
   background: transparent;
   color: ${props => props.$active ? props.theme.colors.electricBlue : props.theme.colors.textSecondary};
   border: none;
-  padding: 1rem 2rem;
-  font-size: ${props => props.theme.fontSizes.lg};
+  padding: 0.8rem 1.5rem;
+  font-size: ${props => props.theme.fontSizes.md};
   font-weight: ${props => props.$active ? '600' : '400'};
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  
+  white-space: nowrap;
+
   &::after {
     content: '';
     position: absolute;
@@ -215,13 +224,28 @@ const FilterTab = styled.button`
     background: ${props => props.theme.colors.electricBlue};
     transition: all 0.3s ease;
   }
-  
+
   &:hover {
     color: ${props => props.theme.colors.electricBlue};
     
     &::after {
       width: 2rem;
     }
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    padding: 0.6rem 1rem;
+    font-size: ${props => props.theme.fontSizes.sm};
+    
+    &::after {
+      bottom: -0.3rem;
+      height: 2px;
+    }
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    padding: 0.5rem 0.8rem;
+    font-size: ${props => props.theme.fontSizes.xs};
   }
 `;
 
