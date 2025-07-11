@@ -5,15 +5,12 @@ const CACHE_NAME = 'codingbull-v1.0.0';
 const STATIC_CACHE_NAME = 'codingbull-static-v1.0.0';
 const DYNAMIC_CACHE_NAME = 'codingbull-dynamic-v1.0.0';
 
-// Files to cache on installation
+// Critical files to cache on installation
 const STATIC_FILES = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  '/codingbulllogo.png',
+  '/offline.html',
   '/favicon.ico',
-  '/offline.html'
+  '/codingbulllogo.png',
+  '/manifest.json'
 ];
 
 // API routes to cache
@@ -31,11 +28,11 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE_NAME)
       .then((cache) => {
-        console.log('Caching static files');
-        return cache.addAll(STATIC_FILES);
-      })
-      .catch((error) => {
-        console.error('Failed to cache static files:', error);
+        console.log('Caching critical static files');
+        return cache.addAll(STATIC_FILES)
+          .catch((error) => {
+            console.error('Failed to cache some static files:', error);
+          });
       })
   );
 
