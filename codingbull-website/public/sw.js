@@ -200,17 +200,20 @@ async function handleDefaultRequest(request) {
   try {
     const networkResponse = await fetch(request);
 
-    if (networkResponse.ok) {
+    // Only cache GET requests
+    if (networkResponse.ok && request.method === 'GET') {
       const cache = await caches.open(DYNAMIC_CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
 
     return networkResponse;
   } catch (error) {
-    const cachedResponse = await caches.match(request);
-
-    if (cachedResponse) {
-      return cachedResponse;
+    // Only serve cached responses for GET requests
+    if (request.method === 'GET') {
+      const cachedResponse = await caches.match(request);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
 
     throw error;

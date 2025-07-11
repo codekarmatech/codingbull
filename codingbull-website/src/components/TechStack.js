@@ -243,7 +243,7 @@ const TechStack = () => {
     // DevOps
     { name: 'Docker', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" />, useCase: 'Containerization for consistent environments' },
     { name: 'GitHub Actions', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub Actions" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'CI/CD automation' },
-    { name: 'AWS', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" style={{background: '#fff', borderRadius: '8px', padding: 4}} />, useCase: 'Cloud infrastructure and services' },
+    { name: 'AWS', category: 'devops', icon: <img src="/devicons/amazonwebservices-original.svg" alt="AWS" style={{background: '#fff', borderRadius: '8px', padding: 4}} />, useCase: 'Cloud infrastructure and services' },
     { name: 'Azure', category: 'devops', icon: <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure" style={{filter: "brightness(0) invert(1)"}} />, useCase: 'Microsoft cloud platform' },
 
     // 3D & Visualization
@@ -442,8 +442,8 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" alt="Tailwind CSS" style={{ width: 32, height: 32, marginRight: 10 }} />
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/framer/framer-original.svg" alt="Framer Motion" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="/devicons/tailwindcss-plain.svg" alt="Tailwind CSS" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="/devicons/framer-original.svg" alt="Framer Motion" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>Tailwind CSS + Framer Motion</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Utility-first styling with fluid animations</p>
@@ -506,7 +506,7 @@ const TechStack = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jwt/jwt-plain.svg" alt="JWT" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="/devicons/jwt-plain.svg" alt="JWT" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oauth/oauth-original.svg" alt="OAuth2" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>JWT + OAuth2</p>
@@ -553,7 +553,7 @@ const TechStack = () => {
               <div style={{ marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
                   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" style={{ width: 32, height: 32, marginRight: 10 }} />
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/timescaledb/timescaledb-original.svg" alt="TimescaleDB" style={{ width: 32, height: 32, marginRight: 10 }} />
+                  <img src="/devicons/timescaledb-original.svg" alt="TimescaleDB" style={{ width: 32, height: 32, marginRight: 10 }} />
                   <div>
                     <p style={{ color: '#E0E0E0', fontWeight: 'bold', marginBottom: '2px' }}>PostgreSQL + TimescaleDB</p>
                     <p style={{ color: '#AAAAAA', fontSize: '0.85rem' }}>Relational data with time-series capabilities</p>
@@ -656,7 +656,7 @@ const TechStack = () => {
                 height: '100%'
               }}>
                 <div style={{ marginBottom: '0.8rem' }}>
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" alt="AWS" style={{ width: 32, height: 32, filter: 'brightness(0) invert(1)' }} />
+                  <img src="/devicons/amazonwebservices-original.svg" alt="AWS" style={{ width: 32, height: 32, filter: 'brightness(0) invert(1)' }} />
                   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure" style={{ width: 32, height: 32, marginLeft: 8, filter: 'brightness(0) invert(1)' }} />
                   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" alt="Terraform" style={{ width: 32, height: 32, marginLeft: 8 }} />
                 </div>
