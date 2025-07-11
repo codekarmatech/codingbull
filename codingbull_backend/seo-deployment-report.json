@@ -1,0 +1,26 @@
+{
+  "deployment_date": "2025-07-09T22:44:31.386250",
+  "domain": "https://codingbullz.com",
+  "company": {
+    "name": "CodingBull Technovations Pvt Ltd",
+    "gstin": "24AAMCC7617E1ZP",
+    "location": "Ahmedabad, Gujarat, India",
+    "email": "contact@codingbullz.com",
+    "founded": "2025"
+  },
+  "urls_count": 9,
+  "sitemap_location": "https://codingbullz.com/sitemap.xml",
+  "robots_location": "https://codingbullz.com/robots.txt",
+  "files_generated": [
+    "sitemap.xml",
+    "robots.txt",
+    "structured-data.json"
+  ],
+  "next_steps": [
+    "Submit sitemap to Google Search Console",
+    "Submit sitemap to Bing Webmaster Tools",
+    "Verify robots.txt is working correctly",
+    "Set up Google Analytics",
+    "Monitor search rankings"
+  ]
+}

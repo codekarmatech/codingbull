@@ -1,15 +1,130 @@
-# Robots.txt for CodingBull Technovations PVT LTD (Registered 2025)
+# Robots.txt for CodingBull Technovations Pvt Ltd
+# Website: https://codingbullz.com
+# Updated: July 2025
+
+# Main crawlers
 User-agent: *
+Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /static/admin/
 Disallow: /django-admin/
+Disallow: /media/private/
+Disallow: /error/
+Disallow: /404/
+Disallow: /500/
 Allow: /static/frontend/
-Crawl-delay: 10
-Sitemap: https://codingbullz.com/sitemap.xml
+Allow: /media/public/
+Crawl-delay: 1
 
-# AI crawlers directive
-User-agent: GPTBot
+# Google crawlers
+User-agent: Googlebot
 Allow: /
 Disallow: /admin/
 Disallow: /api/
+Disallow: /static/admin/
+Disallow: /django-admin/
+Crawl-delay: 1
+
+# Bing crawlers
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /static/admin/
+Disallow: /django-admin/
+Crawl-delay: 1
+
+# Yandex crawlers
+User-agent: YandexBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /static/admin/
+Disallow: /django-admin/
+Crawl-delay: 1
+
+# AI crawlers - Allow with restrictions
+User-agent: GPTBot
+Allow: /
+Allow: /blog/
+Allow: /services/
+Allow: /about/
+Allow: /our-projects/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /contact/
+Disallow: /privacy-policy/
+Disallow: /terms-of-service/
+Crawl-delay: 2
+
+User-agent: Google-Extended
+Allow: /
+Allow: /blog/
+Allow: /services/
+Allow: /about/
+Allow: /our-projects/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /contact/
+Disallow: /privacy-policy/
+Disallow: /terms-of-service/
+Crawl-delay: 2
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /blog/
+Allow: /services/
+Allow: /about/
+Allow: /our-projects/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /contact/
+Disallow: /privacy-policy/
+Disallow: /terms-of-service/
+Crawl-delay: 2
+
+User-agent: CCBot
+Allow: /
+Allow: /blog/
+Allow: /services/
+Allow: /about/
+Allow: /our-projects/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /contact/
+Disallow: /privacy-policy/
+Disallow: /terms-of-service/
+Crawl-delay: 2
+
+# Bad bots - Block completely
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MegaIndex
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://codingbullz.com/sitemap.xml
+
+# Additional information
+# Company: CodingBull Technovations Pvt Ltd
+# GSTIN: 24AAMCC7617E1ZP
+# Location: Ahmedabad, Gujarat, India
+# Contact: contact@codingbullz.com
+# Services: Web Development, Mobile App Development, AI/ML Solutions

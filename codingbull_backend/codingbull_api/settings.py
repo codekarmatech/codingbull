@@ -41,6 +41,12 @@ if ENVIRONMENT == 'production':
 ALLOWED_HOSTS_ENV = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,codingbullz.com,www.codingbullz.com,api.codingbullz.com')
 ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
 
+# Site configuration for sitemap
+SITE_ID = 1
+SITE_DOMAIN = 'codingbullz.com'
+SITE_NAME = 'CodingBull Technovations'
+SITE_LAST_UPDATED = '2025-01-01'
+
 
 # Application definition
 
@@ -51,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django.contrib.sitemaps',
     'rest_framework',
     'corsheaders',
@@ -394,3 +401,23 @@ if ENVIRONMENT == 'production':
     X_FRAME_OPTIONS = 'DENY'
     SESSION_EXPIRE_AT_BROWSER_CLOSE = os.environ.get('SESSION_EXPIRE_AT_BROWSER_CLOSE', 'True').lower() == 'true'
     SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', '3600'))
+
+# ============================================================================
+# SITEMAP CONFIGURATION
+# ============================================================================
+
+# Sitemap settings
+SITEMAP_CACHE_TIMEOUT = 86400  # 24 hours
+SITEMAP_LIMIT = 50000  # Maximum URLs per sitemap
+SITEMAP_USE_HTTPS = True
+
+# Additional sitemap settings
+if ENVIRONMENT == 'production':
+    SITEMAP_DOMAIN = 'codingbullz.com'
+    SITEMAP_PROTOCOL = 'https'
+else:
+    SITEMAP_DOMAIN = 'localhost:8000'
+    SITEMAP_PROTOCOL = 'http'
+
+# Force SQLite for sitemap generation in development
+SITEMAP_USE_SQLITE = True
